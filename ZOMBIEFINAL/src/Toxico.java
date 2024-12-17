@@ -1,12 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
-/**
- *
- * @author pedro
- */
-public class Toxico extends Zombi{
-    
+
+public class Toxico extends Zombi {
+    public Toxico(TipoZombie tipo, int x, int y) {
+        super(tipo, x , y);
+    }
 }
