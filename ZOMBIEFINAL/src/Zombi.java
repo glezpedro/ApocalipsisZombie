@@ -1,10 +1,11 @@
 import java.io.Serializable;
+import java.util.List;
 import java.util.Random;
 
 public class Zombi implements Serializable, Activable {
     private static final Random random = new Random();
-    private static int contador = 1; 
-    
+    private static int contador = 1;
+
     private int identificador;
     private int aguante;
     private int activaciones;
@@ -13,7 +14,7 @@ public class Zombi implements Serializable, Activable {
     private int coordenadaX;
     private int coordenadaY;
 
-    public Zombi(TipoZombie tipo, int x , int y) {
+    public Zombi(TipoZombie tipo, int x, int y) {
         this.identificador = contador++;
         this.tipo = tipo;
         this.vivo = true;
@@ -22,10 +23,7 @@ public class Zombi implements Serializable, Activable {
         asignarAtributosSegunTipo(tipo);
     }
 
-    //zombi.getTipo()     caminante, corredor o abominacion
-    //zombie.getClass().getSimpleName();     normal, toxico o berseker
-    
-     private void asignarAtributosSegunTipo(TipoZombie tipo) {
+    private void asignarAtributosSegunTipo(TipoZombie tipo) {
         switch (tipo) {
             case CAMINANTE:
                 this.aguante = 1;
@@ -41,49 +39,67 @@ public class Zombi implements Serializable, Activable {
                 break;
         }
     }
-    public static Zombi crearZombiAleatorio() {
-        int categoriaSeleccionada = random.nextInt(3); // 0 = Normal, 1 = Berseker, 2 = Toxico
-        TipoZombie tipoZombi = seleccionarTipoAleatorio();
 
-        switch (categoriaSeleccionada) {
-            case 0:
-                return new Normal(tipoZombi, random.nextInt(10), random.nextInt(10));
-            case 1:
-                return new Berseker(tipoZombi, random.nextInt(10), random.nextInt(10));
-            case 2:
-                return new Toxico(tipoZombi, random.nextInt(10), random.nextInt(10));
-            default:
-                throw new IllegalStateException("Categoría inválida");
-        }
+    public static Zombi crearZombiAleatorio() {
+        TipoZombie tipoZombi = seleccionarTipoAleatorio();
+        return new Zombi(tipoZombi, random.nextInt(10), random.nextInt(10));
     }
 
     private static TipoZombie seleccionarTipoAleatorio() {
-        int probabilidad = random.nextInt(100); 
-
+        int probabilidad = random.nextInt(100);
         if (probabilidad < 60) {
-            return TipoZombie.CAMINANTE; // 60%
+            return TipoZombie.CAMINANTE;
         } else if (probabilidad < 90) {
-            return TipoZombie.CORREDOR; // 30%
+            return TipoZombie.CORREDOR;
         } else {
-            return TipoZombie.ABOMINACION; // 10%
+            return TipoZombie.ABOMINACION;
         }
     }
-   
 
     @Override
     public void moverse() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        /*if (supervivientes.isEmpty()) return;
+
+        Superviviente objetivo = supervivientes.get(random.nextInt(supervivientes.size()));
+        if (this.coordenadaX < objetivo.getX()) coordenadaX++;
+        else if (this.coordenadaX > objetivo.getX()) coordenadaX--;
+
+        if (this.coordenadaY < objetivo.getY()) coordenadaY++;
+        else if (this.coordenadaY > objetivo.getY()) coordenadaY--;
+
+        System.out.println("El zombi " + identificador + " se mueve a (" + coordenadaX + ", " + coordenadaY + ").");*/
     }
 
     @Override
-    public int atacar(Arma arma, int distancia) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void atacar(List<Superviviente> supervivientes) {
+        for (Superviviente s : supervivientes) {
+            if (this.coordenadaX == s.getX() && this.coordenadaY == s.getY()) {
+                System.out.println("¡El zombi " + identificador + " ha mordido al superviviente!");
+                s.recibirHerida(this.tipo == TipoZombie.ABOMINACION ? 3 : 1);
+                return;
+            }
+        }
+        System.out.println("El zombi " + identificador + " no encuentra a ningún superviviente.");
     }
 
     @Override
     public int[] getCoordenadas() {
         return new int[]{coordenadaX, coordenadaY};
     }
+
+    public int reaccionAtaques(Arma arma, int distancia) {
+        if (distancia > arma.getAlcance()) return 0;
+
+        int potenciaTotal = arma.getPotencia();
+        if (potenciaTotal >= aguante) {
+            vivo = false;
+            return 1;
+        }
+        return 0;
+    }
+
+
+
     
     public int getX(){
         return coordenadaX;

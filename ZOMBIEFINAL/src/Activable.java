@@ -1,8 +1,9 @@
 
+import java.util.List;
 
 
 public interface Activable {
     void moverse();
-    int atacar(Arma arma, int distancia);
+    void atacar(List<Superviviente> supervivientes);
     int[] getCoordenadas();
 }
