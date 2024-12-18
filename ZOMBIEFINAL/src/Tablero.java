@@ -12,12 +12,13 @@ import javax.swing.border.Border;
 public class Tablero {
     private Coordenada dimension;
     private Coordenada objetivo;
-    private Casilla[][]tablero;
+    public Casilla[][]tablero;
     private final int filasColumnas = 10;
     public int coordenadaXSeleccionada = 0; 
     public int coordenadaYSeleccionada = 0;
     private final VentanaJuego ventana;
     public JButton[][] botonesTablero;
+
 
     public Tablero(VentanaJuego ventanaMain) {
         this.ventana= ventanaMain;
@@ -27,9 +28,10 @@ public class Tablero {
         ventana.panelTablero.setLayout(new GridLayout(10,10));
         ventana.panelTablero.setBounds(190,115,210,210);
         ventana.panelJuego.add(ventana.panelTablero);
-        
-        Border border = BorderFactory.createLineBorder(Color.black, 1);
 
+        Border border = BorderFactory.createLineBorder(Color.black, 1);
+        
+        tablero = new Casilla[filasColumnas][filasColumnas];
         botonesTablero = new JButton[filasColumnas][filasColumnas];
         
         for (int i = 0; i < filasColumnas; i++) {
@@ -39,7 +41,7 @@ public class Tablero {
                 button.setBackground(Color.red);
                 button.setOpaque(false); 
                 botonesTablero[i][j] = button;
-                
+                tablero[i][j] = new Casilla(new Coordenada(i, j));
                 final int fila = i;
                 final int columna = j;
                 
@@ -50,6 +52,7 @@ public class Tablero {
                         coordenadaXSeleccionada = fila;
                         coordenadaYSeleccionada = columna;
                         System.out.println("Coordenadas seleccionadas: X=" + fila + ", Y=" + columna);
+                        MuestraDatos();
                         ventana.actualizarEtiquetaCoordenadas(coordenadaXSeleccionada, coordenadaYSeleccionada);
                     }
                 });
@@ -66,11 +69,15 @@ public class Tablero {
     public int getCoordenadaYSeleccionada(){
         return coordenadaYSeleccionada;
     }
-    /*
-    public void MuestraDatos(){
-        if (button[getCoordenadaXSeleccionada][getCoordenadaYSeleccionada].) {
-            
+    
+    public void MuestraDatos() {
+    int x = getCoordenadaXSeleccionada();
+    int y = getCoordenadaYSeleccionada();
+
+        if (tablero[x][y].tieneZombie()) {
+            System.out.println("Hay un Zombie en la casilla seleccionada");
+        } else {
+            System.out.println("No hay un Zombie en la casilla seleccionada");
         }
-    }
-    */
+    }  
 }

@@ -2,12 +2,10 @@
 public class Coordenada {
     private int fila;
     private int columna;
-    VentanaJuego ventana;
     
-    public Coordenada(VentanaJuego ventanaMain) {
-        this.ventana= ventanaMain;
-        this.fila = ventana.tablero.getCoordenadaXSeleccionada();
-        this.columna = ventana.tablero.getCoordenadaYSeleccionada();
+    public Coordenada(int fila, int columna) {
+        this.fila = fila;
+        this.columna = columna;
     }
 
     public void setFila(int fila) {

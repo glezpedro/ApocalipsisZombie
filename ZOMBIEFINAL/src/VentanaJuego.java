@@ -424,6 +424,7 @@ public class VentanaJuego extends JFrame{
             
             
             tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombi.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            tablero.tablero[nuevoZombie.getX()][nuevoZombie.getY()].setHayZombie(true);
         }
     }
     
