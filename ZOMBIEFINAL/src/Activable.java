@@ -3,6 +3,6 @@
 
 public interface Activable {
     void moverse();
-    void atacar();
+    int atacar(Arma arma, int distancia);
     int[] getCoordenadas();
 }

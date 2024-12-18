@@ -76,7 +76,7 @@ public class Zombi implements Serializable, Activable {
     }
 
     @Override
-    public void atacar() {
+    public int atacar(Arma arma, int distancia) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -90,6 +90,9 @@ public class Zombi implements Serializable, Activable {
     }
     public int getY(){
         return coordenadaY;
+    }
+    public int getAguante(){
+        return aguante;
     }
     
 }
