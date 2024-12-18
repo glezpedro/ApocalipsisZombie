@@ -35,7 +35,7 @@ public class Equipo {
     }
 
     // Método para añadir un objeto al inventario
-    public void agregarItem(Equipo item) {
+    public void agregarItem(Object item) {
         // Crear armas y agregarlas al inventario
         Arma espada = new Arma("Espada", 1, 0, 1, 2);
         Arma pistola = new Arma("Pistola", 2, 1, 3, 3);
