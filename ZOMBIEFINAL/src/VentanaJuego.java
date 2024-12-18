@@ -7,7 +7,6 @@ import java.util.Random;
 import java.util.Set;
 import javax.swing.*;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-import javax.swing.border.Border;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
@@ -16,16 +15,13 @@ import java.io.ObjectInputStream;
 public class VentanaJuego extends JFrame{
     public JPanel panel, panelJuego, panelSimular, panelTablero;
     private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular;
-    private int contadorTurnos;
-    public JButton[][] botonesTablero;
-    private final int filasColumnas = 10;
+    private int contadorTurnos; 
     private final int numZombies = 3;
     private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar;
     private JLabel etiqueta1, etiqueta2, etiqueta3, etiquetaTurnos;
     private JComboBox<String> listaArmas,listaArmas2, listaActivas;    
-    private int coordenadaXSeleccionada = 0; 
-    private int coordenadaYSeleccionada = 0; 
     public Set<Zombi> zombies;
+    Tablero tablero;
     
     //private Armas armaSeleccionada; // Agregamos esta variable para el arma seleccionada
 
@@ -40,7 +36,8 @@ public class VentanaJuego extends JFrame{
         ImageIcon icon = new ImageIcon(getClass().getResource("/resources/zombie2.png"));
         setIconImage(icon.getImage());
         zombies = new HashSet<>();
-
+        tablero = new Tablero(this);
+        
         colocarPanelMain();
     }
     
@@ -74,7 +71,7 @@ public class VentanaJuego extends JFrame{
         colocarEtiquetasJuego();
         colocarBotonesJuego();
         colocarRadioBotones();
-        colocarTablero();
+        tablero.colocarTablero();
     }
 
     private void colocarPanelSimular() {
@@ -93,52 +90,7 @@ public class VentanaJuego extends JFrame{
         colocarEtiquetasSimular();
         colocarBotonesSimular();
     }
-    
-    private void colocarTablero(){
-        panelTablero = new JPanel();
-        panelTablero.setLayout(new GridLayout(10,10));
-        panelTablero.setBounds(190,115,210,210);
-        panelJuego.add(panelTablero);
-        
-        Border border = BorderFactory.createLineBorder(Color.black, 1);
 
-        botonesTablero = new JButton[filasColumnas][filasColumnas];
-        
-        for (int i = 0; i < filasColumnas; i++) {
-            for (int j = 0; j < filasColumnas; j++) {
-                JButton button = new JButton();
-                button.setBorder(border);
-                button.setBackground(Color.red);
-                button.setOpaque(false); 
-                botonesTablero[i][j] = button;
-                
-                final int fila = i;
-                final int columna = j;
-                
-                // Al hacer clic, guardar las coordenadas seleccionadas
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        coordenadaXSeleccionada = fila;
-                        coordenadaYSeleccionada = columna;
-                        System.out.println("Coordenadas seleccionadas: X=" + fila + ", Y=" + columna);
-                        actualizarEtiquetaCoordenadas(coordenadaXSeleccionada, coordenadaYSeleccionada);
-                    }
-                });
-                panelTablero.add(button);
-            }     
-        }
-        colocarZombiesInicio();
-    }
-    
-    public int getCoordenadaXSeleccionada(){
-        return coordenadaXSeleccionada;
-    }
-    
-    public int getCoordenadaYSeleccionada(){
-        return coordenadaYSeleccionada;
-    }
-    
     private void colocarEtiquetasMain (){
         // Etiqueta 1
         JLabel etiqueta = new JLabel("Zombie Game", SwingConstants.CENTER); // Creamos etiqueta
@@ -193,14 +145,14 @@ public class VentanaJuego extends JFrame{
                     // rrestaurar  datos guardados
                     contadorTurnos = estado.getTurno();
                     zombies = estado.getZombies();
-                    coordenadaXSeleccionada = estado.getCoordenadaX();
-                    coordenadaYSeleccionada = estado.getCoordenadaY();
+                    tablero.coordenadaXSeleccionada = estado.getCoordenadaX();
+                    tablero.coordenadaYSeleccionada = estado.getCoordenadaY();
 
                     // actualizar  interfaz
                     colocarPanelJuego();
                     actualizarEtiquetaTurnos(contadorTurnos);
                     for (Zombi zombie : zombies) {
-                        botonesTablero[zombie.getX()][zombie.getY()].setIcon(new ImageIcon(getClass().getResource("/resources/zombie2.png")));
+                        tablero.botonesTablero[zombie.getX()][zombie.getY()].setIcon(new ImageIcon(getClass().getResource("/resources/zombie2.png")));
                     }
                     System.out.println("Partida cargada correctamente.");
                 } catch (Exception ex) {
@@ -302,7 +254,7 @@ public class VentanaJuego extends JFrame{
            public void actionPerformed(ActionEvent e) {
                try {
             // Crear el objeto EstadoJuego con los datos actuales
-                    EstadoJuego estado = new EstadoJuego(contadorTurnos, zombies, coordenadaXSeleccionada, coordenadaYSeleccionada);
+                    EstadoJuego estado = new EstadoJuego(contadorTurnos, zombies, tablero.coordenadaXSeleccionada, tablero.coordenadaYSeleccionada);
                     FileOutputStream fileOut = new FileOutputStream("partidaGuardada.dat");
                     ObjectOutputStream out = new ObjectOutputStream(fileOut);
                     out.writeObject(estado);
@@ -471,7 +423,7 @@ public class VentanaJuego extends JFrame{
             posicionesUsadas.add(new Point(nuevoZombie.getX(), nuevoZombie.getY()));
             
             
-            botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombi.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombi.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
         }
     }
     
@@ -489,7 +441,7 @@ public class VentanaJuego extends JFrame{
         posicionesUsadas.add(new Point(nuevoZombie.getX(), nuevoZombie.getY()));
             
             
-        botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombi.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+        tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombi.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
         
     }
     
@@ -510,7 +462,7 @@ public class VentanaJuego extends JFrame{
         }
     }
 
-public void funcionMoverse(){
+    public void funcionMoverse(){
         // Texto Elegir Casila:
         etiqueta2 = new JLabel("Elegir Casilla:", SwingConstants.CENTER); // Creamos etiqueta
         etiqueta2.setBounds(10, 245, 150, 30);
@@ -520,7 +472,7 @@ public void funcionMoverse(){
         panelJuego.add(etiqueta2);
         etiqueta2.setOpaque(false);
         // Texto x e y
-        etiqueta3 = new JLabel("X: "+getCoordenadaXSeleccionada()+"          Y: "+getCoordenadaYSeleccionada(), SwingConstants.CENTER); // Creamos etiqueta
+        etiqueta3 = new JLabel("X: "+tablero.getCoordenadaXSeleccionada()+"          Y: "+tablero.getCoordenadaYSeleccionada(), SwingConstants.CENTER); // Creamos etiqueta
         etiqueta3.setBounds(25, 275, 100, 20);
         etiqueta3.setOpaque(true); // Asi podemos poner background
         etiqueta3.setForeground(Color.black);
@@ -638,7 +590,7 @@ public void funcionMoverse(){
         ActionListener accionBoton4 = new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent e) {
-                   System.out.println("Armas Seleccionadas");//Aqui hay q poner que el booleano en el inventario o arma sea true (armaActiva = true)
+                   System.out.println("Buscando");//Aqui hay q poner que el booleano en el inventario o arma sea true (armaActiva = true)
                    contadorTurnos++;
                    colocarZombieFinDeRonda();
                    etiquetaTurnos.setText("Turno: "+ contadorTurnos);
@@ -656,17 +608,10 @@ public void funcionMoverse(){
         etiqueta1.setFont(new Font("arial", Font.CENTER_BASELINE, 12)); // estableze el font se puede usar 0123 para typo de letra
         panelJuego.add(etiqueta1);
         etiqueta1.setOpaque(false);
-        // Esto se tiene q meter cuando el Superviviente le da a Buscar y encuentra un arma se le mete en el inventario (AQUI NO VA)
-        Arma arma1 = new Arma("Glock", 1, 1, 1, 1);
-        Arma arma2 = new Arma("AK-47", 1, 1, 1, 1);
-        Arma arma3 = new Arma("AWP", 1, 1, 1, 1);
-        Equipo equipo = new Equipo();
-        equipo.agregarItem(arma1);
-        equipo.agregarItem(arma2);
-        equipo.agregarItem(arma3);
-        // ---------------------------------------------------------------------------
-        // Esto dependera del superviviente hay  que cambiarlo
-        String [] opcionesArmas = equipo.obtenerNombres().toArray(new String[0]);
+        // Aqui no se crean los supervivientes tiene q haber algo q pille al superviviente jugando
+        Superviviente super1 = new Superviviente("Juan", 120, 12);
+        // ---------------------------------------------------------------
+        String [] opcionesArmas = super1.getInventario().obtenerNombres().toArray(new String[0]);
         listaArmas = new JComboBox(opcionesArmas);
         listaArmas.setBounds(30, 275, 50, 20);
         listaArmas.addItem(" ");
@@ -676,7 +621,7 @@ public void funcionMoverse(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 String seleccion = (String) listaArmas.getSelectedItem();
-                for (Equipo item : equipo.obtenerObjetos()) {
+                for (Equipo item : super1.getInventario().obtenerObjetos()) {
                     if (item instanceof Arma) {
                         Arma arma = (Arma) item;
                         if (arma.getNombre().equals(seleccion)) {
@@ -700,7 +645,7 @@ public void funcionMoverse(){
             public void actionPerformed(ActionEvent e){
                 String seleccion = (String) listaArmas.getSelectedItem();
                 if (!seleccion.equals("Niguna")){
-                    for (Equipo item : equipo.obtenerObjetos()) {
+                    for (Equipo item : super1.getInventario().obtenerObjetos()) {
                         if (item instanceof Arma) {
                             Arma arma = (Arma) item; // Convertir el item a Armas
                             if (arma.getNombre().equals(seleccion)) {
@@ -799,8 +744,8 @@ public void funcionMoverse(){
     }
      
     public void atacarZombieSeleccionado(Arma armaSeleccionada) {
-        int coordenadaXSeleccionada = getCoordenadaXSeleccionada();
-        int coordenadaYSeleccionada = getCoordenadaYSeleccionada();
+        int coordenadaXSeleccionada = tablero.getCoordenadaXSeleccionada();
+        int coordenadaYSeleccionada = tablero.getCoordenadaYSeleccionada();
 
         if (coordenadaXSeleccionada != -1 && coordenadaYSeleccionada != -1) {
             Zombi zombieAtacado = buscarZombie(coordenadaXSeleccionada, coordenadaYSeleccionada);
@@ -819,12 +764,12 @@ public void funcionMoverse(){
                         break;
                     case 1:
                         System.out.println("¡Zombie eliminado!");
-                        botonesTablero[coordenadaYSeleccionada][coordenadaXSeleccionada].setIcon(null);
+                        tablero.botonesTablero[coordenadaYSeleccionada][coordenadaXSeleccionada].setIcon(null);
                         zombies.remove(zombieAtacado);
                         break;
                     case 2:
                         System.out.println("¡Zombie eliminado, pero su sangre tóxica causó daño!");
-                        botonesTablero[coordenadaYSeleccionada][coordenadaXSeleccionada].setIcon(null);
+                        tablero.botonesTablero[coordenadaYSeleccionada][coordenadaXSeleccionada].setIcon(null);
                         zombies.remove(zombieAtacado);
                         break;
                 }
