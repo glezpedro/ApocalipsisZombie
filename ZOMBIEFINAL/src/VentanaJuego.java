@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.List;
+
 
 /*
 boton1 --> botonNuevaPartida
@@ -54,6 +56,8 @@ public class VentanaJuego extends JFrame {
     private int coordenadaXSeleccionada = 0;
     private int coordenadaYSeleccionada = 0;
     private Set<Zombi> zombies;
+    private Equipo inventario; 
+
 
     private Image backgroundImage;
 
@@ -67,6 +71,7 @@ public class VentanaJuego extends JFrame {
         setIconImage(icon.getImage());
 
         zombies = new HashSet<>();
+        inventario = new Equipo();
         colocarPanelMain();
     }
 
@@ -170,6 +175,8 @@ public class VentanaJuego extends JFrame {
         colocarBotonesJuego();
         colocarTablero();
         colocarRadioBotones();
+        colocarListaArmas();  // Llamamos aquí para colocar el JComboBox de armas
+
     }
 
     private void colocarEtiquetasJuego() {
@@ -523,17 +530,16 @@ public class VentanaJuego extends JFrame {
         panelJuego.revalidate();
         panelJuego.repaint();
     }
-
-
+    
     public void funcionAtacar(){
         // Texto Elegir Arma:
-        etiquetaElegirArma = new JLabel("Elegir Arma:", SwingConstants.CENTER); // Creamos etiqueta
-        etiquetaElegirArma.setBounds(30, 245, 100, 30);
-        etiquetaElegirArma.setOpaque(true); // Asi podemos poner background
-        etiquetaElegirArma.setForeground(Color.black);
-        etiquetaElegirArma.setFont(new Font("arial", Font.BOLD, 15)); // estableze el font se puede usar 0123 para typo de letra
-        panelJuego.add(etiquetaElegirArma);
-        etiquetaElegirArma.setOpaque(false);
+        etiqueta1 = new JLabel("Elegir Arma:", SwingConstants.CENTER); // Creamos etiqueta
+        etiqueta1.setBounds(30, 245, 100, 30);
+        etiqueta1.setOpaque(true); // Asi podemos poner background
+        etiqueta1.setForeground(Color.black);
+        etiqueta1.setFont(new Font("arial", Font.BOLD, 15)); // estableze el font se puede usar 0123 para typo de letra
+        panelJuego.add(etiqueta1);
+        etiqueta1.setOpaque(false);
         // Para elegir una de las dos armas que puedan estar activas habra que hacer un if(inv.arma.getActiva.equals(true))
         //String [] opcionesArmas = {Inventario.getArmaActiva().getNombre(),arma2.getNombre(), arma3.getNombre()}; HAY QUE HACERLO ASI MAS O MENOS
         String [] opcionesArmas = {"ArmaActiva1", "ArmaActiva2"};
@@ -572,6 +578,10 @@ public class VentanaJuego extends JFrame {
         };
         botonAtacar.addActionListener(accionBoton4);
     }
+
+
+
+
             
     public void funcionQuedarse(){
         // Boton Moverse
@@ -633,7 +643,10 @@ public class VentanaJuego extends JFrame {
 
         // Obtener inventario del superviviente
         Equipo inventario = superviviente.getInventario();
-        String[] opcionesArmas = inventario.obtenerNombres().toArray(new String[0]);
+
+        // Asegurarse de que obtenerNombres devuelve una lista de nombres de armas
+        List<String> nombresArmas = inventario.obtenerNombres(); // Esto debería devolver una lista de nombres de armas
+        String[] opcionesArmas = nombresArmas.toArray(new String[0]);
 
         // Primer combo box para seleccionar el arma activa 1
         listaArmas = new JComboBox<>(opcionesArmas);
@@ -651,6 +664,7 @@ public class VentanaJuego extends JFrame {
         // Acción para activar el arma seleccionada en listaArmas
         listaArmas.addActionListener(e -> {
             String seleccion = (String) listaArmas.getSelectedItem();
+            // Recorremos los objetos en el inventario para encontrar el arma
             for (Equipo item : inventario.obtenerObjetos()) {
                 if (item instanceof Arma) {
                     Arma arma = (Arma) item;
@@ -666,6 +680,7 @@ public class VentanaJuego extends JFrame {
         // Acción para activar/desactivar el arma seleccionada en listaArmas2
         listaArmas2.addActionListener(e -> {
             String seleccion = (String) listaArmas2.getSelectedItem();
+            // Recorremos los objetos en el inventario para encontrar el arma
             for (Equipo item : inventario.obtenerObjetos()) {
                 if (item instanceof Arma) {
                     Arma arma = (Arma) item;
@@ -698,7 +713,7 @@ public class VentanaJuego extends JFrame {
         });
     }
 
-    
+ 
     public void limpiarPanel() {
     // Limpiar Moverse
         if (botonMoverse != null) {
@@ -754,7 +769,6 @@ public class VentanaJuego extends JFrame {
         return null; // Si no hay ninguna arma seleccionada
     }
     
-    
     public void atacarZombieSeleccionado(Arma armaSeleccionada) {
         if (coordenadaXSeleccionada == -1 || coordenadaYSeleccionada == -1) {
             System.out.println("Por favor, selecciona una casilla antes de atacar.");
@@ -782,7 +796,6 @@ public class VentanaJuego extends JFrame {
         panelJuego.repaint();
     }
 
-
     private Zombi buscarZombie(int x, int y) {
         for (Zombi zombie : zombies) {
             if (zombie.getX() == x && zombie.getY() == y) {
@@ -792,8 +805,27 @@ public class VentanaJuego extends JFrame {
         return null;
     }
       
-    
+    private void colocarListaArmas() {
+        // Obtener las armas activas del inventario
+        List<Arma> armasActivas = inventario.obtenerArmasActivas();
+        DefaultComboBoxModel<String> modeloArmas = new DefaultComboBoxModel<>();
 
-    
+        for (Arma arma : armasActivas) {
+            modeloArmas.addElement(arma.getNombre());
+        }
+
+        listaArmas = new JComboBox<>(modeloArmas);
+        listaArmas.setBounds(30, 240, 150, 20);  // Ajustar posición y tamaño según sea necesario
+        panelJuego.add(listaArmas);
+
+        // Agregar el ActionListener para manejar cuando se seleccione un arma
+        listaArmas.addActionListener(e -> {
+            String nombreArmaSeleccionada = (String) listaArmas.getSelectedItem();
+            if (nombreArmaSeleccionada != null) {
+                inventario.activarArma(nombreArmaSeleccionada);
+            }
+        });
+    }
+
     
 }

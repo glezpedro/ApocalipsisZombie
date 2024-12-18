@@ -10,6 +10,8 @@ public class Provisiones extends Equipo {
         this.valorEnergetico = valorEnergetico;
         this.caducidad = caducidad;
     }
+    
+
 
     // Getters
     @Override

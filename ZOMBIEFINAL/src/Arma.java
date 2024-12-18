@@ -1,8 +1,6 @@
-
-
 import java.util.Random;
 
-public class Arma extends Equipo {
+public class Arma extends Equipo{
     private String nombre;
     private int potencia;
     private int alcance;
@@ -10,6 +8,7 @@ public class Arma extends Equipo {
     private int valorExito;
     private boolean activa;
 
+    // Constructor para inicializar el arma
     public Arma(String nombre, int potencia, int alcance, int numDados, int valorExito) {
         this.nombre = nombre;
         this.potencia = potencia;
@@ -20,7 +19,6 @@ public class Arma extends Equipo {
     }
 
     // Getters y setters
-    @Override
     public String getNombre() {
         return nombre;
     }
@@ -45,6 +43,7 @@ public class Arma extends Equipo {
         return activa;
     }
 
+    // Método para activar el arma
     public void setActiva(boolean activa) {
         this.activa = activa;
     }
