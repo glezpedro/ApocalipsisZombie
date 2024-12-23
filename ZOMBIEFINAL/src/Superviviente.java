@@ -8,6 +8,7 @@ public class Superviviente implements Activable {
     private int coordenadaX;
     private int coordenadaY;
     private boolean envenenado;
+    private boolean isEliminado;
 
     public Superviviente(String nombre, int salud, int maxHeridas) {
         this.nombre = nombre;
@@ -17,6 +18,7 @@ public class Superviviente implements Activable {
         this.envenenado = false; // Estado inicial
         this.coordenadaX = 0; // Posición inicial
         this.coordenadaY = 0;
+        this.isEliminado = false; // Al crearse no esta eliminado
     }
 
     public Equipo getInventario() {
@@ -55,10 +57,13 @@ public class Superviviente implements Activable {
     public int getY(){
         return coordenadaY;
     }
+
+    public boolean isIsEliminado() {
+        return isEliminado;
+    }
     
     @Override
-    public void moverse() {
-        
+    public void moverse() {   
     }
 
     public void atacar(List<Zombi> zombis, Arma arma) {

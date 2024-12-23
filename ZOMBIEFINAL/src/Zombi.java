@@ -81,7 +81,7 @@ public class Zombi implements Serializable, Activable {
         int distanciaMinima = Integer.MAX_VALUE;
 
         for (Superviviente s : supervivientes) {
-            if (s.isEliminado()) continue; // Ignorar supervivientes eliminados
+            if (s.isIsEliminado()) continue; // Ignorar supervivientes eliminados
             int distancia = Math.abs(this.coordenadaX - s.getX()) + Math.abs(this.coordenadaY - s.getY());
             if (distancia < distanciaMinima) {
                 distanciaMinima = distancia;
