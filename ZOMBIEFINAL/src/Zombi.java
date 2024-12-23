@@ -13,13 +13,15 @@ public class Zombi implements Serializable, Activable {
     private boolean vivo;
     private int coordenadaX;
     private int coordenadaY;
+    private String categoria;
 
-    public Zombi(TipoZombie tipo, int x, int y) {
+    public Zombi(TipoZombie tipo, int x, int y, String categoria) {
         this.identificador = contador++;
         this.tipo = tipo;
         this.vivo = true;
         this.coordenadaX = x;
         this.coordenadaY = y;
+        this.categoria = categoria;
         asignarAtributosSegunTipo(tipo);
     }
 
@@ -41,8 +43,18 @@ public class Zombi implements Serializable, Activable {
     }
 
     public static Zombi crearZombiAleatorio() {
+        String categoria = seleccionarCategoriaAleatoria();
         TipoZombie tipoZombi = seleccionarTipoAleatorio();
-        return new Zombi(tipoZombi, random.nextInt(10), random.nextInt(10));
+        return new Zombi(tipoZombi, random.nextInt(10), random.nextInt(10), categoria);
+    }
+
+    private static String seleccionarCategoriaAleatoria() {
+        int probabilidad = random.nextInt(3); // Tres categorías equiprobables
+        switch (probabilidad) {
+            case 0: return "NORMAL";
+            case 1: return "BERSERKER";
+            default: return "TOXICO";
+        }
     }
 
     private static TipoZombie seleccionarTipoAleatorio() {
@@ -56,26 +68,60 @@ public class Zombi implements Serializable, Activable {
         }
     }
 
+
     @Override
-    public void moverse() {
-        /*if (supervivientes.isEmpty()) return;
+    public void moverse(List<Superviviente> supervivientes) {
+        if (supervivientes.isEmpty()) {
+            System.out.println("No hay supervivientes en el tablero.");
+            return;
+        }
 
-        Superviviente objetivo = supervivientes.get(random.nextInt(supervivientes.size()));
-        if (this.coordenadaX < objetivo.getX()) coordenadaX++;
-        else if (this.coordenadaX > objetivo.getX()) coordenadaX--;
+        // Encontrar al superviviente más cercano
+        Superviviente objetivo = null;
+        int distanciaMinima = Integer.MAX_VALUE;
 
-        if (this.coordenadaY < objetivo.getY()) coordenadaY++;
-        else if (this.coordenadaY > objetivo.getY()) coordenadaY--;
+        for (Superviviente s : supervivientes) {
+            if (s.isEliminado()) continue; // Ignorar supervivientes eliminados
+            int distancia = Math.abs(this.coordenadaX - s.getX()) + Math.abs(this.coordenadaY - s.getY());
+            if (distancia < distanciaMinima) {
+                distanciaMinima = distancia;
+                objetivo = s;
+            }
+        }
 
-        System.out.println("El zombi " + identificador + " se mueve a (" + coordenadaX + ", " + coordenadaY + ").");*/
+        if (objetivo == null) {
+            System.out.println("No hay objetivos válidos para el zombi " + identificador);
+            return;
+        }
+
+        System.out.println("El zombi " + identificador + " se dirige hacia el superviviente en (" + objetivo.getX() + ", " + objetivo.getY() + ").");
+
+        // Mover el zombi según su número de activaciones
+        for (int i = 0; i < activaciones; i++) {
+            if (this.coordenadaX < objetivo.getX()) this.coordenadaX++;
+            else if (this.coordenadaX > objetivo.getX()) this.coordenadaX--;
+
+            if (this.coordenadaY < objetivo.getY()) this.coordenadaY++;
+            else if (this.coordenadaY > objetivo.getY()) this.coordenadaY--;
+
+            // Si ya alcanzó al objetivo, detener movimiento
+            if (this.coordenadaX == objetivo.getX() && this.coordenadaY == objetivo.getY()) {
+                System.out.println("El zombi " + identificador + " ha alcanzado al superviviente en (" + coordenadaX + ", " + coordenadaY + ").");
+                break;
+            }
+        }
+
+        System.out.println("El zombi " + identificador + " ahora está en (" + coordenadaX + ", " + coordenadaY + ").");
     }
+
 
     @Override
     public void atacar(List<Superviviente> supervivientes) {
         for (Superviviente s : supervivientes) {
             if (this.coordenadaX == s.getX() && this.coordenadaY == s.getY()) {
-                System.out.println("¡El zombi " + identificador + " ha mordido al superviviente!");
-                s.recibirHerida(this.tipo == TipoZombie.ABOMINACION ? 3 : 1);
+                int danio = (this.tipo == TipoZombie.ABOMINACION) ? 3 : 1;
+                System.out.println("¡El zombi " + identificador + " ha mordido al superviviente causando " + danio + " puntos de daño!");
+                s.aplicarEfectos();
                 return;
             }
         }
@@ -93,21 +139,25 @@ public class Zombi implements Serializable, Activable {
         int potenciaTotal = arma.getPotencia();
         if (potenciaTotal >= aguante) {
             vivo = false;
+            System.out.println("¡El zombi " + identificador + " ha sido eliminado!");
             return 1;
         }
         return 0;
     }
 
-
-
-    
-    public int getX(){
+    public int getX() {
         return coordenadaX;
     }
-    public int getY(){
+
+    public int getY() {
         return coordenadaY;
     }
-    public int getAguante(){
+
+    public int getIdentificador() {
+        return identificador;
+    }
+
+    public int getAguante() {
         return aguante;
     }
 
@@ -115,62 +165,14 @@ public class Zombi implements Serializable, Activable {
         return tipo;
     }
     
-}
 
 
-/*
-    //devuelve 0-sigue viuvo, 1-esta muerto, 2-es toxico
-    public int reaccionAtaques(Armas arma, int distancia) {
-      
-        if (distancia > arma.getAlcance()) {
-            return 0; // Fuera de alcance
-        }
-
-        
-        if (esBerserker() && distancia > 0) {
-            return 0; // Inmune a distancia
-        }
-
-        
-        int exitos = arma.lanzarDados();
-        int potenciaTotal = exitos * arma.getPotencia();
-
-        // Aplicar daño y verificar si el zombie es eliminado
-        if (recibirAtaque(potenciaTotal)) {
-            if (esToxico() && distancia == 0) {
-                return 2; 
-            } else {
-                return 1; 
-            }
-        }
-
-
-        return 0; // No eliminado
+    public String getCategoria() {
+        return categoria;
     }
+
     
-    private boolean recibirAtaque(int potencia) {
-        if (potencia >= aguante) {
-            this.vivo = false;
-            return true;
-        }
-        return false;
-    }
-
     public boolean estaVivo() {
         return vivo;
     }
-
-    private boolean esBerserker() {
-        return tipo == TipoZombie.CAMINANTE_BERSERKER || tipo == TipoZombie.CORREDOR_BERSERKER || tipo == TipoZombie.ABOMINACION_BERSERKER;
-    }
-
-    private boolean esToxico() {
-        return tipo == TipoZombie.CAMINANTE_TOXICO || tipo == TipoZombie.CORREDOR_TOXICO || tipo == TipoZombie.ABOMINACION_TOXICO;
-    }
-
-    
-    public boolean puedeSerEliminado(int potenciaArma){
-        return potenciaArma >= aguante;
-    }
-    
-*/
+}
