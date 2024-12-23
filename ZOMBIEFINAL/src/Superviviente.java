@@ -20,11 +20,7 @@ public class Superviviente implements Activable {
         this.coordenadaY = 0;
         this.isEliminado = false; // Al crearse no esta eliminado
     }
-
-    public Equipo getInventario() {
-        return inventario;
-    }
-
+    
     public void recibirHerida(int n) {
         salud -= n;
         if (salud <= 0) {
@@ -51,9 +47,18 @@ public class Superviviente implements Activable {
         return new int[]{coordenadaX, coordenadaY};
     }
 
+    public Equipo getInventario() {
+        return inventario;
+    }
+
+    public int getSalud() {
+        return salud;
+    }
+    
     public int getX(){
         return coordenadaX;
     }
+    
     public int getY(){
         return coordenadaY;
     }
@@ -84,4 +89,5 @@ public class Superviviente implements Activable {
     public void atacar(List<Superviviente> supervivientes) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
 }

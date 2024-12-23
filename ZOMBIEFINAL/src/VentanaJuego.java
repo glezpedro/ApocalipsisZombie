@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 import javax.swing.*;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
@@ -18,14 +17,14 @@ public class VentanaJuego extends JFrame{
     private int contadorTurnos; 
     private final int numZombies = 3;
     private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar;
-    private JLabel etiqueta1, etiqueta2, etiqueta3, etiquetaTurnos;
+    private JLabel etiqueta1, etiqueta2, etiqueta3, etiquetaTurnos, etiquetaStatus;
     private JComboBox<String> listaArmas,listaArmas2, listaActivas;    
     public Set<Zombi> zombies;
+    public Set<Superviviente> supervivientes;
     Tablero tablero;
     
     //private Armas armaSeleccionada; // Agregamos esta variable para el arma seleccionada
 
-   
     public VentanaJuego(){
         setSize(450,450);
         setLocationRelativeTo(null); //Pone la ventana en el centro
@@ -217,6 +216,7 @@ public class VentanaJuego extends JFrame{
         etiquetaTurnos.setFont(new Font("chiller", Font.BOLD, 25)); // estableze el font se puede usar 0123 para typo de letra
         panelJuego.add(etiquetaTurnos);
         etiquetaTurnos.setOpaque(false);
+       
     }
     
     private void colocarBotonesJuego(){
@@ -379,7 +379,6 @@ public class VentanaJuego extends JFrame{
     private void colocarEtiquetasSimular(){
         JLabel etiqueta1 = new JLabel("Zombie Game", SwingConstants.CENTER); // Creamos etiqueta
         etiqueta1.setBounds(25, 30, 400, 65);
-        etiqueta1.setOpaque(true); // Asi podemos poner background
         etiqueta1.setForeground(Color.white);
         etiqueta1.setFont(new Font("chiller", Font.BOLD, 80)); // estableze el font se puede usar 0123 para typo de letra
         panelSimular.add(etiqueta1);
@@ -408,7 +407,6 @@ public class VentanaJuego extends JFrame{
     }
 
     public void colocarZombiesInicio(){
-        Random rand = new Random();
         Set<Point> posicionesUsadas = new HashSet<>();
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
         ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
@@ -447,7 +445,6 @@ public class VentanaJuego extends JFrame{
     }
     
     public void colocarZombieFinDeRonda(){
-        Random rand = new Random();
         Set<Point> posicionesUsadas = new HashSet<>();
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
         ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
@@ -760,6 +757,10 @@ public class VentanaJuego extends JFrame{
         if (listaArmas2 != null) {
             panelJuego.remove(listaArmas2);
         }
+    // Limpia Status            
+        if (etiquetaStatus != null) {
+            panelJuego.remove(etiquetaStatus);
+        }
     // Actualizar la interfaz
     panelJuego.revalidate();
     panelJuego.repaint();
@@ -826,5 +827,53 @@ public class VentanaJuego extends JFrame{
             }
         }
         return null;
-    }   
+    }  
+    
+    private Superviviente buscarSuperviviente(int x, int y) {
+        for (Superviviente superviviente : supervivientes) {
+            if (superviviente.getX() == x && superviviente.getY() == y) {
+                return superviviente;
+            }
+        }
+        return null;
+    } 
+    
+    public void statusCasilla(){
+        int x = tablero.getCoordenadaXSeleccionada();
+        int y = tablero.getCoordenadaYSeleccionada();
+        // Variable para almacenar la información
+        String contenido;
+        // Obtener el objeto de la casilla
+        Casilla casilla = tablero.tablero[x][y];
+
+        if (casilla.tieneZombie()) {
+            Zombi zombi = buscarZombie(x, y); // Método que retorna el zombi
+            contenido = "<html>Contiene: Zombi<br>Tipo: " + zombi.getTipo() + "</html>";
+        }
+        else if (casilla.tieneSuperviviente()) {
+            Superviviente superviviente = buscarSuperviviente(x, y); // Método que retorna el superviviente
+            contenido += "<html>Contiene: Superviviente<br>Vida: " + superviviente.getSalud() +
+                        "<br>Inventario: " + superviviente.getInventario() + "</html>";
+        }
+        else {
+            contenido = "<html>Casilla vacia.</html>";
+        }
+        
+        if (etiquetaStatus == null) {
+        etiquetaStatus = new JLabel(contenido, SwingConstants.CENTER);
+        etiquetaStatus.setBounds(12, 220, 150, 110); // Ajusta el tamaño y posición
+        etiquetaStatus.setForeground(Color.black);
+        etiquetaStatus.setFont(new Font("Chiller", Font.BOLD, 20));
+        etiquetaStatus.setOpaque(false);
+        etiquetaStatus.setBackground(Color.white);
+
+        // Agregar la nueva etiqueta al panel (solo una vez)
+        panelJuego.add(etiquetaStatus);
+    } else {
+        // Si la etiqueta ya existe, solo actualiza el texto
+        etiquetaStatus.setText(contenido);
+    }
+        panelJuego.revalidate();
+        panelJuego.repaint();    
+    }
 }

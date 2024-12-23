@@ -53,6 +53,7 @@ public class Tablero {
                         coordenadaYSeleccionada = columna;
                         System.out.println("Coordenadas seleccionadas: X=" + fila + ", Y=" + columna);
                         MuestraDatos();
+                        ventana.statusCasilla();
                         ventana.actualizarEtiquetaCoordenadas(coordenadaXSeleccionada, coordenadaYSeleccionada);
                     }
                 });
