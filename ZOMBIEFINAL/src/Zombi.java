@@ -69,7 +69,6 @@ public class Zombi implements Serializable, Activable {
     }
 
 
-    @Override
     public void moverse(List<Superviviente> supervivientes) {
         if (supervivientes.isEmpty()) {
             System.out.println("No hay supervivientes en el tablero.");
@@ -174,5 +173,10 @@ public class Zombi implements Serializable, Activable {
     
     public boolean estaVivo() {
         return vivo;
+    }
+
+    @Override
+    public void moverse() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
