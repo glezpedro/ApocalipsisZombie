@@ -68,7 +68,6 @@ public class Zombi implements Serializable, Activable {
         }
     }
 
-
     public void moverse(List<Superviviente> supervivientes) {
         if (supervivientes.isEmpty()) {
             System.out.println("No hay supervivientes en el tablero.");
