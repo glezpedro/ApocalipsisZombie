@@ -152,7 +152,7 @@ public class VentanaJuego extends JFrame{
                     colocarPanelJuego();
                     actualizarEtiquetaTurnos(contadorTurnos);
                     for (Zombi zombie : zombies) {
-                        tablero.botonesTablero[zombie.getX()][zombie.getY()].setIcon(new ImageIcon(getClass().getResource("/resources/zombie2.png")));
+                        tablero.botonesTablero[zombie.getX()][zombie.getY()].setIcon(new ImageIcon(getClass().getResource("/resources/zombiN.png")));
                     }
                     System.out.println("Partida cargada correctamente.");
                 } catch (Exception ex) {
@@ -410,7 +410,15 @@ public class VentanaJuego extends JFrame{
     public void colocarZombiesInicio(){
         Random rand = new Random();
         Set<Point> posicionesUsadas = new HashSet<>();
-        ImageIcon IconoZombi = new ImageIcon(getClass().getResource("/resources/zombie2.png"));
+        ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
+        ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
+        ImageIcon IconoZombiNC = new ImageIcon(getClass().getResource("/resources/zombiNC.png"));
+        ImageIcon IconoZombiT = new ImageIcon(getClass().getResource("/resources/zombiT.png"));
+        ImageIcon IconoZombiTA = new ImageIcon(getClass().getResource("/resources/zombiTA.png"));
+        ImageIcon IconoZombiTC = new ImageIcon(getClass().getResource("/resources/zombiTC.png"));
+        ImageIcon IconoZombiB = new ImageIcon(getClass().getResource("/resources/zombiB.png"));
+        ImageIcon IconoZombiBA = new ImageIcon(getClass().getResource("/resources/zombiBA.png"));
+        ImageIcon IconoZombiBC = new ImageIcon(getClass().getResource("/resources/zombiBC.png"));
         
         for (int i = 0; i < numZombies; i++) {
                         
@@ -422,8 +430,16 @@ public class VentanaJuego extends JFrame{
             zombies.add(nuevoZombie);
             posicionesUsadas.add(new Point(nuevoZombie.getX(), nuevoZombie.getY()));
             
-            
-            tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombi.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("CAMINANTE") || nuevoZombie.getTipo().equals("NORMAL")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiN.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("CAMINANTE") || nuevoZombie.getTipo().equals("TOXICO")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiT.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("CAMINANTE") || nuevoZombie.getTipo().equals("BERSEKER")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiB.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("CORREDOR") || nuevoZombie.getTipo().equals("NORMAL")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiNC.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("CORREDOR") || nuevoZombie.getTipo().equals("TOXICO")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiTC.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("CORREDOR") || nuevoZombie.getTipo().equals("BERSEKER")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiBC.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("ABOMINACION") || nuevoZombie.getTipo().equals("NORMAL")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiNA.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("ABOMINACION") || nuevoZombie.getTipo().equals("TOXICO")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiTA.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+            if (nuevoZombie.getTipo().equals("ABOMINACION") || nuevoZombie.getTipo().equals("BERSEKER")) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiBA.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+
             tablero.tablero[nuevoZombie.getX()][nuevoZombie.getY()].setHayZombie(true);
         }
     }
@@ -431,7 +447,7 @@ public class VentanaJuego extends JFrame{
     public void colocarZombieFinDeRonda(){
         Random rand = new Random();
         Set<Point> posicionesUsadas = new HashSet<>();
-        ImageIcon IconoZombi = new ImageIcon(getClass().getResource("/resources/zombieN.png"));
+        ImageIcon IconoZombi = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
                
         Zombi nuevoZombie;
         do{

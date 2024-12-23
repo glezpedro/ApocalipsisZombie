@@ -110,6 +110,10 @@ public class Zombi implements Serializable, Activable {
     public int getAguante(){
         return aguante;
     }
+
+    public TipoZombie getTipo() {
+        return tipo;
+    }
     
 }
 
