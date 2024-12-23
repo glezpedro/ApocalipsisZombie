@@ -841,36 +841,37 @@ public class VentanaJuego extends JFrame{
     public void statusCasilla(){
         int x = tablero.getCoordenadaXSeleccionada();
         int y = tablero.getCoordenadaYSeleccionada();
-        // Variable para almacenar la información
-        String contenido;
-        // Obtener el objeto de la casilla
+
+        String contenido = "<html>";
+
         Casilla casilla = tablero.tablero[x][y];
 
         if (casilla.tieneZombie()) {
-            Zombi zombi = buscarZombie(x, y); // Método que retorna el zombi
-            contenido = "<html>Contiene: Zombi<br>Tipo: " + zombi.getTipo() + "</html>";
+            Zombi zombi = buscarZombie(x, y);
+            contenido += "Contiene: Zombi<br>Tipo: " + zombi.getTipo()
+                        +"<br>Categoria: "+ zombi.getCategoria();
         }
         else if (casilla.tieneSuperviviente()) {
-            Superviviente superviviente = buscarSuperviviente(x, y); // Método que retorna el superviviente
-            contenido += "<html>Contiene: Superviviente<br>Vida: " + superviviente.getSalud() +
-                        "<br>Inventario: " + superviviente.getInventario() + "</html>";
+            Superviviente superviviente = buscarSuperviviente(x, y);
+            contenido += "Contiene: Superviviente<br>Vida: " + superviviente.getSalud() +
+                        "<br>Inventario: " + superviviente.getInventario();
         }
         else {
-            contenido = "<html>Casilla vacia.</html>";
+            contenido += "Casilla vacia.";
         }
+        
+        contenido += "</html>";
         
         if (etiquetaStatus == null) {
         etiquetaStatus = new JLabel(contenido, SwingConstants.CENTER);
-        etiquetaStatus.setBounds(12, 220, 150, 110); // Ajusta el tamaño y posición
+        etiquetaStatus.setBounds(12, 230, 150, 110);
         etiquetaStatus.setForeground(Color.black);
-        etiquetaStatus.setFont(new Font("Chiller", Font.BOLD, 20));
+        etiquetaStatus.setFont(new Font("Chiller", Font.BOLD, 17));
         etiquetaStatus.setOpaque(false);
         etiquetaStatus.setBackground(Color.white);
 
-        // Agregar la nueva etiqueta al panel (solo una vez)
         panelJuego.add(etiquetaStatus);
     } else {
-        // Si la etiqueta ya existe, solo actualiza el texto
         etiquetaStatus.setText(contenido);
     }
         panelJuego.revalidate();
