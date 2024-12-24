@@ -58,6 +58,10 @@ public class Superviviente implements Activable {
     public int getSalud() {
         return salud;
     }
+    public String getNombre() {
+        return nombre;
+    }
+    
     
     public int getX(){
         return coordenadaX;

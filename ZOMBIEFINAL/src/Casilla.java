@@ -24,4 +24,5 @@ public class Casilla {
     public boolean tieneZombie() {
         return hayZombie;
     }
+    
 }

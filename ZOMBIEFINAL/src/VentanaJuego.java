@@ -24,6 +24,8 @@ public class VentanaJuego extends JFrame{
     Set<Point> posicionesUsadas = new HashSet<>();
     Tablero tablero;
     private List<Superviviente> supervivientes;
+    private int metaX;
+    private int metaY;
 
     
     //private Armas armaSeleccionada; // Agregamos esta variable para el arma seleccionada
@@ -466,6 +468,8 @@ public class VentanaJuego extends JFrame{
                     
         zombies.add(nuevoZombie);
         posicionesUsadas.add(new Point(nuevoZombie.getX(), nuevoZombie.getY()));
+        System.out.println("Zombie creado: " + nuevoZombie.getCategoria() + ", " + nuevoZombie.getTipo()+", X: "+ nuevoZombie.getX()+", Y: "+ nuevoZombie.getY());
+
             
         if (nuevoZombie.getCategoria().equals("NORMAL") && nuevoZombie.getTipo() == TipoZombie.CAMINANTE) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiN.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
         if (nuevoZombie.getCategoria().equals("TOXICO") && nuevoZombie.getTipo() == TipoZombie.CAMINANTE) tablero.botonesTablero[nuevoZombie.getX()][nuevoZombie.getY()].setIcon(new ImageIcon(IconoZombiT.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
@@ -482,20 +486,49 @@ public class VentanaJuego extends JFrame{
     
     public void colocarSupervivientes() {
         ImageIcon iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/hombre.png"));
+        ImageIcon iconoMeta = new ImageIcon(getClass().getResource("/resources/meta.png"));
+
         supervivientes = Superviviente.crearSupervivientes();
-        
+
         for (Superviviente superviviente : supervivientes) {
-            posicionesUsadas.add(new Point(superviviente.getX(), superviviente.getY()));
-            tablero.botonesTablero[superviviente.getX()][superviviente.getY()].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+            int x = superviviente.getX();
+            int y = superviviente.getY();
+
+            posicionesUsadas.add(new Point(x, y));
+
+            tablero.botonesTablero[x][y].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+
             JLabel etiquetaSuperviviente = new JLabel(iconoSuperviviente);
-                etiquetaSuperviviente.setBounds(superviviente.getX() * 50, superviviente.getY() * 50, 50, 50);
-                panelJuego.add(etiquetaSuperviviente);
+            etiquetaSuperviviente.setBounds(x * 50, y * 50, 50, 50);  
+            panelJuego.add(etiquetaSuperviviente);
+            System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: "+ superviviente.getX()+", Y: "+ superviviente.getY());
 
+            tablero.tablero[superviviente.getX()][superviviente.getY()].setHaySuperviviente(true);
 
-        panelJuego.repaint(); 
+            if (x == 0 && y == 0) {
+                tablero.botonesTablero[9][9].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+                metaX = 9;
+                metaY = 9;
+            } else if (x == 9 && y == 9) {
+                tablero.botonesTablero[0][0].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+                metaX = 0;
+                metaY = 0;
+            } else if (x == 9 && y == 0) {
+                tablero.botonesTablero[0][9].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+                metaX = 0;
+                metaY = 9;
+            } else if (x == 0 && y == 9) {
+                tablero.botonesTablero[9][0].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+                metaX = 9;
+                metaY = 0;
+            }
+        }
+        panelJuego.revalidate();
+        panelJuego.repaint();
     }
-    }
 
+    
+    
 
 
     
@@ -866,11 +899,17 @@ public class VentanaJuego extends JFrame{
 
         int x = tablero.getCoordenadaXSeleccionada();
         int y = tablero.getCoordenadaYSeleccionada();
+        boolean esMeta = false;
 
         StringBuilder contenido = new StringBuilder("<html>");
 
         Casilla casilla = tablero.tablero[x][y];
 
+        if(metaX == x && metaY == y){
+            contenido.append("ESA ES LA META.");
+            esMeta = true;
+        }
+        
         if (casilla.tieneZombie()) {
             Zombi zombi = buscarZombie(x, y); 
             contenido.append("Contiene: Zombi<br>")
@@ -879,13 +918,13 @@ public class VentanaJuego extends JFrame{
         }
 
         if (casilla.tieneSuperviviente()) {
-            Superviviente superviviente = buscarSuperviviente(x, y);
+            Superviviente superviviente1 = buscarSuperviviente(x, y);
             contenido.append("Contiene: Superviviente<br>")
-                 .append("Vida: ").append(superviviente.getSalud()).append("<br>")
-                 .append("Inventario: ").append(superviviente.getInventario()).append("<br>");
+                 .append("Vida: ").append(superviviente1.getSalud()).append("<br>")
+                 .append("Inventario: ").append(superviviente1.getInventario()).append("<br>");
         }
 
-        if (!casilla.tieneZombie() && !casilla.tieneSuperviviente()) {
+        if (!casilla.tieneZombie() && !casilla.tieneSuperviviente() && !esMeta) {
             contenido.append("Casilla vacía.");
         }
 
