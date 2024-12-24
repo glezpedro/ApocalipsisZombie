@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.List;
 
 public class VentanaJuego extends JFrame{
     public JPanel panel, panelJuego, panelSimular, panelTablero;
@@ -20,8 +21,10 @@ public class VentanaJuego extends JFrame{
     private JLabel etiqueta1, etiqueta2, etiqueta3, etiquetaTurnos, etiquetaStatus;
     private JComboBox<String> listaArmas,listaArmas2, listaActivas;    
     public Set<Zombi> zombies;
-    public Set<Superviviente> supervivientes;
+    Set<Point> posicionesUsadas = new HashSet<>();
     Tablero tablero;
+    private List<Superviviente> supervivientes;
+
     
     //private Armas armaSeleccionada; // Agregamos esta variable para el arma seleccionada
 
@@ -71,6 +74,7 @@ public class VentanaJuego extends JFrame{
         colocarBotonesJuego();
         colocarRadioBotones();
         tablero.colocarTablero();
+        colocarSupervivientes();
     }
 
     private void colocarPanelSimular() {
@@ -302,7 +306,7 @@ public class VentanaJuego extends JFrame{
                 panelJuego.repaint();
                 funcionAtacar();
                 
-                Arma armaSeleccionada = getArmaSeleccionada();
+/*                Arma armaSeleccionada = getArmaSeleccionada();
 
                 // Verifica que haya un arma seleccionada
                 if (armaSeleccionada != null) {
@@ -314,6 +318,7 @@ public class VentanaJuego extends JFrame{
                     funcionAtacar();
                     System.out.println("Por favor, selecciona un arma antes de atacar.");
                 }
+*/
             }
         };
         radioBoton2.addActionListener(accionAtacar);
@@ -407,7 +412,6 @@ public class VentanaJuego extends JFrame{
     }
 
     public void colocarZombiesInicio(){
-        Set<Point> posicionesUsadas = new HashSet<>();
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
         ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
         ImageIcon IconoZombiNC = new ImageIcon(getClass().getResource("/resources/zombiNC.png"));
@@ -445,7 +449,6 @@ public class VentanaJuego extends JFrame{
     }
     
     public void colocarZombieFinDeRonda(){
-        Set<Point> posicionesUsadas = new HashSet<>();
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
         ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
         ImageIcon IconoZombiNC = new ImageIcon(getClass().getResource("/resources/zombiNC.png"));
@@ -476,6 +479,25 @@ public class VentanaJuego extends JFrame{
 
         tablero.tablero[nuevoZombie.getX()][nuevoZombie.getY()].setHayZombie(true); 
     }
+    
+    public void colocarSupervivientes() {
+        ImageIcon iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/hombre.png"));
+        supervivientes = Superviviente.crearSupervivientes();
+        
+        for (Superviviente superviviente : supervivientes) {
+            posicionesUsadas.add(new Point(superviviente.getX(), superviviente.getY()));
+            tablero.botonesTablero[superviviente.getX()][superviviente.getY()].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+            JLabel etiquetaSuperviviente = new JLabel(iconoSuperviviente);
+                etiquetaSuperviviente.setBounds(superviviente.getX() * 50, superviviente.getY() * 50, 50, 50);
+                panelJuego.add(etiquetaSuperviviente);
+
+
+        panelJuego.repaint(); 
+    }
+    }
+
+
+
     
     public void actualizarTurno() {
         contadorTurnos++;
@@ -829,13 +851,13 @@ public class VentanaJuego extends JFrame{
         return null;
     }  
     
-    private Superviviente buscarSuperviviente(int x, int y) {
+    private Superviviente buscarSuperviviente(List<Superviviente> supervivientes, int x, int y) {
         for (Superviviente superviviente : supervivientes) {
             if (superviviente.getX() == x && superviviente.getY() == y) {
-                return superviviente;
+                return superviviente; 
             }
         }
-        return null;
+        return null; 
     } 
     
     public void statusCasilla(){
@@ -852,7 +874,7 @@ public class VentanaJuego extends JFrame{
                         +"<br>Categoria: "+ zombi.getCategoria();
         }
         else if (casilla.tieneSuperviviente()) {
-            Superviviente superviviente = buscarSuperviviente(x, y);
+        Superviviente superviviente = buscarSuperviviente(supervivientes, x, y);
             contenido += "Contiene: Superviviente<br>Vida: " + superviviente.getSalud() +
                         "<br>Inventario: " + superviviente.getInventario();
         }

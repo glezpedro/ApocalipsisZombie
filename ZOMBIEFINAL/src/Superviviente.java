@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 
 public class Superviviente implements Activable {
     private String nombre;
@@ -9,6 +12,7 @@ public class Superviviente implements Activable {
     private int coordenadaY;
     private boolean envenenado;
     private boolean isEliminado;
+    private final int NUM_SUPERVIVIENTES = 4;
 
     public Superviviente(String nombre, int salud, int maxHeridas) {
         this.nombre = nombre;
@@ -85,6 +89,34 @@ public class Superviviente implements Activable {
         System.out.println("No hay zombis en el alcance.");
     }
 
+    public static List<Superviviente> crearSupervivientes() {
+        List<Superviviente> supervivientes = new ArrayList<>();
+        String[] colores = {"Rojo", "Azul", "Verde", "Amarillo"};
+        int[][] coordenadas = {
+            {0, 0}, {10, 0}, {0, 10}, {10, 10}
+        };
+
+        Random random = new Random();
+
+        int[] coordenadaSeleccionada = coordenadas[random.nextInt(coordenadas.length)];
+
+        for (String nombre : colores) {
+            int salud = random.nextInt(50) + 50;
+            int maxHeridas = random.nextInt(3) + 3;
+            Superviviente superviviente = new Superviviente(nombre, salud, maxHeridas);
+
+            superviviente.coordenadaX = coordenadaSeleccionada[0];
+            superviviente.coordenadaY = coordenadaSeleccionada[1];
+
+            supervivientes.add(superviviente);
+        }
+
+        return supervivientes;
+    }
+
+    
+    
+    
     @Override
     public void atacar(List<Superviviente> supervivientes) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
