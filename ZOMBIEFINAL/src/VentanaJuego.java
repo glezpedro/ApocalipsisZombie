@@ -782,6 +782,7 @@ public class VentanaJuego extends JFrame{
     // Limpia Status            
         if (etiquetaStatus != null) {
             panelJuego.remove(etiquetaStatus);
+            etiquetaStatus = null;
         }
     // Actualizar la interfaz
     panelJuego.revalidate();
@@ -851,7 +852,7 @@ public class VentanaJuego extends JFrame{
         return null;
     }  
     
-    private Superviviente buscarSuperviviente(List<Superviviente> supervivientes, int x, int y) {
+    private Superviviente buscarSuperviviente(int x, int y) {
         for (Superviviente superviviente : supervivientes) {
             if (superviviente.getX() == x && superviviente.getY() == y) {
                 return superviviente; 
@@ -861,31 +862,36 @@ public class VentanaJuego extends JFrame{
     } 
     
     public void statusCasilla(){
+        limpiarPanel(); 
+
         int x = tablero.getCoordenadaXSeleccionada();
         int y = tablero.getCoordenadaYSeleccionada();
 
-        String contenido = "<html>";
+        StringBuilder contenido = new StringBuilder("<html>");
 
         Casilla casilla = tablero.tablero[x][y];
 
         if (casilla.tieneZombie()) {
-            Zombi zombi = buscarZombie(x, y);
-            contenido += "Contiene: Zombi<br>Tipo: " + zombi.getTipo()
-                        +"<br>Categoria: "+ zombi.getCategoria();
+            Zombi zombi = buscarZombie(x, y); 
+            contenido.append("Contiene: Zombi<br>")
+                 .append("Tipo: ").append(zombi.getTipo()).append("<br>")
+                 .append("Categoria: ").append(zombi.getCategoria()).append("<br>");
         }
-        else if (casilla.tieneSuperviviente()) {
-        Superviviente superviviente = buscarSuperviviente(supervivientes, x, y);
-            contenido += "Contiene: Superviviente<br>Vida: " + superviviente.getSalud() +
-                        "<br>Inventario: " + superviviente.getInventario();
+
+        if (casilla.tieneSuperviviente()) {
+            Superviviente superviviente = buscarSuperviviente(x, y);
+            contenido.append("Contiene: Superviviente<br>")
+                 .append("Vida: ").append(superviviente.getSalud()).append("<br>")
+                 .append("Inventario: ").append(superviviente.getInventario()).append("<br>");
         }
-        else {
-            contenido += "Casilla vacia.";
+
+        if (!casilla.tieneZombie() && !casilla.tieneSuperviviente()) {
+            contenido.append("Casilla vacía.");
         }
+
+        contenido.append("</html>");
         
-        contenido += "</html>";
-        
-        if (etiquetaStatus == null) {
-        etiquetaStatus = new JLabel(contenido, SwingConstants.CENTER);
+        etiquetaStatus = new JLabel(contenido.toString(), SwingConstants.CENTER);
         etiquetaStatus.setBounds(12, 230, 150, 110);
         etiquetaStatus.setForeground(Color.black);
         etiquetaStatus.setFont(new Font("Chiller", Font.BOLD, 17));
@@ -893,9 +899,6 @@ public class VentanaJuego extends JFrame{
         etiquetaStatus.setBackground(Color.white);
 
         panelJuego.add(etiquetaStatus);
-    } else {
-        etiquetaStatus.setText(contenido);
-    }
         panelJuego.revalidate();
         panelJuego.repaint();    
     }
