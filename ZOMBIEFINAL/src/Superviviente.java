@@ -93,10 +93,10 @@ public class Superviviente implements Activable {
         List<Superviviente> supervivientes = new ArrayList<>();
         String[] colores = {"Rojo", "Azul", "Verde", "Amarillo"};
         int[][] coordenadas = {
-            {0, 0}, {10, 0}, {0, 10}, {10, 10}
+            {0, 0}, {9, 0}, {0, 9}, {9, 9}
         };
 
-        Random random = new Random();
+        Random random = new Random(4);
 
         int[] coordenadaSeleccionada = coordenadas[random.nextInt(coordenadas.length)];
 
