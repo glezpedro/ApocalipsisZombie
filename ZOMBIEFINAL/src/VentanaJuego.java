@@ -15,11 +15,14 @@ import java.util.List;
 public class VentanaJuego extends JFrame{
     public JPanel panel, panelJuego, panelSimular, panelTablero;
     private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular;
-    private int contadorTurnos; 
+    private int contadorTurnos = 0;
+    private int turno = 1;
     private final int numZombies = 3;
     private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar;
-    private JLabel etiqueta1, etiqueta2, etiqueta3, etiquetaTurnos, etiquetaStatus;
-    private JComboBox<String> listaArmas,listaArmas2, listaActivas;    
+    private JLabel etiqueta1, etiqueta2, etiqueta3, etiquetaTurnos;
+    private JComboBox<String> listaArmas,listaArmas2, listaActivas;  
+    private JTextArea etiquetaStatus;
+    private JScrollPane scrollPanel;
     public Set<Zombi> zombies;
     Set<Point> posicionesUsadas = new HashSet<>();
     Tablero tablero;
@@ -27,7 +30,6 @@ public class VentanaJuego extends JFrame{
     private int metaX;
     private int metaY;
 
-    
     //private Armas armaSeleccionada; // Agregamos esta variable para el arma seleccionada
 
     public VentanaJuego(){
@@ -527,15 +529,11 @@ public class VentanaJuego extends JFrame{
         panelJuego.repaint();
     }
 
-    
-    
-
-
-    
     public void actualizarTurno() {
-        contadorTurnos++;
+        contadorTurnos ++;
+        turno = (contadorTurnos - 1) / 3 + 1;
         if (etiquetaTurnos != null) {
-            actualizarEtiquetaTurnos(contadorTurnos);
+            actualizarEtiquetaTurnos(turno);
         } else {
             System.out.println("Error: etiquetaTurnos no está inicializada.");
         }
@@ -582,9 +580,8 @@ public class VentanaJuego extends JFrame{
                @Override
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Moviendose");
-                   contadorTurnos++;
+                   actualizarTurno();
                    colocarZombieFinDeRonda();
-                   etiquetaTurnos.setText("Turno: "+ contadorTurnos);
            }
         };
         Moverse.addActionListener(accionBoton4);
@@ -630,9 +627,8 @@ public class VentanaJuego extends JFrame{
                @Override
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Atacando");
-                   contadorTurnos++;
+                   actualizarTurno();
                    colocarZombieFinDeRonda();
-                   etiquetaTurnos.setText("Turno: "+ contadorTurnos);
            }
         };
         Atacar.addActionListener(accionBoton4);
@@ -654,9 +650,8 @@ public class VentanaJuego extends JFrame{
                @Override
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Siguiente Turno");
-                   contadorTurnos++;
+                   actualizarTurno();
                    colocarZombieFinDeRonda();
-                   etiquetaTurnos.setText("Turno: "+ contadorTurnos);
            }
         };
         SiguienteTurno.addActionListener(accionBoton4);
@@ -678,9 +673,8 @@ public class VentanaJuego extends JFrame{
                @Override
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Buscando");//Aqui hay q poner que el booleano en el inventario o arma sea true (armaActiva = true)
-                   contadorTurnos++;
+                   actualizarTurno();
                    colocarZombieFinDeRonda();
-                   etiquetaTurnos.setText("Turno: "+ contadorTurnos);
            }
         };
         Buscar.addActionListener(accionBoton4);
@@ -761,9 +755,8 @@ public class VentanaJuego extends JFrame{
                @Override
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Armas Seleccionadas");//Aqui hay q poner que el booleano en el inventario o arma sea true (armaActiva = true)
-                   contadorTurnos++;
+                   actualizarTurno();
                    colocarZombieFinDeRonda();
-                   etiquetaTurnos.setText("Turno: "+ contadorTurnos);
            }
         };
         Seleccionar.addActionListener(accionBoton4);
@@ -816,6 +809,11 @@ public class VentanaJuego extends JFrame{
         if (etiquetaStatus != null) {
             panelJuego.remove(etiquetaStatus);
             etiquetaStatus = null;
+        }
+        
+        if (scrollPanel != null) {
+            panelJuego.remove(scrollPanel);
+            scrollPanel = null;
         }
     // Actualizar la interfaz
     panelJuego.revalidate();
@@ -901,44 +899,51 @@ public class VentanaJuego extends JFrame{
         int y = tablero.getCoordenadaYSeleccionada();
         boolean esMeta = false;
 
-        StringBuilder contenido = new StringBuilder("<html>");
+        String contenido = "";
 
         Casilla casilla = tablero.tablero[x][y];
 
         if(metaX == x && metaY == y){
-            contenido.append("ESA ES LA META.");
+            contenido = "ESA ES LA META.";
             esMeta = true;
         }
         
         if (casilla.tieneZombie()) {
-            Zombi zombi = buscarZombie(x, y); 
-            contenido.append("Contiene: Zombi<br>")
-                 .append("Tipo: ").append(zombi.getTipo()).append("<br>")
-                 .append("Categoria: ").append(zombi.getCategoria()).append("<br>");
+            Zombi zombi = buscarZombie(x, y); // Method to return the zombie
+            contenido += "Contiene: Zombi\nTipo: " + zombi.getTipo()+"\nCategoria: "+ zombi.getCategoria();
         }
 
         if (casilla.tieneSuperviviente()) {
-            Superviviente superviviente1 = buscarSuperviviente(x, y);
-            contenido.append("Contiene: Superviviente<br>")
-                 .append("Vida: ").append(superviviente1.getSalud()).append("<br>")
-                 .append("Inventario: ").append(superviviente1.getInventario()).append("<br>");
+            if (casilla.tieneZombie()) contenido += "\n\n"; // Add spacing if there's already a zombie
+                Superviviente superviviente = buscarSuperviviente(x, y); // Method to return the survivor
+                contenido += "Contiene: Superviviente\nVida: " + superviviente.getSalud() +
+                     "\nInventario: " + superviviente.getInventario().obtenerNombres();
         }
 
         if (!casilla.tieneZombie() && !casilla.tieneSuperviviente() && !esMeta) {
-            contenido.append("Casilla vacía.");
+            contenido = "Contiene: Vacío";
         }
 
-        contenido.append("</html>");
-        
-        etiquetaStatus = new JLabel(contenido.toString(), SwingConstants.CENTER);
-        etiquetaStatus.setBounds(12, 230, 150, 110);
+        // Set up JTextArea
+        etiquetaStatus = new JTextArea(contenido);
+        etiquetaStatus.setEditable(false);
+        etiquetaStatus.setLineWrap(true);
+        etiquetaStatus.setWrapStyleWord(true);
         etiquetaStatus.setForeground(Color.black);
         etiquetaStatus.setFont(new Font("Chiller", Font.BOLD, 17));
         etiquetaStatus.setOpaque(false);
-        etiquetaStatus.setBackground(Color.white);
 
-        panelJuego.add(etiquetaStatus);
+    // Set up JScrollPane
+        scrollPanel = new JScrollPane(etiquetaStatus);
+        scrollPanel.setBounds(22, 245, 130, 86);
+        scrollPanel.setOpaque(false);
+        scrollPanel.getViewport().setOpaque(false);
+        scrollPanel.setBorder(null);
+
+        panelJuego.add(scrollPanel);
+
+    // Refresh panel
         panelJuego.revalidate();
-        panelJuego.repaint();    
+        panelJuego.repaint();   
     }
 }
