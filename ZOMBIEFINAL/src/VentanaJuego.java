@@ -772,9 +772,12 @@ public class VentanaJuego extends JFrame{
             superviviente.getInventario().agregarItem();
             actualizarTurno();
             colocarZombieFinDeRonda();
-            } 
-        } else System.out.println("Seleccione un Superviviente valido.");
+        }
+        }else {
+            actualizarEtiqueta("Seleccione una casilla con Superviviente.");
+        }
     }
+
     
     public void limpiarPanel() {
     // Limpiar Moverse
@@ -797,7 +800,6 @@ public class VentanaJuego extends JFrame{
         if (listaActivas != null) {
             panelJuego.remove(listaActivas);
         }
-
     // Limpiar Quedarse
         if (SiguienteTurno != null) {
             panelJuego.remove(SiguienteTurno);
@@ -907,7 +909,6 @@ public class VentanaJuego extends JFrame{
     } 
     
     public void statusCasilla(){
-        limpiarPanel(); 
 
         int x = tablero.getCoordenadaXSeleccionada();
         int y = tablero.getCoordenadaYSeleccionada();
@@ -918,27 +919,30 @@ public class VentanaJuego extends JFrame{
         Casilla casilla = tablero.tablero[x][y];
 
         if(metaX == x && metaY == y){
-            contenido = "ESA ES LA META.";
+            contenido = "Es la Meta.";
             esMeta = true;
         }
         
         if (casilla.tieneZombie()) {
-            Zombi zombi = buscarZombie(x, y); // Method to return the zombie
+            Zombi zombi = buscarZombie(x, y);
             contenido += "Contiene: Zombi\nTipo: " + zombi.getTipo()+"\nCategoria: "+ zombi.getCategoria();
         }
 
         if (casilla.tieneSuperviviente()) {
-            if (casilla.tieneZombie()) contenido += "\n\n"; // Add spacing if there's already a zombie
-                Superviviente superviviente = buscarSuperviviente(x, y); // Method to return the survivor
+            if (casilla.tieneZombie()) contenido += "\n\n"; 
+                Superviviente superviviente = buscarSuperviviente(x, y); 
                 contenido += "Contiene: Superviviente\nVida: " + superviviente.getSalud() +
                      "\nInventario: " + superviviente.getInventario().obtenerNombres();
         }
 
         if (!casilla.tieneZombie() && !casilla.tieneSuperviviente() && !esMeta) {
-            contenido = "Contiene: Vacío";
+            contenido = "Casilla Vacia.";
         }
-
-        // Set up JTextArea
+        actualizarEtiqueta(contenido);  
+    }
+    
+    public void actualizarEtiqueta(String contenido){
+        limpiarPanel();
         etiquetaStatus = new JTextArea(contenido);
         etiquetaStatus.setEditable(false);
         etiquetaStatus.setLineWrap(true);
@@ -946,18 +950,15 @@ public class VentanaJuego extends JFrame{
         etiquetaStatus.setForeground(Color.black);
         etiquetaStatus.setFont(new Font("Chiller", Font.BOLD, 17));
         etiquetaStatus.setOpaque(false);
-
-    // Set up JScrollPane
+        
         scrollPanel = new JScrollPane(etiquetaStatus);
         scrollPanel.setBounds(22, 245, 130, 86);
         scrollPanel.setOpaque(false);
         scrollPanel.getViewport().setOpaque(false);
         scrollPanel.setBorder(null);
-
         panelJuego.add(scrollPanel);
 
-    // Refresh panel
         panelJuego.revalidate();
-        panelJuego.repaint();   
+        panelJuego.repaint(); 
     }
 }
