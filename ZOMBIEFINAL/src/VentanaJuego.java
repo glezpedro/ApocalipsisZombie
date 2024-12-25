@@ -672,9 +672,8 @@ public class VentanaJuego extends JFrame{
         ActionListener accionBoton4 = new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent e) {
-                   System.out.println("Buscando");//Aqui hay q poner que el booleano en el inventario o arma sea true (armaActiva = true)
-                   actualizarTurno();
-                   colocarZombieFinDeRonda();
+                   System.out.println("Buscando");
+                   buscar();
            }
         };
         Buscar.addActionListener(accionBoton4);
@@ -760,6 +759,21 @@ public class VentanaJuego extends JFrame{
            }
         };
         Seleccionar.addActionListener(accionBoton4);
+    }
+    
+    public void buscar (){
+        int x = tablero.getCoordenadaXSeleccionada();
+        int y = tablero.getCoordenadaYSeleccionada();
+
+        Superviviente superviviente = buscarSuperviviente(x, y);
+        
+        if (superviviente != null) {
+            if (superviviente.getInventario() != null) {
+            superviviente.getInventario().agregarItem();
+            actualizarTurno();
+            colocarZombieFinDeRonda();
+            } 
+        } else System.out.println("Seleccione un Superviviente valido.");
     }
     
     public void limpiarPanel() {

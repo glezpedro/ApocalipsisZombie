@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Equipo {
     private static final int MAX_OBJETOS = 5; // Límite del inventario general
@@ -35,26 +36,38 @@ public class Equipo {
     }
 
     // Método para añadir un objeto al inventario
-    public void agregarItem(Object item) {
-        // Crear armas y agregarlas al inventario
+     public void agregarItem() {
+    if (objetos.size() >= MAX_OBJETOS) {
+        System.out.println("Número máximo de objetos alcanzado. No se pueden agregar más elementos.");
+    } else {
+        // Crear armas y provisiones
         Arma espada = new Arma("Espada", 1, 0, 1, 2);
         Arma pistola = new Arma("Pistola", 2, 1, 3, 3);
         Arma rifle = new Arma("Rifle", 3, 2, 5, 5);
 
-        // Agregar las armas a la lista de armas activas
-        armas.add(espada);
-        armas.add(pistola);
-        armas.add(rifle);
-
-        // Crear provisiones y agregarlas al inventario
         Provisiones agua = new Provisiones("Agua", 0, "2025-12-31");
         Provisiones barritaEnergetica = new Provisiones("Barrita Energética", 250, "2024-08-15");
         Provisiones galletas = new Provisiones("Galletas de avena", 150, "2026-01-10");
 
-        objetos.add(agua);
-        objetos.add(barritaEnergetica);
-        objetos.add(galletas);
+        // Crear lista de objetos posibles
+        List<Object> posiblesItems = new ArrayList<>();
+        posiblesItems.add(espada);
+        posiblesItems.add(pistola);
+        posiblesItems.add(rifle);
+        posiblesItems.add(agua);
+        posiblesItems.add(barritaEnergetica);
+        posiblesItems.add(galletas);
+
+        // Seleccionar un objeto aleatorio
+        Random random = new Random();
+        int indexAleatorio = random.nextInt(posiblesItems.size());
+        Object itemRandom = posiblesItems.get(indexAleatorio);
+
+        // Agregar al inventario si aún hay espacio
+        objetos.add((Equipo) itemRandom);
+        System.out.println("Se agregó al inventario: " + itemRandom.toString());
     }
+}
 
     // Método que será sobrescrito en clases hijas para obtener el nombre del equipo
     public String getNombre() {

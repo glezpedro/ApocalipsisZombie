@@ -11,8 +11,6 @@ public class Provisiones extends Equipo {
         this.caducidad = caducidad;
     }
     
-
-
     // Getters
     @Override
     public String getNombre() {
