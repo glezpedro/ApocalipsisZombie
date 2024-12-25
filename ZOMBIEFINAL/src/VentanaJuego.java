@@ -772,6 +772,7 @@ public class VentanaJuego extends JFrame{
             superviviente.getInventario().agregarItem();
             actualizarTurno();
             colocarZombieFinDeRonda();
+            actualizarEtiqueta("Se ha encontrado "+ superviviente.getInventario().obtenerNombres().getLast());
         }
         }else {
             actualizarEtiqueta("Seleccione una casilla con Superviviente.");

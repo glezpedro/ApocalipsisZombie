@@ -65,7 +65,7 @@ public class Equipo {
 
         // Agregar al inventario si aún hay espacio
         objetos.add((Equipo) itemRandom);
-        System.out.println("Se agregó al inventario: " + itemRandom.toString());
+        System.out.println("Se añadio al inventario " + objetos.getLast().getNombre());
     }
 }
 
