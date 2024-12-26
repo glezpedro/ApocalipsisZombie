@@ -15,7 +15,7 @@ import java.util.List;
 public class VentanaJuego extends JFrame{
     public JPanel panel, panelJuego, panelSimular, panelTablero;
     private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular;
-    private int contadorTurnos = 0;
+    private int contadorTurnos = -1;
     private int turno = 1;
     private final int numZombies = 3;
     private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar;
@@ -544,7 +544,6 @@ public class VentanaJuego extends JFrame{
         }
     }
 
-
     public void actualizarEtiquetaTurnos(int turno) {
         if (etiquetaTurnos != null) {
             etiquetaTurnos.setText("Turno: " + turno);
@@ -692,10 +691,14 @@ public class VentanaJuego extends JFrame{
         etiqueta1.setFont(new Font("arial", Font.CENTER_BASELINE, 12)); // estableze el font se puede usar 0123 para typo de letra
         panelJuego.add(etiqueta1);
         etiqueta1.setOpaque(false);
-        // Aqui no se crean los supervivientes tiene q haber algo q pille al superviviente jugando
-        Superviviente super1 = new Superviviente("Juan", 120, 12);
+
+        int x = tablero.getCoordenadaXSeleccionada();
+        int y = tablero.getCoordenadaYSeleccionada();
+        Superviviente superviviente = buscarSuperviviente(x,y);
         // ---------------------------------------------------------------
-        String [] opcionesArmas = super1.getInventario().obtenerNombres().toArray(new String[0]);
+        if (superviviente != null) {
+            if (!superviviente.getInventario().obtenerObjetos().isEmpty()) {
+        String [] opcionesArmas = superviviente.getInventario().obtenerNombres().toArray(new String[0]);
         listaArmas = new JComboBox(opcionesArmas);
         listaArmas.setBounds(30, 275, 50, 20);
         listaArmas.addItem(" ");
@@ -705,7 +708,7 @@ public class VentanaJuego extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 String seleccion = (String) listaArmas.getSelectedItem();
-                for (Equipo item : super1.getInventario().obtenerObjetos()) {
+                for (Equipo item : superviviente.getInventario().obtenerObjetos()) {
                     if (item instanceof Arma) {
                         Arma arma = (Arma) item;
                         if (arma.getNombre().equals(seleccion)) {
@@ -729,7 +732,7 @@ public class VentanaJuego extends JFrame{
             public void actionPerformed(ActionEvent e){
                 String seleccion = (String) listaArmas.getSelectedItem();
                 if (!seleccion.equals("Niguna")){
-                    for (Equipo item : super1.getInventario().obtenerObjetos()) {
+                    for (Equipo item : superviviente.getInventario().obtenerObjetos()) {
                         if (item instanceof Arma) {
                             Arma arma = (Arma) item; // Convertir el item a Armas
                             if (arma.getNombre().equals(seleccion)) {
@@ -762,6 +765,10 @@ public class VentanaJuego extends JFrame{
            }
         };
         Seleccionar.addActionListener(accionBoton4);
+        }else actualizarEtiqueta("Superviviente sin armas.");
+        }else {
+            actualizarEtiqueta("Seleccione una casilla con Superviviente.");
+        }
     }
     
     public void buscar (){
@@ -774,7 +781,6 @@ public class VentanaJuego extends JFrame{
             if (superviviente.getInventario() != null) {
             superviviente.getInventario().agregarItem();
             actualizarTurno();
-            colocarZombieFinDeRonda();
             actualizarEtiqueta("Se ha encontrado "+ superviviente.getInventario().obtenerNombres().getLast());
         }
         }else {
