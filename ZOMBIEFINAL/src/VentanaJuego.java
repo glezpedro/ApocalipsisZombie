@@ -530,14 +530,20 @@ public class VentanaJuego extends JFrame{
     }
 
     public void actualizarTurno() {
-        contadorTurnos ++;
-        turno = (contadorTurnos - 1) / 3 + 1;
+        contadorTurnos++;
+        int nuevoTurno = (contadorTurnos - 1) / 3 + 1;
+
         if (etiquetaTurnos != null) {
-            actualizarEtiquetaTurnos(turno);
+            actualizarEtiquetaTurnos(nuevoTurno);
+        }
+        if (nuevoTurno > turno) {
+            turno = nuevoTurno; 
+            colocarZombieFinDeRonda();
         } else {
-            System.out.println("Error: etiquetaTurnos no está inicializada.");
+            turno = nuevoTurno;
         }
     }
+
 
     public void actualizarEtiquetaTurnos(int turno) {
         if (etiquetaTurnos != null) {
@@ -581,7 +587,6 @@ public class VentanaJuego extends JFrame{
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Moviendose");
                    actualizarTurno();
-                   colocarZombieFinDeRonda();
            }
         };
         Moverse.addActionListener(accionBoton4);
@@ -628,7 +633,6 @@ public class VentanaJuego extends JFrame{
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Atacando");
                    actualizarTurno();
-                   colocarZombieFinDeRonda();
            }
         };
         Atacar.addActionListener(accionBoton4);
@@ -651,7 +655,6 @@ public class VentanaJuego extends JFrame{
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Siguiente Turno");
                    actualizarTurno();
-                   colocarZombieFinDeRonda();
            }
         };
         SiguienteTurno.addActionListener(accionBoton4);
@@ -674,6 +677,7 @@ public class VentanaJuego extends JFrame{
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Buscando");
                    buscar();
+                   actualizarTurno();
            }
         };
         Buscar.addActionListener(accionBoton4);
@@ -755,7 +759,6 @@ public class VentanaJuego extends JFrame{
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Armas Seleccionadas");//Aqui hay q poner que el booleano en el inventario o arma sea true (armaActiva = true)
                    actualizarTurno();
-                   colocarZombieFinDeRonda();
            }
         };
         Seleccionar.addActionListener(accionBoton4);
@@ -778,8 +781,7 @@ public class VentanaJuego extends JFrame{
             actualizarEtiqueta("Seleccione una casilla con Superviviente.");
         }
     }
-
-    
+ 
     public void limpiarPanel() {
     // Limpiar Moverse
         if (Moverse != null) {
