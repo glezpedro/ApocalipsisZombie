@@ -101,6 +101,7 @@ public class VentanaJuego extends JFrame{
         colocarEtiquetasSimular();
         colocarBotonesSimular();
         tablero.colocarTablero2();
+        colocarRadioBotonesSim();
     }
 
     private void colocarEtiquetasMain (){
@@ -389,6 +390,53 @@ public class VentanaJuego extends JFrame{
        grupoRadioBotones.add(radioBoton5);
 
     }
+     private void colocarRadioBotonesSim(){
+       JRadioButton radioBoton10 = new JRadioButton("Añadir Zombi", false); // El booleano es para saber si aparece seleccionado o no
+       radioBoton10.setBounds(20, 140, 150, 15);
+       radioBoton10.setOpaque(false);
+       ActionListener accionAñadirZombi = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               limpiarPanel();
+               panelSimular.revalidate(); //para que se muestre en pantalla
+               panelSimular.repaint();
+           }
+       };
+       panelSimular.add(radioBoton10);
+       JRadioButton radioBoton11 = new JRadioButton("Añadir Superviviente", false);
+       radioBoton11.setBounds(20, 160, 130, 15);
+       radioBoton11.setOpaque(false);
+       ActionListener accionAñadirSuperviviente = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Limpia el panel de opciones
+                limpiarPanel();
+                panelSimular.revalidate();
+                panelSimular.repaint();
+            }
+       };
+       panelSimular.add(radioBoton11);
+       JRadioButton radioBoton12 = new JRadioButton("Atacar", false);
+       radioBoton12.setBounds(20, 180, 150, 15);
+       radioBoton12.setOpaque(false);
+       ActionListener accionAtacar = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Limpia el panel de opciones
+                limpiarPanel();
+                panelSimular.revalidate();
+                panelSimular.repaint();
+                funcionAtacar();
+                    }
+        };
+        radioBoton12.addActionListener(accionAtacar);
+        panelSimular.add(radioBoton12);
+        
+        ButtonGroup grupoRadioBotonesSim = new ButtonGroup();
+       grupoRadioBotonesSim.add(radioBoton10);
+       grupoRadioBotonesSim.add(radioBoton11);
+       grupoRadioBotonesSim.add(radioBoton12);
+     }
     
     private void colocarEtiquetasSimular(){
         JLabel etiqueta1 = new JLabel("Zombie Game", SwingConstants.CENTER); // Creamos etiqueta
@@ -397,6 +445,13 @@ public class VentanaJuego extends JFrame{
         etiqueta1.setFont(new Font("chiller", Font.BOLD, 80)); // estableze el font se puede usar 0123 para typo de letra
         panelSimular.add(etiqueta1);
         etiqueta1.setOpaque(false);
+        JLabel etiqueta2 = new JLabel("Simulación", SwingConstants.CENTER);
+        etiqueta2.setBounds(35, 105, 100, 35);
+        etiqueta2.setForeground(Color.black);
+        etiqueta2.setFont(new Font("chiller", Font.BOLD, 31)); // estableze el font se puede usar 0123 para typo de letra
+        panelSimular.add(etiqueta2);
+        etiqueta2.setOpaque(false);
+        
     }    
     
     private void colocarBotonesSimular(){
@@ -419,7 +474,6 @@ public class VentanaJuego extends JFrame{
        };
        Atras.addActionListener(accionBoton4);
     }
-
     public void colocarZombiesInicio(){
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
         ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
