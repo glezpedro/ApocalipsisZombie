@@ -15,7 +15,7 @@ import java.util.List;
 public class VentanaJuego extends JFrame{
     public JPanel panel, panelJuego, panelSimular, panelTablero;
     private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular;
-    private int contadorTurnos = -1;
+    private int contadorTurnos;
     private int turno = 1;
     private final int numZombies = 3;
     private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar;
@@ -216,8 +216,8 @@ public class VentanaJuego extends JFrame{
         panelJuego.add(etiqueta);
         etiqueta.setOpaque(false);
         // Etiqueta Turnos
-        contadorTurnos = 1;
-        etiquetaTurnos = new JLabel("Turno: "+ contadorTurnos, SwingConstants.CENTER); // Creamos etiqueta
+        contadorTurnos = 0;
+        etiquetaTurnos = new JLabel("Turno: 1", SwingConstants.CENTER); // Creamos etiqueta
         etiquetaTurnos.setBounds(30, 105, 100, 35);
         etiquetaTurnos.setOpaque(true); // Asi podemos poner background
         etiquetaTurnos.setForeground(Color.black);
