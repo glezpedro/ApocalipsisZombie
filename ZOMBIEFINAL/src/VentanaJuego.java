@@ -558,7 +558,6 @@ public class VentanaJuego extends JFrame{
         panelJuego.repaint();
     }
 
-
     public void actualizarTurno() {
         contadorTurnos++;
         int nuevoTurno = (contadorTurnos - 1) / 3 + 1;
@@ -729,7 +728,7 @@ public class VentanaJuego extends JFrame{
         // ---------------------------------------------------------------
         if (superviviente != null) {
             if (!superviviente.getInventario().obtenerObjetos().isEmpty()) {
-        String [] opcionesArmas = superviviente.getInventario().obtenerNombres().toArray(new String[0]);
+        String [] opcionesArmas = superviviente.getInventario().obtenerNombresArmas().toArray(new String[0]);
         listaArmas = new JComboBox(opcionesArmas);
         listaArmas.setBounds(30, 275, 50, 20);
         listaArmas.addItem(" ");
@@ -743,7 +742,7 @@ public class VentanaJuego extends JFrame{
                     if (item instanceof Arma) {
                         Arma arma = (Arma) item;
                         if (arma.getNombre().equals(seleccion)) {
-                            arma.setActiva(true);
+                            arma.activarArma(seleccion);
                             System.out.println("Arma activada: " + arma.getNombre());
                         }
                     }
@@ -752,6 +751,8 @@ public class VentanaJuego extends JFrame{
         };
 
         listaArmas.addActionListener(accionLista1);
+        
+        
         panelJuego.add(listaArmas); 
         // Segunda opccion activa
         listaArmas2 = new JComboBox(opcionesArmas);
@@ -763,13 +764,12 @@ public class VentanaJuego extends JFrame{
             public void actionPerformed(ActionEvent e){
                 String seleccion = (String) listaArmas.getSelectedItem();
                 if (!seleccion.equals("Niguna")){
-                    for (Equipo item : superviviente.getInventario().obtenerObjetos()) {
-                        if (item instanceof Arma) {
+                    for (Equipo item : superviviente.getInventario().obtenerArmas()) {
                             Arma arma = (Arma) item; // Convertir el item a Armas
                             if (arma.getNombre().equals(seleccion)) {
-                                arma.setActiva(true);
+                                arma.activarArma(seleccion);
                                 System.out.println("Arma activada: " + arma.getNombre());
-                            }
+                            
                         }
                     }
                 }
@@ -1000,8 +1000,7 @@ public class VentanaJuego extends JFrame{
 
         panelJuego.revalidate();
         panelJuego.repaint(); 
-    }
-    
+    } 
     
     public void moverSuperviviente(int x, int y, String color){
         
