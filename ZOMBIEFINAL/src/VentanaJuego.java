@@ -100,6 +100,7 @@ public class VentanaJuego extends JFrame{
         
         colocarEtiquetasSimular();
         colocarBotonesSimular();
+        tablero.colocarTablero2();
     }
 
     private void colocarEtiquetasMain (){
