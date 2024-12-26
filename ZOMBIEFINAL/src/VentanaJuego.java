@@ -10,7 +10,9 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.List;
+
 
 public class VentanaJuego extends JFrame{
     public JPanel panel, panelJuego, panelSimular, panelTablero;
@@ -26,7 +28,7 @@ public class VentanaJuego extends JFrame{
     public Set<Zombi> zombies;
     Set<Point> posicionesUsadas = new HashSet<>();
     Tablero tablero;
-    private List<Superviviente> supervivientes;
+    private List<Superviviente> supervivientes = new ArrayList<>();
     private int metaX;
     private int metaY;
 
@@ -487,26 +489,51 @@ public class VentanaJuego extends JFrame{
     }
     
     public void colocarSupervivientes() {
-        ImageIcon iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/hombre.png"));
+        // Usar los íconos de los colores de los supervivientes
         ImageIcon iconoMeta = new ImageIcon(getClass().getResource("/resources/meta.png"));
 
+        // Crear la lista de supervivientes
         supervivientes = Superviviente.crearSupervivientes();
 
         for (Superviviente superviviente : supervivientes) {
             int x = superviviente.getX();
             int y = superviviente.getY();
+            String color = superviviente.getNombre().toLowerCase();  // Usar el nombre del superviviente como color
 
+            // Asignar el ícono según el color del superviviente
+            ImageIcon iconoSuperviviente = null;
+            switch (color) {
+                case "rojo":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
+                    break;
+                case "azul":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/azul.png"));
+                    break;
+                case "verde":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/verde.png"));
+                    break;
+                case "amarillo":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/amarillo.png"));
+                    break;
+            }
+
+            // Marcar la posición ocupada por el superviviente
             posicionesUsadas.add(new Point(x, y));
 
+            // Colocar el icono del superviviente en el tablero
             tablero.botonesTablero[x][y].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
 
+            // Crear la etiqueta visual para el superviviente
             JLabel etiquetaSuperviviente = new JLabel(iconoSuperviviente);
-            etiquetaSuperviviente.setBounds(x * 50, y * 50, 50, 50);  
+            etiquetaSuperviviente.setBounds(x * 50, y * 50, 50, 50);
             panelJuego.add(etiquetaSuperviviente);
-            System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: "+ superviviente.getX()+", Y: "+ superviviente.getY());
 
-            tablero.tablero[superviviente.getX()][superviviente.getY()].setHaySuperviviente(true);
+            System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: " + x + ", Y: " + y);
 
+            // Marcar que hay un superviviente en esa casilla
+            tablero.tablero[x][y].setHaySuperviviente(true);
+
+            // Colocar la meta en la esquina opuesta a los supervivientes
             if (x == 0 && y == 0) {
                 tablero.botonesTablero[9][9].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
                 metaX = 9;
@@ -525,9 +552,12 @@ public class VentanaJuego extends JFrame{
                 metaY = 0;
             }
         }
+
+        // Actualizar la interfaz gráfica
         panelJuego.revalidate();
         panelJuego.repaint();
     }
+
 
     public void actualizarTurno() {
         contadorTurnos++;
@@ -585,6 +615,7 @@ public class VentanaJuego extends JFrame{
                @Override
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Moviendose");
+                   //moverSuperviviente(tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada(), superviviente.getNombre());
                    actualizarTurno();
            }
         };
@@ -940,7 +971,7 @@ public class VentanaJuego extends JFrame{
         if (casilla.tieneSuperviviente()) {
             if (casilla.tieneZombie()) contenido += "\n\n"; 
                 Superviviente superviviente = buscarSuperviviente(x, y); 
-                contenido += "Contiene: Superviviente\nVida: " + superviviente.getSalud() +
+                contenido += "Contiene:" + superviviente.getNombre() + "\nVida: " + superviviente.getSalud() +
                      "\nInventario: " + superviviente.getInventario().obtenerNombres();
         }
 
@@ -969,5 +1000,10 @@ public class VentanaJuego extends JFrame{
 
         panelJuego.revalidate();
         panelJuego.repaint(); 
+    }
+    
+    
+    public void moverSuperviviente(int x, int y, String color){
+        
     }
 }
