@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 
 public class Superviviente implements Activable {
@@ -19,7 +20,11 @@ public class Superviviente implements Activable {
     private static int index = 0; // Controla el progreso de los colores
     private static final Random random = new Random(4);
     private static int[] coordenadaSeleccionada = null;
+    private int viejaX;
+    private int viejaY;
 
+
+    private int accionesDisponibles = 3;  
 
 
     public Superviviente(String nombre, int salud, int maxHeridas) {
@@ -175,6 +180,80 @@ public class Superviviente implements Activable {
     @Override
     public int hashCode() {
         return nombre.hashCode();
+    }
+
+    
+    public int getViejaX(){
+        return viejaX;
+    }
+    public int getViejaY(){
+        return viejaY;
+    }
+    
+    
+    public boolean mover(int nuevaX, int nuevaY, Set<Zombi> zombis, Tablero tablero) {
+        // Validación: si el movimiento está fuera del tablero
+        if (nuevaX < 0 || nuevaY < 0 || nuevaX >= 10 || nuevaY >= 10){
+            System.out.println("Movimiento fuera de los límites del tablero.");
+            return false;
+        }
+        viejaX = tablero.coordenadaXSeleccionada;
+        viejaY = tablero.coordenadaYSeleccionada;
+
+        
+        // Verificar si hay zombis en la casilla de origen (coordenada actual)
+        int zombisEnCasilla = contarZombisEnCasilla(coordenadaX, coordenadaY, zombis);
+
+        // Si hay zombis, se gastan tantas acciones extra como zombis en la casilla de origen
+        if (zombisEnCasilla > 0) {
+            int accionesNecesarias = zombisEnCasilla;  // Cada zombi requiere una acción extra
+            if (accionesDisponibles < accionesNecesarias) {
+                System.out.println("No hay suficientes acciones para mover debido a los zombis.");
+                return false;  // No hay suficientes acciones
+            } else {
+                accionesDisponibles -= accionesNecesarias;  // Restar las acciones extra
+            }
+        }
+
+        // Realizar el movimiento si hay suficientes acciones
+        coordenadaX = nuevaX;
+        coordenadaY = nuevaY;
+
+        System.out.println(nombre + " se ha movido a la casilla (" + nuevaX + ", " + nuevaY + ").");
+
+        return true;
+    }
+
+    // Método para contar los zombis en la casilla de origen
+    private int contarZombisEnCasilla(int x, int y, Set<Zombi> zombis) {
+        int contador = 0;
+        for (Zombi zombi : zombis) {
+            // Supongo que el método getCoordenadas() te da las coordenadas del zombi
+            int[] coordenadasZombi = zombi.getCoordenadas();
+            if (coordenadasZombi[0] == x && coordenadasZombi[1] == y) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+    
+    
+    public boolean gastarAccion() {
+        if (accionesDisponibles > 0) {
+            accionesDisponibles--;
+            return true;
+        } else {
+            System.out.println(nombre + " no tiene acciones disponibles.");
+            return false;
+        }
+    }
+
+    public void resetearAcciones() {
+        accionesDisponibles = 3; // Al comenzar el siguiente turno, se reinician las acciones
+    }
+
+    public int getAccionesDisponibles() {
+        return accionesDisponibles;
     }
 
     
