@@ -689,6 +689,7 @@ public class VentanaJuego extends JFrame{
         };
         Moverse.addActionListener(accionBoton4);
     }
+    
     private boolean esMovimientoValido(int xActual, int yActual, int nuevaX, int nuevaY) {
         int deltaX = nuevaX - xActual;
         int deltaY = nuevaY - yActual;
