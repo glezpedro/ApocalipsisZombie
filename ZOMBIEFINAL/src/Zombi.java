@@ -173,7 +173,10 @@ public class Zombi implements Serializable, Activable {
     }
 
     @Override
-    public void moverse() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void moverse(int x, int y) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    
+    
 }

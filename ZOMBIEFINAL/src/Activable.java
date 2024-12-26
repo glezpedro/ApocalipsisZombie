@@ -3,7 +3,7 @@ import java.util.List;
 
 
 public interface Activable {
-    void moverse();
+    void moverse(int x, int y);
     void atacar(List<Superviviente> supervivientes);
     int[] getCoordenadas();
 }
