@@ -28,6 +28,7 @@ public class Tablero {
         ventana.panelTablero.setLayout(new GridLayout(10,10));
         ventana.panelTablero.setBounds(190,115,210,210);
         ventana.panelJuego.add(ventana.panelTablero);
+        
 
         Border border = BorderFactory.createLineBorder(Color.black, 1);
         
@@ -61,6 +62,44 @@ public class Tablero {
             }     
         }
         ventana.colocarZombiesInicio();
+    }
+    public void colocarTablero2(){
+        ventana.panelTablero = new JPanel();
+        ventana.panelTablero.setLayout(new GridLayout(10,10));
+        ventana.panelTablero.setBounds(190,115,210,210);
+        ventana.panelSimular.add(ventana.panelTablero);
+
+        Border border = BorderFactory.createLineBorder(Color.black, 1);
+        
+        tablero = new Casilla[filasColumnas][filasColumnas];
+        botonesTablero = new JButton[filasColumnas][filasColumnas];
+        
+        for (int i = 0; i < filasColumnas; i++) {
+            for (int j = 0; j < filasColumnas; j++) {
+                JButton button = new JButton();
+                button.setBorder(border);
+                button.setBackground(Color.red);
+                button.setOpaque(false); 
+                botonesTablero[i][j] = button;
+                tablero[i][j] = new Casilla(new Coordenada(i, j));
+                final int fila = i;
+                final int columna = j;
+                
+                // Al hacer clic, guardar las coordenadas seleccionadas
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        coordenadaXSeleccionada = fila;
+                        coordenadaYSeleccionada = columna;
+                        System.out.println("Coordenadas seleccionadas: X=" + fila + ", Y=" + columna);
+                        MuestraDatos();
+                        ventana.statusCasilla();
+                        ventana.actualizarEtiquetaCoordenadas(coordenadaXSeleccionada, coordenadaYSeleccionada);
+                    }
+                });
+                ventana.panelTablero.add(button);
+            }     
+        }
     }
     
     public int getCoordenadaXSeleccionada(){
