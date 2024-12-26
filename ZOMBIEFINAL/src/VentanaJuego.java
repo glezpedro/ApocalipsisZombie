@@ -31,6 +31,8 @@ public class VentanaJuego extends JFrame{
     private List<Superviviente> supervivientes = new ArrayList<>();
     private int metaX;
     private int metaY;
+    private int indiceActual = 0;
+    private int accionesTotales = 0;
 
     //private Armas armaSeleccionada; // Agregamos esta variable para el arma seleccionada
 
@@ -613,14 +615,114 @@ public class VentanaJuego extends JFrame{
         Moverse.setBorderPainted(false);
 
         ActionListener accionBoton4 = new ActionListener() {
-               @Override
-               public void actionPerformed(ActionEvent e) {
-                   System.out.println("Moviendose");
-                   //moverSuperviviente(tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada(), superviviente.getNombre());
-                   actualizarTurno();
-           }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+
+                // Obtener las coordenadas seleccionadas para mover
+                int nuevaX = tablero.getCoordenadaXSeleccionada();
+                int nuevaY = tablero.getCoordenadaYSeleccionada();
+                
+                int viejaX = supervivienteActual.getViejaX();
+                int viejaY = supervivienteActual.getViejaY();
+
+                boolean movimientoValido = esMovimientoValido(viejaX, viejaY, nuevaX, nuevaY);
+
+                // Verificar si el superviviente tiene acciones disponibles y el movimiento es válido
+                
+                //DEBERIA DE SER ASI NO FUNCIONA
+                //if (supervivienteActual.gastarAccion() && movimientoValido) {
+
+                if (supervivienteActual.gastarAccion()) {
+                    // Mover al superviviente
+                    supervivienteActual.moverse(nuevaX, nuevaY);
+
+                    String color = supervivienteActual.getNombre().toLowerCase();
+                    ImageIcon iconoSuperviviente = null;
+
+                    // Cambiar el icono según el color del superviviente
+                    switch (color) {
+                        case "rojo":
+                            iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
+                            break;
+                        case "azul":
+                            iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/azul.png"));
+                            break;
+                        case "verde":
+                            iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/verde.png"));
+                            break;
+                        case "amarillo":
+                            iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/amarillo.png"));
+                            break;
+                    }
+
+                    // Actualizar la interfaz gráfica
+                    tablero.botonesTablero[nuevaX][nuevaY].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+                    tablero.botonesTablero[viejaX][viejaY].setIcon(null);
+                    panelJuego.revalidate();
+                    panelJuego.repaint();
+
+                    // Mostrar cuántas acciones le quedan al superviviente
+                    System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                } else {
+                    System.out.println("Movimiento no válido o acciones agotadas.");
+                }
+
+                // Comprobar si el superviviente ha agotado sus acciones
+                if (supervivienteActual.getAccionesDisponibles() == 0) {
+                    // Pasar al siguiente superviviente
+                    indiceActual++;
+                    if (indiceActual >= supervivientes.size()) {
+                        indiceActual = 0; // Volver al inicio de la lista
+                    }
+
+                    // Reiniciar las acciones del siguiente superviviente
+                    Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+                    siguienteSuperviviente.resetearAcciones();
+
+                    // Imprimir información sobre el siguiente turno
+                    System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                }
+
+                // Actualizar el turno en la interfaz
+                actualizarTurno();
+            }
         };
         Moverse.addActionListener(accionBoton4);
+    }
+    private boolean esMovimientoValido(int xActual, int yActual, int nuevaX, int nuevaY) {
+        int deltaX = nuevaX - xActual;
+        int deltaY = nuevaY - yActual;
+
+        // Movimiento válido solo si es adyacente (horizontal, vertical o diagonal)
+        return (Math.abs(deltaX) <= 1 && Math.abs(deltaY) <= 1);
+    }
+    
+    public void actualizarTablero() {
+        // Limpiar el tablero visual (en caso de que sea necesario)
+        panelJuego.removeAll();
+
+        // Reemplazar el icono del superviviente en la nueva posición
+        for (Superviviente s : supervivientes) {
+            int x = s.getX();
+            int y = s.getY();
+
+            // Actualizar los botones y la interfaz con los nuevos iconos
+            ImageIcon iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/" + s.getNombre() + ".png"));
+            tablero.botonesTablero[x][y].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+
+            JLabel etiquetaSuperviviente = new JLabel(iconoSuperviviente);
+            etiquetaSuperviviente.setBounds(x * 50, y * 50, 50, 50);  
+            panelJuego.add(etiquetaSuperviviente);
+
+            // Actualizar si el superviviente está en la nueva casilla
+            tablero.tablero[x][y].setHaySuperviviente(true);
+        }
+
+        // Refrescar el panel para mostrar los cambios
+        panelJuego.revalidate();
+        panelJuego.repaint();
     }
 
     public void funcionAtacar(){
@@ -997,7 +1099,24 @@ public class VentanaJuego extends JFrame{
     }
     
     
-    public void moverSuperviviente(int x, int y, String color){
+    public void moverSuperviviente(Superviviente superviviente, int nuevaX, int nuevaY) {
+        // Llamar al método de movimiento del superviviente
+        boolean seMovio = superviviente.mover(nuevaX, nuevaY, zombies, tablero);
         
+        if (seMovio) {
+            // Si el movimiento fue exitoso, actualizar la interfaz de usuario
+            System.out.println("El superviviente se movió a la nueva posición.");
+        } else {
+            System.out.println("El movimiento no pudo realizarse.");
+        }
+    }
+    
+    public Superviviente obtenerSupervivienteActual() {
+        // Aquí debes retornar el superviviente actual que está interactuando
+        // Ejemplo: obtener el primer superviviente de la lista, o uno específico.
+        if (!supervivientes.isEmpty()) {
+            return supervivientes.get(0);  // Asumiendo que tienes una lista de supervivientes
+        }
+        return null;
     }
 }
