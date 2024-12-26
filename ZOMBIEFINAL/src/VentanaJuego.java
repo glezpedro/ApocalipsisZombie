@@ -426,7 +426,7 @@ public class VentanaJuego extends JFrame{
                 limpiarPanel();
                 panelSimular.revalidate();
                 panelSimular.repaint();
-                funcionAtacar();
+                funcionAtacar2();
                     }
         };
         radioBoton12.addActionListener(accionAtacar);
@@ -814,6 +814,51 @@ public class VentanaJuego extends JFrame{
         Atacar.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(62, 26, Image.SCALE_AREA_AVERAGING)));
         Atacar.setOpaque(false);
         panelJuego.add(Atacar);
+        Atacar.setBorderPainted(false);
+
+        ActionListener accionBoton4 = new ActionListener() {
+               @Override
+               public void actionPerformed(ActionEvent e) {
+                   System.out.println("Atacando");
+                   actualizarTurno();
+           }
+        };
+        Atacar.addActionListener(accionBoton4);
+    }
+    public void funcionAtacar2(){
+        // Texto Elegir Arma:
+        etiqueta1 = new JLabel("Elegir Arma:", SwingConstants.CENTER); // Creamos etiqueta
+        etiqueta1.setBounds(30, 245, 100, 30);
+        etiqueta1.setOpaque(true); // Asi podemos poner background
+        etiqueta1.setForeground(Color.black);
+        etiqueta1.setFont(new Font("arial", Font.BOLD, 15)); // estableze el font se puede usar 0123 para typo de letra
+        panelSimular.add(etiqueta1);
+        etiqueta1.setOpaque(false);
+        // Para elegir una de las dos armas que puedan estar activas habra que hacer un if(inv.arma.getActiva.equals(true))
+        //String [] opcionesArmas = {Inventario.getArmaActiva().getNombre(),arma2.getNombre(), arma3.getNombre()}; HAY QUE HACERLO ASI MAS O MENOS
+        String [] opcionesArmas = {"ArmaActiva1", "ArmaActiva2"};
+        listaActivas = new JComboBox(opcionesArmas);
+        listaActivas.setBounds(30, 275, 100, 20);
+        listaActivas.addItem(" ");
+        listaActivas.setSelectedItem(" ");
+        ActionListener accionLista = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String seleccion = (String) listaActivas.getSelectedItem();
+                System.out.println(seleccion);
+            }
+        };
+        listaActivas.addActionListener(accionLista);
+        panelSimular.add(listaActivas); 
+        // Atacar
+        Atacar = new JButton();
+        Atacar.setBounds(55, 300, 62, 26);
+        Atacar.setEnabled(true);
+        Atacar.setBackground(Color.red);
+        ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/Atacar.png"));
+        Atacar.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(62, 26, Image.SCALE_AREA_AVERAGING)));
+        Atacar.setOpaque(false);
+        panelSimular.add(Atacar);
         Atacar.setBorderPainted(false);
 
         ActionListener accionBoton4 = new ActionListener() {
