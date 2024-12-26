@@ -12,7 +12,6 @@ public class Provisiones extends Equipo {
     }
     
     // Getters
-    @Override
     public String getNombre() {
         return nombre;
     }

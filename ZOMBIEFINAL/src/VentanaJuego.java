@@ -657,8 +657,9 @@ public class VentanaJuego extends JFrame{
                     }
 
                     // Actualizar la interfaz gráfica
-                    tablero.botonesTablero[nuevaX][nuevaY].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+                    System.out.println("("+viejaX+" ,"+viejaY+" )");
                     tablero.botonesTablero[viejaX][viejaY].setIcon(null);
+                    tablero.botonesTablero[nuevaX][nuevaY].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
                     panelJuego.revalidate();
                     panelJuego.repaint();
 
@@ -734,9 +735,12 @@ public class VentanaJuego extends JFrame{
         etiqueta1.setFont(new Font("arial", Font.BOLD, 15)); // estableze el font se puede usar 0123 para typo de letra
         panelJuego.add(etiqueta1);
         etiqueta1.setOpaque(false);
-        // Para elegir una de las dos armas que puedan estar activas habra que hacer un if(inv.arma.getActiva.equals(true))
-        //String [] opcionesArmas = {Inventario.getArmaActiva().getNombre(),arma2.getNombre(), arma3.getNombre()}; HAY QUE HACERLO ASI MAS O MENOS
-        String [] opcionesArmas = {"ArmaActiva1", "ArmaActiva2"};
+        
+        int x = tablero.getCoordenadaXSeleccionada();
+        int y = tablero.getCoordenadaYSeleccionada();
+        Superviviente superviviente = buscarSuperviviente(x,y);
+        
+        String [] opcionesArmas = superviviente.getInventario().obtenerNombresArmasActivas().toArray(new String[0]);
         listaActivas = new JComboBox(opcionesArmas);
         listaActivas.setBounds(30, 275, 100, 20);
         listaActivas.addItem(" ");
@@ -816,92 +820,95 @@ public class VentanaJuego extends JFrame{
         Buscar.addActionListener(accionBoton4);
     }
     
-    public void funcionElegirArma(){
+    private String armaSeleccionada1 = "";
+    private String armaSeleccionada2 = "";
+
+    public void funcionElegirArma() {
         // Texto Elegir Arma:
         etiqueta1 = new JLabel("Elegir Armas activas:", SwingConstants.CENTER); // Creamos etiqueta
         etiqueta1.setBounds(28, 245, 120, 30);
-        etiqueta1.setOpaque(true); // Asi podemos poner background
+        etiqueta1.setOpaque(true); // Así podemos poner background
         etiqueta1.setForeground(Color.black);
-        etiqueta1.setFont(new Font("arial", Font.CENTER_BASELINE, 12)); // estableze el font se puede usar 0123 para typo de letra
+        etiqueta1.setFont(new Font("arial", Font.CENTER_BASELINE, 12)); // Establece el font
         panelJuego.add(etiqueta1);
         etiqueta1.setOpaque(false);
 
         int x = tablero.getCoordenadaXSeleccionada();
         int y = tablero.getCoordenadaYSeleccionada();
-        Superviviente superviviente = buscarSuperviviente(x,y);
+        Superviviente superviviente = buscarSuperviviente(x, y);
+
         // ---------------------------------------------------------------
         if (superviviente != null) {
             if (!superviviente.getInventario().obtenerObjetos().isEmpty()) {
-        String [] opcionesArmas = superviviente.getInventario().obtenerNombresArmas().toArray(new String[0]);
-        listaArmas = new JComboBox(opcionesArmas);
-        listaArmas.setBounds(30, 275, 50, 20);
-        listaArmas.addItem(" ");
-        listaArmas.setSelectedItem(" ");
-        //Activa el booleano de ArmaActiva a true
-        ActionListener accionLista1 = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String seleccion = (String) listaArmas.getSelectedItem();
-                for (Equipo item : superviviente.getInventario().obtenerObjetos()) {
-                    if (item instanceof Arma) {
-                        Arma arma = (Arma) item;
-                        if (arma.getNombre().equals(seleccion)) {
-                            arma.activarArma(seleccion);
-                            System.out.println("Arma activada: " + arma.getNombre());
+                // Obtener las opciones de armas para el JComboBox
+                String[] opcionesArmas = superviviente.getInventario().obtenerNombresArmasNA().toArray(new String[0]);
+
+                // JComboBox 1: Armas activas
+                listaArmas = new JComboBox(opcionesArmas);
+                listaArmas.setBounds(30, 275, 50, 20);
+                listaArmas.addItem(" "); // Añadir un espacio para la opción "ninguna"
+                listaArmas.setSelectedItem(" ");
+                panelJuego.add(listaArmas);
+
+                // JComboBox 2: Segunda opción para elegir arma
+                listaArmas2 = new JComboBox(opcionesArmas);
+                listaArmas2.setBounds(90, 275, 50, 20);
+                listaArmas2.addItem("Ninguna"); // Añadir la opción "Ninguna"
+                listaArmas2.setSelectedItem("Ninguna");
+                panelJuego.add(listaArmas2);
+
+                // Botón Seleccionar
+                Seleccionar = new JButton();
+                Seleccionar.setBounds(35, 300, 100, 30);
+                Seleccionar.setEnabled(true);
+                Seleccionar.setBackground(Color.red);
+                ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/Seleccionar.png"));
+                Seleccionar.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(100, 30, Image.SCALE_AREA_AVERAGING)));
+                Seleccionar.setOpaque(false);
+                panelJuego.add(Seleccionar);
+                Seleccionar.setBorderPainted(false);
+
+                // ActionListener para el JComboBox 1
+                listaArmas.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String seleccion = (String) listaArmas.getSelectedItem();
+
+                    // Si se selecciona un arma, eliminarla de listaArmas2
+                        if (!seleccion.equals(" ")) {
+                        // Eliminar el arma seleccionada de listaArmas2
+                            armaSeleccionada1 = (String) listaArmas.getSelectedItem();
+                            listaArmas2.removeItem(armaSeleccionada1);// Limpiar ese elemento
                         }
                     }
-                }
-            }
-        };
+                });
 
-        listaArmas.addActionListener(accionLista1);
-        
-        
-        panelJuego.add(listaArmas); 
-        // Segunda opccion activa
-        listaArmas2 = new JComboBox(opcionesArmas);
-        listaArmas2.setBounds(90, 275, 50, 20);
-        listaArmas2.addItem("Ninguna");
-        listaArmas2.setSelectedItem("Ninguna");
-        ActionListener accionLista2 = new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                String seleccion = (String) listaArmas.getSelectedItem();
-                if (!seleccion.equals("Niguna")){
-                    for (Equipo item : superviviente.getInventario().obtenerArmas()) {
-                            Arma arma = (Arma) item; // Convertir el item a Armas
-                            if (arma.getNombre().equals(seleccion)) {
-                                arma.activarArma(seleccion);
-                                System.out.println("Arma activada: " + arma.getNombre());
+                // ActionListener para el JComboBox 2
+                listaArmas2.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        armaSeleccionada2 = (String) listaArmas2.getSelectedItem();
+                        listaArmas.removeItem(armaSeleccionada2);
+
+                    }
+                });
+
+                // ActionListener para el botón Seleccionar
+                Seleccionar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Verificar que al menos una arma ha sido seleccionada
+                        superviviente.getInventario().activarArma(armaSeleccionada1);  
+                        superviviente.getInventario().activarArma(armaSeleccionada2);
                             
-                        }
+                        actualizarEtiqueta("Has seleccionado "+armaSeleccionada1+" y "+armaSeleccionada2+".");
+                        actualizarTurno();
                     }
-                }
+                });
+            } else {
+                actualizarEtiqueta("Superviviente sin armas.");
             }
-        };
-        listaArmas2.addActionListener(accionLista2);
-        panelJuego.add(listaArmas2);
-        // Seleccionar
-        Seleccionar = new JButton();
-        Seleccionar.setBounds(35, 300, 100, 30);
-        Seleccionar.setEnabled(true);
-        Seleccionar.setBackground(Color.red);
-        ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/Seleccionar.png"));
-        Seleccionar.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(100, 30, Image.SCALE_AREA_AVERAGING)));
-        Seleccionar.setOpaque(false);
-        panelJuego.add(Seleccionar);
-        Seleccionar.setBorderPainted(false);
-
-        ActionListener accionBoton4 = new ActionListener() {
-               @Override
-               public void actionPerformed(ActionEvent e) {
-                   System.out.println("Armas Seleccionadas");//Aqui hay q poner que el booleano en el inventario o arma sea true (armaActiva = true)
-                   actualizarTurno();
-           }
-        };
-        Seleccionar.addActionListener(accionBoton4);
-        }else actualizarEtiqueta("Superviviente sin armas.");
-        }else {
+        } else {
             actualizarEtiqueta("Seleccione una casilla con Superviviente.");
         }
     }
@@ -913,11 +920,11 @@ public class VentanaJuego extends JFrame{
         Superviviente superviviente = buscarSuperviviente(x, y);
         
         if (superviviente != null) {
-            if (superviviente.getInventario() != null) {
+            if (superviviente.getInventario() != null && superviviente.getInventario().obtenerObjetos().size()<5) {
             superviviente.getInventario().agregarItem();
             actualizarTurno();
             actualizarEtiqueta("Se ha encontrado "+ superviviente.getInventario().obtenerNombres().getLast());
-        }
+        }else actualizarEtiqueta("Inventario lleno.");
         }else {
             actualizarEtiqueta("Seleccione una casilla con Superviviente.");
         }
