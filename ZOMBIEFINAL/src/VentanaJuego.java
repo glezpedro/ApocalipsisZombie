@@ -551,11 +551,13 @@ public class VentanaJuego extends JFrame{
 
         // Crear la lista de supervivientes
         supervivientes = Superviviente.crearSupervivientes();
+                    
 
         for (Superviviente superviviente : supervivientes) {
             int x = superviviente.getX();
             int y = superviviente.getY();
             String color = superviviente.getNombre().toLowerCase();  // Usar el nombre del superviviente como color
+            tablero.tablero[x][y].agregarSuperviviente(superviviente);
 
             // Asignar el ícono según el color del superviviente
             ImageIcon iconoSuperviviente = null;
@@ -615,19 +617,22 @@ public class VentanaJuego extends JFrame{
         panelJuego.repaint();
     }
 
-    public void actualizarTurno() {
-        contadorTurnos++;
-        int nuevoTurno = (contadorTurnos - 1) / 3 + 1;
+    private void actualizarTurno() {
+        System.out.println("Iniciando un nuevo turno...");
 
-        if (etiquetaTurnos != null) {
-            actualizarEtiquetaTurnos(nuevoTurno);
+        // Reinicia las acciones de todos los supervivientes
+        for (Superviviente s : supervivientes) {
+            s.resetearAcciones();
         }
-        if (nuevoTurno > turno) {
-            turno = nuevoTurno; 
-            colocarZombieFinDeRonda();
-        } else {
-            turno = nuevoTurno;
-        }
+
+        // Resetea el índice del superviviente actual
+        indiceActual = 0;
+
+        // Actualiza la interfaz gráfica o imprime información relevante
+        colocarZombieFinDeRonda();
+        panelJuego.revalidate();
+        panelJuego.repaint();
+        System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
     }
 
     public void actualizarEtiquetaTurnos(int turno) {
@@ -668,83 +673,79 @@ public class VentanaJuego extends JFrame{
         Moverse.setBorderPainted(false);
 
         ActionListener accionBoton4 = new ActionListener() {
-            @Override
+            @Override    
             public void actionPerformed(ActionEvent e) {
+            Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+            int nuevaX = tablero.getCoordenadaXSeleccionada();
+            int nuevaY = tablero.getCoordenadaYSeleccionada();
+            int[] viejaXY = supervivienteActual.getCoordenadas();
 
-                Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+            boolean movimientoValido = esMovimientoValido(viejaXY[0], viejaXY[1], nuevaX, nuevaY);
 
-                // Obtener las coordenadas seleccionadas para mover
-                int nuevaX = tablero.getCoordenadaXSeleccionada();
-                int nuevaY = tablero.getCoordenadaYSeleccionada();
+            if (supervivienteActual.gastarAccion() && movimientoValido) {
+                tablero.tablero[viejaXY[0]][viejaXY[1]].eliminarSuperviviente(supervivienteActual);
+                tablero.tablero[nuevaX][nuevaY].agregarSuperviviente(supervivienteActual);
+                supervivienteActual.moverse(nuevaX, nuevaY);
+
+                actualizarIconos(viejaXY[0], viejaXY[1]);
+                actualizarIconos(nuevaX, nuevaY);
+                tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
+                tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
                 
-                int viejaX = supervivienteActual.getViejaX();
-                int viejaY = supervivienteActual.getViejaY();
-
-                boolean movimientoValido = esMovimientoValido(viejaX, viejaY, nuevaX, nuevaY);
-
-                // Verificar si el superviviente tiene acciones disponibles y el movimiento es válido
                 
-                //DEBERIA DE SER ASI NO FUNCIONA
-                //if (supervivienteActual.gastarAccion() && movimientoValido) {
+                System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                accionesTotales++;
+            } else {
+                System.out.println("Movimiento no válido o acciones agotadas.");
+            }
 
-                if (supervivienteActual.gastarAccion()) {
-                    // Mover al superviviente
-                    supervivienteActual.moverse(nuevaX, nuevaY);
-
-                    String color = supervivienteActual.getNombre().toLowerCase();
-                    ImageIcon iconoSuperviviente = null;
-
-                    // Cambiar el icono según el color del superviviente
-                    switch (color) {
-                        case "rojo":
-                            iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
-                            break;
-                        case "azul":
-                            iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/azul.png"));
-                            break;
-                        case "verde":
-                            iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/verde.png"));
-                            break;
-                        case "amarillo":
-                            iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/amarillo.png"));
-                            break;
-                    }
-
-                    // Actualizar la interfaz gráfica
-                    System.out.println("("+viejaX+" ,"+viejaY+" )");
-                    tablero.botonesTablero[viejaX][viejaY].setIcon(null);
-                    tablero.botonesTablero[nuevaX][nuevaY].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
-                    panelJuego.revalidate();
-                    panelJuego.repaint();
-
-                    // Mostrar cuántas acciones le quedan al superviviente
-                    System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
-                } else {
-                    System.out.println("Movimiento no válido o acciones agotadas.");
+            if (supervivienteActual.getAccionesDisponibles() == 0) {
+                indiceActual++;
+                if (indiceActual >= supervivientes.size()) {
+                    indiceActual = 0;
                 }
+                Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+                siguienteSuperviviente.resetearAcciones();
+                System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+            }
 
-                // Comprobar si el superviviente ha agotado sus acciones
-                if (supervivienteActual.getAccionesDisponibles() == 0) {
-                    // Pasar al siguiente superviviente
-                    indiceActual++;
-                    if (indiceActual >= supervivientes.size()) {
-                        indiceActual = 0; // Volver al inicio de la lista
-                    }
-
-                    // Reiniciar las acciones del siguiente superviviente
-                    Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
-                    siguienteSuperviviente.resetearAcciones();
-
-                    // Imprimir información sobre el siguiente turno
-                    System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
-                }
-
-                // Actualizar el turno en la interfaz
+            if(accionesTotales == 12){
                 actualizarTurno();
             }
+        }
         };
         Moverse.addActionListener(accionBoton4);
     }
+    
+    
+    private void actualizarIconos(int x, int y) {
+        List<Superviviente> supervivientesEnCelda = tablero.tablero[x][y].getSupervivientes();
+        tablero.botonesTablero[x][y].setIcon(null);
+
+        for (Superviviente s : supervivientesEnCelda) {
+            String color = s.getNombre().toLowerCase();
+            ImageIcon iconoSuperviviente = null;
+            switch (color) {
+                case "rojo":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
+                    break;
+                case "azul":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/azul.png"));
+                    break;
+                case "verde":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/verde.png"));
+                    break;
+                case "amarillo":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/amarillo.png"));
+                    break;
+            }
+
+            if (iconoSuperviviente != null) {
+                tablero.botonesTablero[x][y].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+            }
+        }
+    }
+    
     
     private boolean esMovimientoValido(int xActual, int yActual, int nuevaX, int nuevaY) {
         int deltaX = nuevaX - xActual;
@@ -754,7 +755,7 @@ public class VentanaJuego extends JFrame{
         return (Math.abs(deltaX) <= 1 && Math.abs(deltaY) <= 1);
     }
     
-    public void actualizarTablero() {
+    /*public void actualizarTablero() {
         // Limpiar el tablero visual (en caso de que sea necesario)
         panelJuego.removeAll();
 
@@ -778,7 +779,7 @@ public class VentanaJuego extends JFrame{
         // Refrescar el panel para mostrar los cambios
         panelJuego.revalidate();
         panelJuego.repaint();
-    }
+    }*/
 
     public void funcionAtacar(){
         // Texto Elegir Arma:
@@ -790,25 +791,26 @@ public class VentanaJuego extends JFrame{
         panelJuego.add(etiqueta1);
         etiqueta1.setOpaque(false);
         
+        Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+
         int x = tablero.getCoordenadaXSeleccionada();
         int y = tablero.getCoordenadaYSeleccionada();
-        Superviviente superviviente = buscarSuperviviente(x,y);
         
-        String [] opcionesArmas = superviviente.getInventario().obtenerNombresArmasActivas().toArray(new String[0]);
+        String[] opcionesArmas = supervivienteActual.getInventario().obtenerNombresArmasActivas().toArray(new String[0]);
         listaActivas = new JComboBox(opcionesArmas);
         listaActivas.setBounds(30, 275, 100, 20);
         listaActivas.addItem(" ");
         listaActivas.setSelectedItem(" ");
         ActionListener accionLista = new ActionListener(){
             @Override
-            public void actionPerformed(ActionEvent e){
-                String seleccion = (String) listaActivas.getSelectedItem();
-                System.out.println(seleccion);
+            public void actionPerformed(ActionEvent e) {
+                armaSeleccionada1 = (String) listaActivas.getSelectedItem();
+                System.out.println("Arma seleccionada: " + armaSeleccionada1);
             }
         };
         listaActivas.addActionListener(accionLista);
         panelJuego.add(listaActivas); 
-        // Atacar
+        // BOTON Atacar
         Atacar = new JButton();
         Atacar.setBounds(55, 300, 62, 26);
         Atacar.setEnabled(true);
@@ -820,14 +822,57 @@ public class VentanaJuego extends JFrame{
         Atacar.setBorderPainted(false);
 
         ActionListener accionBoton4 = new ActionListener() {
-               @Override
-               public void actionPerformed(ActionEvent e) {
-                   System.out.println("Atacando");
-                   actualizarTurno();
-           }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (armaSeleccionada1 == null || armaSeleccionada1.trim().isEmpty()) {
+                    System.out.println("No se ha seleccionado un arma.");
+                    return;
+                }
+
+                System.out.println("Atacando con " + armaSeleccionada1);
+
+                // Obtener el arma seleccionada del inventario
+                Arma arma = supervivienteActual.getInventario().obtenerArmaPorNombre(armaSeleccionada1);
+
+                // Verificar si hay zombies en la casilla seleccionada
+                if (tablero.tablero[x][y].tieneZombie()) {
+                    // Atacar al primer zombie de la lista (puedes ajustar esta lógica)
+                    Zombi objetivo = tablero.tablero[x][y].getZombies().get(0);
+                    int distancia = calcularDistancia(x, y, objetivo.getX(), objetivo.getY());
+                    objetivo.reaccionAtaques(arma, distancia);
+                    System.out.println(supervivienteActual.getNombre() + " atacó al zombie en (" + x + ", " + y + ") con " + armaSeleccionada1);
+
+                    // Eliminar zombie si su vida llega a 0
+                    if (!objetivo.estaVivo()) {
+                        tablero.tablero[x][y].eliminarZombie(objetivo);
+                        System.out.println("Zombie eliminado en (" + x + ", " + y + ").");
+                    }
+
+                    // Reducir acciones del superviviente
+                    supervivienteActual.gastarAccion();
+                    System.out.println("Acciones restantes para " + supervivienteActual.getNombre() + ": " + supervivienteActual.getAccionesDisponibles());
+
+                    // Incrementar acciones totales
+                    accionesTotales++;
+                } else {
+                    System.out.println("No hay zombies en la casilla seleccionada.");
+                }
+
+                // Verificar si el turno debe finalizar
+                if (accionesTotales == 12) {
+                    //accionarZombies(); // Lógica para el turno de los zombies
+                    actualizarTurno(); // Reinicia el turno
+                }
+            }
         };
         Atacar.addActionListener(accionBoton4);
     }
+    
+    public int calcularDistancia(int x1, int y1, int x2, int y2) {
+        return (int) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    
     public void funcionAtacar2(){
         // Texto Elegir Arma:
         etiqueta1 = new JLabel("Elegir Arma:", SwingConstants.CENTER); // Creamos etiqueta
@@ -889,8 +934,31 @@ public class VentanaJuego extends JFrame{
         ActionListener accionBoton4 = new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent e) {
-                   System.out.println("Siguiente Turno");
-                   actualizarTurno();
+                   Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+
+                    if (supervivienteActual.gastarAccion()) {
+                        System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                    } else {
+                        System.out.println("Movimiento no válido o acciones agotadas.");
+                    }
+
+                    if (supervivienteActual.getAccionesDisponibles() == 0) {
+                        indiceActual++;
+                        if (indiceActual >= supervivientes.size()) {
+                            indiceActual = 0;
+                        }
+                        Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+                        siguienteSuperviviente.resetearAcciones();
+                        System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                        accionesTotales++;
+                    }
+
+                    if (accionesTotales == 12) {
+                        //accionarZombies();
+                        actualizarTurno(); 
+                    }
+                   
+                   
            }
         };
         SiguienteTurno.addActionListener(accionBoton4);
@@ -913,7 +981,13 @@ public class VentanaJuego extends JFrame{
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Buscando");
                    buscar();
-                   actualizarTurno();
+                   accionesTotales++;
+                   
+                   if (accionesTotales == 12) {
+                    //accionarZombies();
+                    actualizarTurno(); // Reinicia turno y supervivientes
+}
+                   
            }
         };
         Buscar.addActionListener(accionBoton4);
@@ -1021,7 +1095,6 @@ public class VentanaJuego extends JFrame{
         if (superviviente != null) {
             if (superviviente.getInventario() != null && superviviente.getInventario().obtenerObjetos().size()<5) {
             superviviente.getInventario().agregarItem();
-            actualizarTurno();
             actualizarEtiqueta("Se ha encontrado "+ superviviente.getInventario().obtenerNombres().getLast());
         }else actualizarEtiqueta("Inventario lleno.");
         }else {
@@ -1103,15 +1176,13 @@ public class VentanaJuego extends JFrame{
         int coordenadaXSeleccionada = tablero.getCoordenadaXSeleccionada();
         int coordenadaYSeleccionada = tablero.getCoordenadaYSeleccionada();
 
+        Superviviente supervivienteActual = supervivientes.get(indiceActual);
+        
         if (coordenadaXSeleccionada != -1 && coordenadaYSeleccionada != -1) {
             Zombi zombieAtacado = buscarZombie(coordenadaXSeleccionada, coordenadaYSeleccionada);
             if (zombieAtacado != null) {
-                // Aquí, pasa el arma seleccionada como parte del ataque.
-                int distancia = 1;
-                if(coordenadaXSeleccionada == zombieAtacado.getX() && coordenadaYSeleccionada == zombieAtacado.getY()){
-                    distancia = 0;
-                }
-                //CALCULAR LA DISTANCIA
+                
+                int distancia = calcularDistancia(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado.getX(), zombieAtacado.getY());
 
                 int resultado = zombieAtacado.reaccionAtaques(armaSeleccionada, distancia );
                 switch (resultado) {
@@ -1121,11 +1192,15 @@ public class VentanaJuego extends JFrame{
                     case 1:
                         System.out.println("¡Zombie eliminado!");
                         tablero.botonesTablero[coordenadaYSeleccionada][coordenadaXSeleccionada].setIcon(null);
+                        tablero.tablero[coordenadaXSeleccionada][coordenadaYSeleccionada].setHayZombie(false);
                         zombies.remove(zombieAtacado);
                         break;
                     case 2:
                         System.out.println("¡Zombie eliminado, pero su sangre tóxica causó daño!");
+                        supervivienteActual.envenenar();
+                        supervivienteActual.aplicarEfectos();
                         tablero.botonesTablero[coordenadaYSeleccionada][coordenadaXSeleccionada].setIcon(null);
+                        tablero.tablero[coordenadaXSeleccionada][coordenadaYSeleccionada].setHayZombie(false);
                         zombies.remove(zombieAtacado);
                         break;
                 }
@@ -1228,8 +1303,14 @@ public class VentanaJuego extends JFrame{
         // Aquí debes retornar el superviviente actual que está interactuando
         // Ejemplo: obtener el primer superviviente de la lista, o uno específico.
         if (!supervivientes.isEmpty()) {
-            return supervivientes.get(0);  // Asumiendo que tienes una lista de supervivientes
+            return supervivientes.get(0);  
         }
         return null;
     }
+    
+    
+
+    
+    
+    
 }

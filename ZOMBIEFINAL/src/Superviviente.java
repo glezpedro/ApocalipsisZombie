@@ -183,25 +183,16 @@ public class Superviviente implements Activable {
     }
 
     
-    public int getViejaX(){
-        return viejaX;
-    }
-    public int getViejaY(){
-        return viejaY;
-    }
+    
     
     
     public boolean mover(int nuevaX, int nuevaY, Set<Zombi> zombis, Tablero tablero) {
-        // Validación: si el movimiento está fuera del tablero
         if (nuevaX < 0 || nuevaY < 0 || nuevaX >= 10 || nuevaY >= 10){
             System.out.println("Movimiento fuera de los límites del tablero.");
             return false;
         }
-        viejaX = tablero.coordenadaXSeleccionada;
-        viejaY = tablero.coordenadaYSeleccionada;
-
         
-        // Verificar si hay zombis en la casilla de origen (coordenada actual)
+        
         int zombisEnCasilla = contarZombisEnCasilla(coordenadaX, coordenadaY, zombis);
 
         // Si hay zombis, se gastan tantas acciones extra como zombis en la casilla de origen

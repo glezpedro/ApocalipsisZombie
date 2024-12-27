@@ -138,10 +138,12 @@ public class Zombi implements Serializable, Activable {
         if (potenciaTotal >= aguante) {
             vivo = false;
             System.out.println("¡El zombi " + identificador + " ha sido eliminado!");
-            return 1;
+            if(getCategoria().equals("TOXICO")) return 2;
+            else return 1;
         }
         return 0;
     }
+
 
     public int getX() {
         return coordenadaX;
