@@ -114,6 +114,23 @@ public class Superviviente implements Activable {
             coordenadaSeleccionada = COORDENADAS[random.nextInt(COORDENADAS.length)];
         }
     }
+    public static List<Superviviente> crearSupervivienteSim(){
+        List<Superviviente> supervivienteSIm = new ArrayList<>();
+                for(int i = 0; i < 1; i++){
+                    String nombre = COLORES[i];
+                    int salud = random.nextInt(50) + 50;
+                    int maxHeridas = random.nextInt(3) + 3;
+                    
+                    Superviviente superviviente = new Superviviente(nombre, salud, maxHeridas);
+                    superviviente.coordenadaX = coordenadaSeleccionada[0];  // Usamos la misma coordenada para todos
+                    superviviente.coordenadaY = coordenadaSeleccionada[1];
+
+            supervivienteSIm.add(superviviente);
+        }
+
+        return supervivienteSIm;
+               
+    }
 
     // Nuevo método para obtener una lista de 4 supervivientes
     public static List<Superviviente> crearSupervivientes() {
