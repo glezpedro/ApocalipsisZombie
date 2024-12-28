@@ -18,7 +18,7 @@ public class Superviviente implements Activable {
     private static final String[] COLORES = {"Rojo", "Azul", "Verde", "Amarillo"};
     private static final int[][] COORDENADAS = {{0, 0}, {9, 0}, {0, 9}, {9, 9}};
     private static int index = 0; // Controla el progreso de los colores
-    private static final Random random = new Random(4);
+    private static final Random random = new Random();
     private static int[] coordenadaSeleccionada = null;
     private int viejaX;
     private int viejaY;
