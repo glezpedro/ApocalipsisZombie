@@ -163,7 +163,6 @@ public class VentanaJuego extends JFrame{
 
                     // actualizar  interfaz
                     colocarPanelJuego();
-                    actualizarEtiquetaTurnos(contadorTurnos);
                     for (Zombi zombie : zombies) {
                         tablero.botonesTablero[zombie.getX()][zombie.getY()].setIcon(new ImageIcon(getClass().getResource("/resources/zombiN.png")));
                     }
@@ -223,14 +222,13 @@ public class VentanaJuego extends JFrame{
         etiqueta.setOpaque(false);
         // Etiqueta Turnos
         contadorTurnos = 0;
-        etiquetaTurnos = new JLabel("Turno: 1", SwingConstants.CENTER); // Creamos etiqueta
+        etiquetaTurnos = new JLabel("Turno Rojo", SwingConstants.CENTER); // Creamos etiqueta
         etiquetaTurnos.setBounds(30, 105, 100, 35);
         etiquetaTurnos.setOpaque(true); // Asi podemos poner background
         etiquetaTurnos.setForeground(Color.black);
         etiquetaTurnos.setFont(new Font("chiller", Font.BOLD, 25)); // estableze el font se puede usar 0123 para typo de letra
         panelJuego.add(etiquetaTurnos);
         etiquetaTurnos.setOpaque(false);
-       
     }
     
     private void colocarBotonesJuego(){
@@ -390,7 +388,8 @@ public class VentanaJuego extends JFrame{
        grupoRadioBotones.add(radioBoton5);
 
     }
-     private void colocarRadioBotonesSim(){
+    
+    private void colocarRadioBotonesSim(){
        JRadioButton radioBoton10 = new JRadioButton("Añadir Zombi", false); // El booleano es para saber si aparece seleccionado o no
        radioBoton10.setBounds(20, 140, 150, 15);
        radioBoton10.setOpaque(false);
@@ -474,6 +473,7 @@ public class VentanaJuego extends JFrame{
        };
        Atras.addActionListener(accionBoton4);
     }
+    
     public void colocarZombiesInicio(){
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
         ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
@@ -619,7 +619,16 @@ public class VentanaJuego extends JFrame{
 
     private void actualizarTurno() {
         System.out.println("Iniciando un nuevo turno...");
+        
+        contadorTurnos++;
+        int nuevoTurno = (contadorTurnos - 1) / 3 + 1;
 
+        if (nuevoTurno > turno) {
+            turno = nuevoTurno; 
+            colocarZombieFinDeRonda();
+        } else {
+            turno = nuevoTurno;
+        }
         // Reinicia las acciones de todos los supervivientes
         for (Superviviente s : supervivientes) {
             s.resetearAcciones();
@@ -634,15 +643,7 @@ public class VentanaJuego extends JFrame{
         panelJuego.repaint();
         System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
     }
-
-    public void actualizarEtiquetaTurnos(int turno) {
-        if (etiquetaTurnos != null) {
-            etiquetaTurnos.setText("Turno: " + turno);
-            panelJuego.revalidate();
-            panelJuego.repaint();
-        }
-    }
-
+    
     public void funcionMoverse(){
         // Texto Elegir Casila:
         etiqueta2 = new JLabel("Elegir Casilla:", SwingConstants.CENTER); // Creamos etiqueta
@@ -707,6 +708,9 @@ public class VentanaJuego extends JFrame{
                 Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                 siguienteSuperviviente.resetearAcciones();
                 System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+                panelJuego.revalidate();
+                panelJuego.repaint();
             }
 
             if(accionesTotales == 12){
@@ -716,7 +720,6 @@ public class VentanaJuego extends JFrame{
         };
         Moverse.addActionListener(accionBoton4);
     }
-    
     
     private void actualizarIconos(int x, int y) {
         List<Superviviente> supervivientesEnCelda = tablero.tablero[x][y].getSupervivientes();
@@ -745,7 +748,6 @@ public class VentanaJuego extends JFrame{
             }
         }
     }
-    
     
     private boolean esMovimientoValido(int xActual, int yActual, int nuevaX, int nuevaY) {
         int deltaX = nuevaX - xActual;
@@ -871,7 +873,6 @@ public class VentanaJuego extends JFrame{
     public int calcularDistancia(int x1, int y1, int x2, int y2) {
         return (int) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
-
     
     public void funcionAtacar2(){
         // Texto Elegir Arma:
@@ -950,6 +951,9 @@ public class VentanaJuego extends JFrame{
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                         siguienteSuperviviente.resetearAcciones();
                         System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                        etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+                        panelJuego.revalidate();
+                        panelJuego.repaint();
                         accionesTotales++;
                     }
 
@@ -1307,10 +1311,5 @@ public class VentanaJuego extends JFrame{
         }
         return null;
     }
-    
-    
-
-    
-    
     
 }
