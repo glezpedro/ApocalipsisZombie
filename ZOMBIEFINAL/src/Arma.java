@@ -47,6 +47,7 @@ public class Arma extends Equipo{
     public void setActiva(boolean activa) {
         this.activa = activa;
     }
+   
 
     // Método para lanzar dados y calcular éxitos
     public int lanzarDados() {

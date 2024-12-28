@@ -8,8 +8,8 @@ import java.util.Set;
 public class Superviviente implements Activable {
     private String nombre;
     private int salud;
-    private Equipo inventario; // Inventario que contiene armas
-    private int maxHeridas; // Máximo de heridas antes de quedar fuera
+    private Equipo inventario; 
+    private int maxHeridas; 
     private int coordenadaX;
     private int coordenadaY;
     private boolean envenenado;
@@ -17,7 +17,7 @@ public class Superviviente implements Activable {
     private final int NUM_SUPERVIVIENTES = 4;
     private static final String[] COLORES = {"Rojo", "Azul", "Verde", "Amarillo"};
     private static final int[][] COORDENADAS = {{0, 0}, {9, 0}, {0, 9}, {9, 9}};
-    private static int index = 0; // Controla el progreso de los colores
+    private static int index = 0; 
     private static final Random random = new Random();
     private static int[] coordenadaSeleccionada = null;
     private int viejaX;
@@ -31,11 +31,10 @@ public class Superviviente implements Activable {
         this.nombre = nombre;
         this.salud = salud;
         this.maxHeridas = maxHeridas;
-        this.inventario = new Equipo(); // Inicializa un inventario vacío
-        this.envenenado = false; // Estado inicial
-        this.coordenadaX = 0; // Posición inicial
-        this.coordenadaY = 0;
-        this.isEliminado = false; // Al crearse no esta eliminado
+        this.inventario = new Equipo(); 
+        this.envenenado = false; 
+        this.coordenadaX = 0; 
+        this.isEliminado = false; 
     }
     
     public void recibirHerida(int n) {
@@ -54,7 +53,7 @@ public class Superviviente implements Activable {
 
     public void aplicarEfectos() {
         if (envenenado) {
-            recibirHerida(1); // Pierde 1 de salud por turno
+            recibirHerida(1); 
             System.out.println(nombre + " sufre daño por veneno.");
         }
     }
@@ -91,7 +90,7 @@ public class Superviviente implements Activable {
     
     @Override
     public void atacar(List<Superviviente> supervivientes) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     public void atacar(List<Zombi> zombis, Arma arma) {
@@ -110,7 +109,6 @@ public class Superviviente implements Activable {
     
     public static void seleccionarCoordenadasAleatorias() {
         if (coordenadaSeleccionada == null) {
-            // Si no se ha seleccionado aún, elige una coordenada aleatoria entre las 4 posibles
             coordenadaSeleccionada = COORDENADAS[random.nextInt(COORDENADAS.length)];
         }
     }
@@ -122,7 +120,7 @@ public class Superviviente implements Activable {
                     int maxHeridas = random.nextInt(3) + 3;
                     
                     Superviviente superviviente = new Superviviente(nombre, salud, maxHeridas);
-                    superviviente.coordenadaX = coordenadaSeleccionada[0];  // Usamos la misma coordenada para todos
+                    superviviente.coordenadaX = coordenadaSeleccionada[0];  
                     superviviente.coordenadaY = coordenadaSeleccionada[1];
 
             supervivienteSIm.add(superviviente);
@@ -132,23 +130,20 @@ public class Superviviente implements Activable {
                
     }
 
-    // Nuevo método para obtener una lista de 4 supervivientes
     public static List<Superviviente> crearSupervivientes() {
         List<Superviviente> supervivientes = new ArrayList<>();
 
-        // Seleccionamos las coordenadas aleatorias si no se han seleccionado
         if (coordenadaSeleccionada == null) {
             seleccionarCoordenadasAleatorias();
         }
 
-        // Creamos 4 supervivientes con las mismas coordenadas
         for (int i = 0; i < 4; i++) {
             String nombre = COLORES[i];
             int salud = random.nextInt(50) + 50;
             int maxHeridas = random.nextInt(3) + 3;
 
             Superviviente superviviente = new Superviviente(nombre, salud, maxHeridas);
-            superviviente.coordenadaX = coordenadaSeleccionada[0];  // Usamos la misma coordenada para todos
+            superviviente.coordenadaX = coordenadaSeleccionada[0];  
             superviviente.coordenadaY = coordenadaSeleccionada[1];
 
             supervivientes.add(superviviente);
@@ -163,17 +158,14 @@ public class Superviviente implements Activable {
     
     @Override
     public void moverse(int nuevaX, int nuevaY) {
-        // Validación opcional: Verificar que el movimiento es válido según el tablero
         if (nuevaX < 0 || nuevaY < 0) {
             System.out.println("Movimiento fuera de los límites.");
             return;
         }
 
-        // Actualizar coordenadas
         this.coordenadaX = nuevaX;
         this.coordenadaY = nuevaY;
 
-        // Mensaje de confirmación
         System.out.println(nombre + " se ha movido a la posición (" + nuevaX + ", " + nuevaY + ").");
     }
 
@@ -182,16 +174,16 @@ public class Superviviente implements Activable {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
-            return true; // Si es el mismo objeto, son iguales
+            return true; 
         }
         if (obj == null || getClass() != obj.getClass()) {
-            return false; // Si es null o no es de la misma clase, no son iguales
+            return false; 
         }
         Superviviente that = (Superviviente) obj;
         if (this.nombre == null) {
-            return that.nombre == null; // Ambos nombres son null
+            return that.nombre == null; 
         }
-        return this.nombre.equals(that.nombre); // Compara los nombres manualmente
+        return this.nombre.equals(that.nombre); 
     }
 
     @Override
@@ -212,18 +204,16 @@ public class Superviviente implements Activable {
         
         int zombisEnCasilla = contarZombisEnCasilla(coordenadaX, coordenadaY, zombis);
 
-        // Si hay zombis, se gastan tantas acciones extra como zombis en la casilla de origen
         if (zombisEnCasilla > 0) {
-            int accionesNecesarias = zombisEnCasilla;  // Cada zombi requiere una acción extra
+            int accionesNecesarias = zombisEnCasilla;  
             if (accionesDisponibles < accionesNecesarias) {
                 System.out.println("No hay suficientes acciones para mover debido a los zombis.");
-                return false;  // No hay suficientes acciones
+                return false;  
             } else {
-                accionesDisponibles -= accionesNecesarias;  // Restar las acciones extra
+                accionesDisponibles -= accionesNecesarias;  
             }
         }
 
-        // Realizar el movimiento si hay suficientes acciones
         coordenadaX = nuevaX;
         coordenadaY = nuevaY;
 
@@ -232,11 +222,9 @@ public class Superviviente implements Activable {
         return true;
     }
 
-    // Método para contar los zombis en la casilla de origen
     private int contarZombisEnCasilla(int x, int y, Set<Zombi> zombis) {
         int contador = 0;
         for (Zombi zombi : zombis) {
-            // Supongo que el método getCoordenadas() te da las coordenadas del zombi
             int[] coordenadasZombi = zombi.getCoordenadas();
             if (coordenadasZombi[0] == x && coordenadasZombi[1] == y) {
                 contador++;
@@ -257,7 +245,7 @@ public class Superviviente implements Activable {
     }
 
     public void resetearAcciones() {
-        accionesDisponibles = 3; // Al comenzar el siguiente turno, se reinician las acciones
+        accionesDisponibles = 3;
     }
 
     public int getAccionesDisponibles() {
