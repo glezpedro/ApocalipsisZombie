@@ -1204,7 +1204,7 @@ public class VentanaJuego extends JFrame{
         if (casilla.tieneSuperviviente()) {
             if (casilla.tieneZombie()) contenido += "\n\n"; 
                 Superviviente superviviente = buscarSuperviviente(x, y); 
-                contenido += "Contiene:" + superviviente.getNombre() + "\nVida: " + superviviente.getSalud() +
+                contenido += "Contiene: " + superviviente.getNombre() + "\nVida: " + superviviente.getSalud() +
                      "\nInventario: " + superviviente.getInventario().obtenerNombres();
         }
 
@@ -1244,7 +1244,4 @@ public class VentanaJuego extends JFrame{
             System.out.println("El movimiento no pudo realizarse.");
         }
     }
-    
-   
-    
 }
