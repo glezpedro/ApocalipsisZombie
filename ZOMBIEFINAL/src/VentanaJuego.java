@@ -698,6 +698,7 @@ public class VentanaJuego extends JFrame{
                 accionesTotales++;
             } else {
                 System.out.println("Movimiento no válido o acciones agotadas.");
+                actualizarEtiqueta("Movimiento no válido o acciones agotadas.");
             }
 
             if (supervivienteActual.getAccionesDisponibles() == 0) {
