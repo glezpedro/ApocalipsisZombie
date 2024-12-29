@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,8 +33,8 @@ public class VentanaJuego extends JFrame{
     private int metaX;
     private int metaY;
     private int indiceActual = 0;
-    private int accionesTotales = 0;
-
+    public int accionesTotales = 0;
+    private VentanaJuego ventana;
     private Arma armaSeleccionada; // Agregamos esta variable para el arma seleccionada
 
     public VentanaJuego(){
@@ -47,7 +48,7 @@ public class VentanaJuego extends JFrame{
         setIconImage(icon.getImage());
         zombies = new HashSet<>();
         tablero = new Tablero(this);
-        
+        this.ventana = this;
         colocarPanelMain();
     }
     
@@ -548,8 +549,7 @@ public class VentanaJuego extends JFrame{
         ImageIcon iconoMeta = new ImageIcon(getClass().getResource("/resources/meta.png"));
 
         supervivientes = Superviviente.crearSupervivientes();
-                    
-
+        
         for (Superviviente superviviente : supervivientes) {
             int x = superviviente.getX();
             int y = superviviente.getY();
@@ -558,26 +558,25 @@ public class VentanaJuego extends JFrame{
 
             ImageIcon iconoSuperviviente = null;
             switch (color) {
-                case "rojo":
-                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
-                    break;
-                case "azul":
-                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/azul.png"));
+                case "amarillo":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/amarillo.png"));
                     break;
                 case "verde":
                     iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/verde.png"));
                     break;
-                case "amarillo":
-                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/amarillo.png"));
+                case "azul":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/azul.png"));
+                    break;
+                case "rojo":
+                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
                     break;
             }
 
             posicionesUsadas.add(new Point(x, y));
 
             tablero.botonesTablero[x][y].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
-
             JLabel etiquetaSuperviviente = new JLabel(iconoSuperviviente);
-            etiquetaSuperviviente.setBounds(x * 50, y * 50, 50, 50);
+         //   etiquetaSuperviviente.setBounds(x * 50, y * 50, 50, 50);
             panelJuego.add(etiquetaSuperviviente);
 
             System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: " + x + ", Y: " + y);
@@ -608,7 +607,7 @@ public class VentanaJuego extends JFrame{
         panelJuego.repaint();
     }
 
-    private void actualizarTurno() {
+    public void actualizarTurno() {
         System.out.println("Iniciando un nuevo turno...");
         
         contadorTurnos++;
@@ -745,7 +744,6 @@ public class VentanaJuego extends JFrame{
         return (Math.abs(deltaX) <= 1 && Math.abs(deltaY) <= 1);
     }
     
-
     public void funcionAtacar(){
         // Texto Elegir Arma:
         etiqueta1 = new JLabel("Elegir Arma:", SwingConstants.CENTER); // Creamos etiqueta
@@ -789,41 +787,12 @@ public class VentanaJuego extends JFrame{
         ActionListener accionBoton4 = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (armaSeleccionada1 == null || armaSeleccionada1.trim().isEmpty()) {
-                    System.out.println("No se ha seleccionado un arma.");
-                    return;
-                }
-
-                System.out.println("Atacando con " + armaSeleccionada1);
-
-                Arma arma = supervivienteActual.getInventario().obtenerArmaPorNombre(armaSeleccionada1);
-
-                if (tablero.tablero[x][y].tieneZombie()) {
-                    
-                    Zombi objetivo = tablero.tablero[x][y].getZombies().get(0);
-                    int distancia = calcularDistancia(x, y, objetivo.getX(), objetivo.getY());
-                    objetivo.reaccionAtaques(arma, distancia);
-                    System.out.println(supervivienteActual.getNombre() + " atacó al zombie en (" + x + ", " + y + ") con " + armaSeleccionada1);
-
-                    atacarZombieSeleccionado(arma);
-                    
-                    supervivienteActual.gastarAccion();
-                    System.out.println("Acciones restantes para " + supervivienteActual.getNombre() + ": " + supervivienteActual.getAccionesDisponibles());
-
-                    accionesTotales++;
-                } else {
-                    System.out.println("No hay zombies en la casilla seleccionada.");
-                }
-
-                // Verificar si el turno debe finalizar
-                if (accionesTotales == 12) {
-                    actualizarTurno(); 
-                }
+                Ataque ataque = new Ataque(armaSeleccionada1,supervivienteActual,x,y, ventana);
             }
         };
         Atacar.addActionListener(accionBoton4);
     }
-    
+
     public int calcularDistancia(int x1, int y1, int x2, int y2) {
         return (int) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
@@ -1115,7 +1084,9 @@ public class VentanaJuego extends JFrame{
     
     public Arma getArmaSeleccionada() {
         if (listaActivas != null) {
-            return (Arma) listaActivas.getSelectedItem();
+            Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+            String arma = listaActivas.getSelectedItem().toString();
+            return supervivienteActual.getInventario().obtenerArmaPorNombre(armaSeleccionada1);
         }
         return null; 
     }
@@ -1136,15 +1107,18 @@ public class VentanaJuego extends JFrame{
                 switch (resultado) {
                     case 0:
                         System.out.println("El zombie sigue vivo.");
+                        actualizarEtiqueta("El zombie sigue vivo.");
                         break;
                     case 1:
                         System.out.println("¡Zombie eliminado!");
+                        actualizarEtiqueta("¡Zombie eliminado!");
                         tablero.botonesTablero[coordenadaYSeleccionada][coordenadaXSeleccionada].setIcon(null);
                         tablero.tablero[coordenadaXSeleccionada][coordenadaYSeleccionada].setHayZombie(false);
                         zombies.remove(zombieAtacado);
                         break;
                     case 2:
                         System.out.println("¡Zombie eliminado, pero su sangre tóxica causó daño!");
+                        actualizarEtiqueta("¡Zombie eliminado, pero su sangre tóxica causó daño!");
                         supervivienteActual.envenenar();
                         supervivienteActual.aplicarEfectos();
                         tablero.botonesTablero[coordenadaYSeleccionada][coordenadaXSeleccionada].setIcon(null);

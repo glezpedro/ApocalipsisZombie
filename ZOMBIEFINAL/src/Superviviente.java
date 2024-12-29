@@ -15,7 +15,7 @@ public class Superviviente implements Activable {
     private boolean envenenado;
     private boolean isEliminado;
     private final int NUM_SUPERVIVIENTES = 4;
-    private static final String[] COLORES = {"Rojo", "Azul", "Verde", "Amarillo"};
+    private static final String[] COLORES = {"Amarillo", "Verde", "Azul","Rojo" };
     private static final int[][] COORDENADAS = {{0, 0}, {9, 0}, {0, 9}, {9, 9}};
     private static int index = 0; 
     private static final Random random = new Random();
