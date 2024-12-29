@@ -30,7 +30,7 @@ public class VentanaJuego extends JFrame{
     private List<Superviviente> supervivientes = new ArrayList<>();
     private int metaX;
     private int metaY;
-    private int indiceActual = 0;
+    private int indiceActual = 3;
     public int accionesTotales = 0;
     private final VentanaJuego ventana;
     private Arma armaSeleccionada; // Agregamos esta variable para el arma seleccionada
@@ -623,7 +623,7 @@ public class VentanaJuego extends JFrame{
             s.resetearAcciones();
         }
 
-        indiceActual = 0;
+        indiceActual = 3;
 
         panelJuego.revalidate();
         panelJuego.repaint();
@@ -688,9 +688,9 @@ public class VentanaJuego extends JFrame{
             }
 
             if (supervivienteActual.getAccionesDisponibles() == 0) {
-                indiceActual++;
+                indiceActual--;
                 if (indiceActual >= supervivientes.size()) {
-                    indiceActual = 0;
+                    indiceActual = 3;
                 }
                 Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                 siguienteSuperviviente.resetearAcciones();
@@ -705,7 +705,6 @@ public class VentanaJuego extends JFrame{
                 colocarZombieFinDeRonda();
             }
         }};
-        System.out.println(accionesTotales);
         Moverse.addActionListener(accionBoton4);
     }
     
@@ -797,9 +796,9 @@ public class VentanaJuego extends JFrame{
                     }
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
-                        indiceActual++;
+                        indiceActual--;
                         if (indiceActual >= supervivientes.size()) {
-                            indiceActual = 0;
+                            indiceActual = 3;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                         siguienteSuperviviente.resetearAcciones();
@@ -899,9 +898,9 @@ public class VentanaJuego extends JFrame{
                     }
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
-                        indiceActual++;
+                        indiceActual--;
                         if (indiceActual >= supervivientes.size()) {
-                            indiceActual = 0;
+                            indiceActual = 3;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                         siguienteSuperviviente.resetearAcciones();
@@ -950,9 +949,9 @@ public class VentanaJuego extends JFrame{
                     }
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
-                        indiceActual++;
+                        indiceActual--;
                         if (indiceActual >= supervivientes.size()) {
-                            indiceActual = 0;
+                            indiceActual = 3;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                         siguienteSuperviviente.resetearAcciones();
@@ -1058,9 +1057,9 @@ public class VentanaJuego extends JFrame{
                         }
 
                         if (supervivienteActual.getAccionesDisponibles() == 0) {
-                            indiceActual++;
+                            indiceActual--;
                             if (indiceActual >= supervivientes.size()) {
-                                indiceActual = 0;
+                                indiceActual = 3;
                             }
                             Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                             siguienteSuperviviente.resetearAcciones();
@@ -1164,6 +1163,7 @@ public class VentanaJuego extends JFrame{
     public Arma getArmaSeleccionada() {
         if (listaActivas != null) {
             Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+            String arma = listaActivas.getSelectedItem().toString();
             return supervivienteActual.getInventario().obtenerArmaPorNombre(armaSeleccionada1);
         }
         return null; 
