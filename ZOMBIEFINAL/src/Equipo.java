@@ -82,16 +82,14 @@ public class Equipo {
         return nombres;
     }
     
-    // Buscar un arma por su nombre
     public Arma obtenerArmaPorNombre(String nombreArma) {
-        // Buscar en armas activas
         for (Arma arma : armasActivas) {
             if (arma.getNombre().equals(nombreArma)) {
-                return arma; // Devuelve el arma activa encontrada
+                return arma; 
             }
         }
         
-        return null; // Devuelve null si no se encuentra el arma
+        return null; 
     }
 
 

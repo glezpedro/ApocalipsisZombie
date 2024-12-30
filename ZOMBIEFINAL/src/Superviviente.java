@@ -37,13 +37,8 @@ public class Superviviente implements Activable {
         this.isEliminado = false; 
     }
     
-    public void recibirHerida(int n) {
-        salud -= n;
-        if (salud <= 0) {
-            System.out.println(nombre + " ha sido eliminado.");
-        } else {
-            System.out.println(nombre + " ha recibido " + n + " heridas. Salud restante: " + salud);
-        }
+    public void recibirHerida() {
+        salud--;
     }
 
     public void envenenar() {
@@ -53,7 +48,7 @@ public class Superviviente implements Activable {
 
     public void aplicarEfectos() {
         if (envenenado) {
-            recibirHerida(1); 
+            recibirHerida(); 
             System.out.println(nombre + " sufre daño por veneno.");
         }
     }

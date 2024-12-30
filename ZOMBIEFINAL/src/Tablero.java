@@ -110,6 +110,10 @@ public class Tablero {
         return coordenadaYSeleccionada;
     }
     
+    public boolean esPosicionValida(int x, int y){
+        return(x >= 0 && y >= 0 && x <=9 && y <= 9);
+    }
+    
     public void MuestraDatos() {
     int x = getCoordenadaXSeleccionada();
     int y = getCoordenadaYSeleccionada();

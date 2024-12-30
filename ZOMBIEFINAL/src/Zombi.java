@@ -68,49 +68,7 @@ public class Zombi implements Serializable, Activable {
         }
     }
 
-    public void moverse(List<Superviviente> supervivientes) {
-        if (supervivientes.isEmpty()) {
-            System.out.println("No hay supervivientes en el tablero.");
-            return;
-        }
-
-        // Encontrar al superviviente más cercano
-        Superviviente objetivo = null;
-        int distanciaMinima = Integer.MAX_VALUE;
-
-        for (Superviviente s : supervivientes) {
-            if (s.isIsEliminado()) continue; // Ignorar supervivientes eliminados
-            int distancia = Math.abs(this.coordenadaX - s.getX()) + Math.abs(this.coordenadaY - s.getY());
-            if (distancia < distanciaMinima) {
-                distanciaMinima = distancia;
-                objetivo = s;
-            }
-        }
-
-        if (objetivo == null) {
-            System.out.println("No hay objetivos válidos para el zombi " + identificador);
-            return;
-        }
-
-        System.out.println("El zombi " + identificador + " se dirige hacia el superviviente en (" + objetivo.getX() + ", " + objetivo.getY() + ").");
-
-        // Mover el zombi según su número de activaciones
-        for (int i = 0; i < activaciones; i++) {
-            if (this.coordenadaX < objetivo.getX()) this.coordenadaX++;
-            else if (this.coordenadaX > objetivo.getX()) this.coordenadaX--;
-
-            if (this.coordenadaY < objetivo.getY()) this.coordenadaY++;
-            else if (this.coordenadaY > objetivo.getY()) this.coordenadaY--;
-
-            // Si ya alcanzó al objetivo, detener movimiento
-            if (this.coordenadaX == objetivo.getX() && this.coordenadaY == objetivo.getY()) {
-                System.out.println("El zombi " + identificador + " ha alcanzado al superviviente en (" + coordenadaX + ", " + coordenadaY + ").");
-                break;
-            }
-        }
-
-        System.out.println("El zombi " + identificador + " ahora está en (" + coordenadaX + ", " + coordenadaY + ").");
-    }
+    
 
 
     @Override
@@ -130,6 +88,32 @@ public class Zombi implements Serializable, Activable {
     public int[] getCoordenadas() {
         return new int[]{coordenadaX, coordenadaY};
     }
+    
+    
+    @Override
+    public void moverse(int objetivoX, int objetivoY) {
+
+        for (int i = 0; i < activaciones; i++) {
+            if (this.coordenadaX < objetivoX) {
+                this.coordenadaX++;
+            } else if (this.coordenadaX > objetivoX) {
+                this.coordenadaX--;
+            }
+
+            if (this.coordenadaY < objetivoY) {
+                this.coordenadaY++;
+            } else if (this.coordenadaY > objetivoY) {
+                this.coordenadaY--;
+            }
+
+            if (this.coordenadaX == objetivoX && this.coordenadaY == objetivoY) {
+                break;
+            }
+        }
+
+        System.out.println("El zombi " + identificador + " ahora esta en (" + coordenadaX + ", " + coordenadaY + ").");
+    }
+
 
     public int reaccionAtaques(Arma arma, int distancia) {
         if (distancia > arma.getAlcance()) return 0;
@@ -143,7 +127,11 @@ public class Zombi implements Serializable, Activable {
         }
         return 0;
     }
-
+    
+    
+    public int getActivaciones(){
+        return activaciones;
+    }
 
     public int getX() {
         return coordenadaX;
@@ -174,10 +162,7 @@ public class Zombi implements Serializable, Activable {
         return vivo;
     }
 
-    @Override
-    public void moverse(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
 
     
     
