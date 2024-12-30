@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Equipo {
     private static final int MAX_OBJETOS = 5; // Límite del inventario general
-    private static final int MAX_ARMAS = 3; // Límite de armas activas
+    private static final int MAX_ARMAS = 2; // Límite de armas activas
     private List<Object> objetos = new ArrayList<>(); // Inventario general
     private List<Arma> armasActivas = new ArrayList<>(); // Armas activas
 
@@ -119,4 +119,16 @@ public class Equipo {
         }
         return nombres;
     }
+    
+    public void desactivarArma(String nombreArma) {
+        Arma arma = obtenerArmaPorNombre(nombreArma);
+        if (arma != null) {
+            arma.setActiva(false);
+            armasActivas.remove(arma);
+            System.out.println("Arma " + nombreArma + " desactivada.");
+        } else {
+            System.out.println("No se encontró el arma activa con el nombre " + nombreArma);
+        }
+    }
+
 }

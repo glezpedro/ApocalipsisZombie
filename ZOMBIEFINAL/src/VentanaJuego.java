@@ -574,7 +574,6 @@ public class VentanaJuego extends JFrame{
 
             tablero.botonesTablero[x][y].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
             JLabel etiquetaSuperviviente = new JLabel(iconoSuperviviente);
-         //   etiquetaSuperviviente.setBounds(x * 50, y * 50, 50, 50);
             panelJuego.add(etiquetaSuperviviente);
 
             System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: " + x + ", Y: " + y);
@@ -1360,7 +1359,7 @@ public class VentanaJuego extends JFrame{
                         tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
                         tablero.tablero[x][y].setHaySuperviviente(false);
                         tablero.botonesTablero[x][y].setIcon(null);
-                        // ACABAR, TERMINA EL JUEGO MURIO UNO
+                        finJuego();
                     }
                 }
 
@@ -1451,6 +1450,89 @@ public class VentanaJuego extends JFrame{
         panelJuego.revalidate();
         panelJuego.repaint();
 
-    }   
+    }  
     
+    public int getMetaX() {
+        return metaX;
+    }
+
+    public int getMetaY() {
+        return metaY;
+    }
+    
+    private void finJuego() {
+        int metaX =getMetaX();
+        int metaY =getMetaY();
+        Casilla casillaMeta = tablero.tablero[metaX][metaY];
+
+        List<Superviviente> supervivientesEnMeta = casillaMeta.getSupervivientes();
+        List<Superviviente> todosLosSupervivientes = supervivientes;
+
+    
+        if (supervivientesEnMeta.containsAll(todosLosSupervivientes)) {
+            // Comprobar que todos los supervivientes tienen al menos una provisión
+            boolean todosConProvisiones = true;
+            for (Superviviente superviviente : todosLosSupervivientes) {
+                int cantidadProvisiones = 0;
+                for (Object item : superviviente.getInventario().obtenerObjetos()) {
+                    if (item instanceof Provisiones) cantidadProvisiones++;
+                }
+                if (cantidadProvisiones < 1) {
+                    System.out.println("El superviviente "+superviviente.getNombre()+ " no tiene suficientes provisiones.");
+                    todosConProvisiones = false;
+                    break;
+                } 
+                if (superviviente.getSalud()<1) {
+                    System.out.println("El superviviente "+superviviente.getNombre()+" ha muerto, fin de la partida.");
+                    mostrarGameOver();
+                }
+            }
+
+            if (todosConProvisiones) {
+                System.out.println("¡Todos los supervivientes han llegado a la meta con provisiones! ¡Has ganado!");
+                mostrarMensajeVictoria();
+            } else {
+                System.out.println("No todos los supervivientes tienen provisiones suficientes.");
+                actualizarEtiqueta("No todos los supervivientes tienen provisiones suficientes.");
+            }
+        }
+    }
+    
+    public void mostrarMensajeVictoria() {
+        JLabel victoriaLabel = new JLabel("¡VICTORIA!", SwingConstants.CENTER);
+        
+        victoriaLabel.setFont(new Font("Arial", Font.BOLD, 50));  // Establecer un tamaño de fuente grande
+        victoriaLabel.setForeground(Color.GREEN);  // Establecer color verde para la etiqueta
+        
+        victoriaLabel.setBounds(
+            (panelJuego.getWidth() - victoriaLabel.getPreferredSize().width) / 2, // Centrar horizontalmente
+            (panelJuego.getHeight() - victoriaLabel.getPreferredSize().height) / 2, // Centrar verticalmente
+            victoriaLabel.getPreferredSize().width,
+            victoriaLabel.getPreferredSize().height
+        );
+        
+        panelJuego.add(victoriaLabel);
+        
+        panelJuego.revalidate();
+        panelJuego.repaint();
+    }
+    
+    public void mostrarGameOver() {
+        JLabel gameOverLabel = new JLabel("GAME OVER", SwingConstants.CENTER);
+        
+        gameOverLabel.setFont(new Font("Arial", Font.BOLD, 50));  // Establecer un tamaño de fuente grande
+        gameOverLabel.setForeground(Color.RED);  // Establecer color rojo para la etiqueta
+        
+        gameOverLabel.setBounds(
+            (panelJuego.getWidth() - gameOverLabel.getPreferredSize().width) / 2, // Centrar horizontalmente
+            (panelJuego.getHeight() - gameOverLabel.getPreferredSize().height) / 2, // Centrar verticalmente
+            gameOverLabel.getPreferredSize().width,
+            gameOverLabel.getPreferredSize().height
+        );
+        
+        panelJuego.add(gameOverLabel);
+        
+        panelJuego.revalidate();
+        panelJuego.repaint();
+    }
 }
