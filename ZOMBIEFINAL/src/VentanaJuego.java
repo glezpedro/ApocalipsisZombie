@@ -619,6 +619,7 @@ public class VentanaJuego extends JFrame{
         panelJuego.revalidate();
         panelJuego.repaint();
         System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
+        etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
     }
     
     public void funcionMoverse(){
@@ -1339,7 +1340,6 @@ public class VentanaJuego extends JFrame{
         panelJuego.repaint(); 
     } 
     
-    
     public void accionarZombies() {
         for (Zombi zombi : zombies) {
             for (int i = 0; i < zombi.getActivaciones(); i++) {
@@ -1349,10 +1349,12 @@ public class VentanaJuego extends JFrame{
                 Casilla casilla = tablero.tablero[x][y];
                 List<Superviviente> supervivientesEnCasilla = casilla.getSupervivientes();
 
+                // mira si hay supervivientes en la casilla actual
                 if (!supervivientesEnCasilla.isEmpty() && zombi.getCategoria().equals("TOXICO")) {
                     Superviviente primerSuperviviente = supervivientesEnCasilla.get(0);
                     primerSuperviviente.envenenar();
                     primerSuperviviente.recibirHerida();
+
                     System.out.println("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
                     if (primerSuperviviente.getSalud() == 0) {
                         tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
@@ -1362,36 +1364,41 @@ public class VentanaJuego extends JFrame{
                     }
                 }
 
+                // busca el superviviente cercano
                 Superviviente objetivo = encontrarSupervivienteCercano(x, y);
                 if (objetivo != null) {
                     int xObjetivo = objetivo.getX();
                     int yObjetivo = objetivo.getY();
 
+                    // calcula la posición del zombi
                     int nuevaX = x + Integer.signum(xObjetivo - x);
                     int nuevaY = y + Integer.signum(yObjetivo - y);
 
+                    // mueve al zombi si la posición es válida
                     if (tablero.esPosicionValida(nuevaX, nuevaY)) {
-                        zombi.moverse(nuevaX, nuevaY);
+                        tablero.tablero[nuevaX][nuevaY].agregarZombie(zombi);
+                        tablero.tablero[nuevaX][nuevaY].setHayZombie(true);
+
+                        actualizarIconosZombie(nuevaX, nuevaY, zombi);
 
                         tablero.tablero[x][y].eliminarZombie(zombi);
                         tablero.tablero[x][y].setHayZombie(false);
                         tablero.botonesTablero[x][y].setIcon(null);
-                        
-                        actualizarIconosZombie(nuevaX, nuevaY, zombi); 
-                        tablero.tablero[x][y].agregarZombie(zombi);
-                        
-          
+
+                        zombi.moverse(nuevaX, nuevaY);
+
+                        System.out.println("Zombi movido de (" + x + ", " + y + ") a (" + nuevaX + ", " + nuevaY + ")");
                     }
                 }
             }
         }
 
-        panelJuego.revalidate();
-        panelJuego.repaint();
+        SwingUtilities.invokeLater(() -> {
+            panelJuego.revalidate();
+            panelJuego.repaint();
+        });
     }
-
-
-
+    
     private Superviviente encontrarSupervivienteCercano(int x, int y) {
         Superviviente masCercano = null;
         int distanciaMinima = Integer.MAX_VALUE;
@@ -1438,11 +1445,12 @@ public class VentanaJuego extends JFrame{
                 if (zombi.getCategoria().equals("BERSERKER") && zombi.getTipo() == TipoZombie.ABOMINACION) tablero.botonesTablero[x][y].setIcon(new ImageIcon(IconoZombiBA.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
             }
         }
+        tablero.botonesTablero[x][y].revalidate();
+        tablero.botonesTablero[x][y].repaint();
         tablero.tablero[x][y].setHayZombie(true); 
         panelJuego.revalidate();
         panelJuego.repaint();
 
-    }
-   
+    }   
     
 }
