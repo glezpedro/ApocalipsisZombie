@@ -1456,7 +1456,14 @@ public class VentanaJuego extends JFrame{
 
         List<Superviviente> supervivientesEnMeta = casillaMeta.getSupervivientes();
         List<Superviviente> todosLosSupervivientes = supervivientes;
-
+        
+        for (Superviviente superviviente : todosLosSupervivientes) {
+            if (superviviente.getSalud()<1) {
+                    System.out.println("El superviviente "+superviviente.getNombre()+" ha muerto, fin de la partida.");
+                    mostrarGameStatusFinal(false);
+                }
+        }
+        
         if (supervivientesEnMeta.containsAll(todosLosSupervivientes)) {
             // Comprobar que todos los supervivientes tienen al menos una provisión
             boolean todosConProvisiones = true;
@@ -1470,10 +1477,6 @@ public class VentanaJuego extends JFrame{
                     todosConProvisiones = false;
                     break;
                 } 
-                if (superviviente.getSalud()<1) {
-                    System.out.println("El superviviente "+superviviente.getNombre()+" ha muerto, fin de la partida.");
-                    mostrarGameStatusFinal(false);
-                }
             }
 
             if (todosConProvisiones) {
