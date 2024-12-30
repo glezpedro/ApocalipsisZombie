@@ -23,7 +23,6 @@ public class Ataque {
                     int distancia = ventana.calcularDistancia(x, y, objetivo.getX(), objetivo.getY());
                     objetivo.reaccionAtaques(arma, distancia);
                     System.out.println(supervivienteActual.getNombre() + " atacó al zombie en (" + x + ", " + y + ") con " + armaSeleccionada1);
-
                     ventana.atacarZombieSeleccionado(arma);
                     
                     supervivienteActual.gastarAccion();

@@ -67,10 +67,7 @@ public class Zombi implements Serializable, Activable {
             return TipoZombie.ABOMINACION;
         }
     }
-
     
-
-
     @Override
     public void atacar(List<Superviviente> supervivientes) {
         for (Superviviente s : supervivientes) {
@@ -114,14 +111,13 @@ public class Zombi implements Serializable, Activable {
         System.out.println("El zombi " + identificador + " ahora esta en (" + coordenadaX + ", " + coordenadaY + ").");
     }
 
-
     public int reaccionAtaques(Arma arma, int distancia) {
         if (distancia > arma.getAlcance()) return 0;
 
         int potenciaTotal = arma.getPotencia();
         if (potenciaTotal >= aguante) {
             vivo = false;
-            System.out.println("¡El zombi " + identificador + " ha sido eliminado!");
+            System.out.println("¡El zombi " + identificador + " ha sido eliminado con "+arma.getNombre()+"!");
             if(getCategoria().equals("TOXICO")) return 2;
             else return 1;
         }

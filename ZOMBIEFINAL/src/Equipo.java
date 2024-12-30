@@ -10,12 +10,10 @@ public class Equipo {
 
     public Equipo() {}
 
-    // Obtener las armas activas
     public List<Arma> obtenerArmasActivas() {
         return new ArrayList<>(armasActivas); // Devuelve una copia para evitar modificaciones directas
     }
 
-    // Obtener las armas no activas
     public List<Arma> obtenerArmasNA() {
         List<Arma> armasNA = new ArrayList<>();
         for (Object item : objetos) {
@@ -29,7 +27,6 @@ public class Equipo {
         return armasNA;
     }
 
-    // Activar un arma si no se ha alcanzado el límite de armas activas
     public void activarArma(String nombreArma) {
         if (armasActivas.size() >= MAX_ARMAS) {
             System.out.println("Límite de armas activas alcanzado. No se puede activar más armas.");
@@ -48,14 +45,13 @@ public class Equipo {
         System.out.println("No se encontró el arma " + nombreArma + " o ya está activa.");
     }
 
-    // Agregar un item al inventario
     public void agregarItem() {
         if (objetos.size() >= MAX_OBJETOS) {
             System.out.println("Inventario lleno. No se pueden agregar más objetos.");
             return;
         }
 
-        // Lista predefinida de posibles objetos
+        // Lista de objetos
         List<Object> posiblesItems = List.of(
             new Arma("Espada", 1, 0, 1, 2),
             new Arma("Pistola", 2, 1, 3, 3),
@@ -65,15 +61,33 @@ public class Equipo {
             new Provisiones("Galletas de avena", 150, "2026-01-10")
         );
 
-        // Selección aleatoria
         Random random = new Random();
-        Object itemRandom = posiblesItems.get(random.nextInt(posiblesItems.size()));
+        Object itemRandom;
 
+        while (true) {
+            itemRandom = posiblesItems.get(random.nextInt(posiblesItems.size()));
+
+            if (itemRandom instanceof Arma) {
+                Arma nuevaArma = (Arma) itemRandom;
+                boolean armaRepetida = objetos.stream()
+                    .filter(obj -> obj instanceof Arma)
+                    .map(obj -> (Arma) obj)
+                    .anyMatch(arma -> arma.getNombre().equals(nuevaArma.getNombre()));
+
+                if (armaRepetida) {
+                    System.out.println("El arma " + nuevaArma.getNombre() + " ya está en el inventario. Seleccionando otro ítem...");
+                    continue;
+                }
+            }
+            break;
+        }
+
+        // Agregar el ítem
         objetos.add(itemRandom);
-        System.out.println("Se añadió al inventario: " + itemRandom.getClass().getSimpleName());
+        System.out.println("Se añadió al inventario: " + 
+            (itemRandom instanceof Arma ? ((Arma) itemRandom).getNombre() : ((Provisiones) itemRandom).getNombre()));
     }
 
-    // Obtener los nombres de armas no activas
     public List<String> obtenerNombresArmasNA() {
         List<String> nombres = new ArrayList<>();
         for (Arma arma : obtenerArmasNA()) {
@@ -88,12 +102,9 @@ public class Equipo {
                 return arma; 
             }
         }
-        
         return null; 
     }
 
-
-    // Obtener los nombres de armas activas
     public List<String> obtenerNombresArmasActivas() {
         List<String> nombres = new ArrayList<>();
         for (Arma arma : armasActivas) {
@@ -102,12 +113,10 @@ public class Equipo {
         return nombres;
     }
     
-    // Método para obtener los objetos del inventario
     public List<Object> obtenerObjetos() {
         return new ArrayList<>(objetos); // Devuelve una copia del inventario
     }
 
-    // Obtener todos los nombres de objetos
     public List<String> obtenerNombres() {
         List<String> nombres = new ArrayList<>();
         for (Object item : objetos) {
