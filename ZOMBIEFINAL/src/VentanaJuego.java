@@ -658,9 +658,7 @@ public class VentanaJuego extends JFrame{
             int nuevaY = tablero.getCoordenadaYSeleccionada();
             int[] viejaXY = supervivienteActual.getCoordenadas();
 
-            boolean movimientoValido = esMovimientoValido(viejaXY[0], viejaXY[1], nuevaX, nuevaY);
-            
-            
+            boolean movimientoValido = esMovimientoValido(viejaXY[0], viejaXY[1], nuevaX, nuevaY);            
             
             if (supervivienteActual.gastarAccion() && movimientoValido == true) {
                 tablero.tablero[viejaXY[0]][viejaXY[1]].eliminarSuperviviente(supervivienteActual);
@@ -1452,23 +1450,13 @@ public class VentanaJuego extends JFrame{
 
     }  
     
-    public int getMetaX() {
-        return metaX;
-    }
-
-    public int getMetaY() {
-        return metaY;
-    }
-    
     private void finJuego() {
-        int metaX =getMetaX();
-        int metaY =getMetaY();
+        
         Casilla casillaMeta = tablero.tablero[metaX][metaY];
 
         List<Superviviente> supervivientesEnMeta = casillaMeta.getSupervivientes();
         List<Superviviente> todosLosSupervivientes = supervivientes;
 
-    
         if (supervivientesEnMeta.containsAll(todosLosSupervivientes)) {
             // Comprobar que todos los supervivientes tienen al menos una provisión
             boolean todosConProvisiones = true;
@@ -1484,13 +1472,13 @@ public class VentanaJuego extends JFrame{
                 } 
                 if (superviviente.getSalud()<1) {
                     System.out.println("El superviviente "+superviviente.getNombre()+" ha muerto, fin de la partida.");
-                    mostrarGameOver();
+                    mostrarGameStatusFinal(false);
                 }
             }
 
             if (todosConProvisiones) {
                 System.out.println("¡Todos los supervivientes han llegado a la meta con provisiones! ¡Has ganado!");
-                mostrarMensajeVictoria();
+                mostrarGameStatusFinal(true);
             } else {
                 System.out.println("No todos los supervivientes tienen provisiones suficientes.");
                 actualizarEtiqueta("No todos los supervivientes tienen provisiones suficientes.");
@@ -1498,41 +1486,49 @@ public class VentanaJuego extends JFrame{
         }
     }
     
-    public void mostrarMensajeVictoria() {
-        JLabel victoriaLabel = new JLabel("¡VICTORIA!", SwingConstants.CENTER);
+    private void mostrarGameStatusFinal(Boolean status) {
+        this.getContentPane().removeAll();
         
-        victoriaLabel.setFont(new Font("Arial", Font.BOLD, 50));  // Establecer un tamaño de fuente grande
-        victoriaLabel.setForeground(Color.GREEN);  // Establecer color verde para la etiqueta
+        Atras = new JButton();
+        Atras.setBounds(20, 360, 40, 40);
+        Atras.setEnabled(true);
+        Atras.setBackground(Color.red);        
+        ImageIcon imagen4 = new ImageIcon(getClass().getResource("/resources/Atras.png"));
+        Atras.setIcon(new ImageIcon(imagen4.getImage().getScaledInstance(200, 40, Image.SCALE_AREA_AVERAGING)));
+        Atras.setOpaque(false);
+        Atras.setBorderPainted(false);
+        this.add(Atras);
+
+        ActionListener accionBoton4 = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                colocarPanelMain();
+            }
+        };
+        Atras.addActionListener(accionBoton4);
+       
+        panel = new BackgroundPanel("/resources/woods.png"); 
+        panel.setLayout(null);
+        this.getContentPane().add(panel);
+        JLabel gameStatus = new JLabel("", SwingConstants.CENTER);
+        gameStatus.setBounds(25, 180, 400, 65);
+        gameStatus.setOpaque(true); // Asi podemos poner background
+        gameStatus.setForeground(Color.red);
+        gameStatus.setFont(new Font("chiller", Font.BOLD, 80)); // estableze el font se puede usar 0123 para typo de letra
+        panel.add(gameStatus); //agregamos la etiqueta al panel
+        gameStatus.setOpaque(false);
         
-        victoriaLabel.setBounds(
-            (panelJuego.getWidth() - victoriaLabel.getPreferredSize().width) / 2, // Centrar horizontalmente
-            (panelJuego.getHeight() - victoriaLabel.getPreferredSize().height) / 2, // Centrar verticalmente
-            victoriaLabel.getPreferredSize().width,
-            victoriaLabel.getPreferredSize().height
-        );
+        if (status) {
+            gameStatus.setText("¡Victoria!");
+            gameStatus.setForeground(Color.green);
+        }
+        else gameStatus.setText("Derrota");
         
-        panelJuego.add(victoriaLabel);
+        panel.add(gameStatus);
         
         panelJuego.revalidate();
         panelJuego.repaint();
-    }
-    
-    public void mostrarGameOver() {
-        JLabel gameOverLabel = new JLabel("GAME OVER", SwingConstants.CENTER);
-        
-        gameOverLabel.setFont(new Font("Arial", Font.BOLD, 50));  // Establecer un tamaño de fuente grande
-        gameOverLabel.setForeground(Color.RED);  // Establecer color rojo para la etiqueta
-        
-        gameOverLabel.setBounds(
-            (panelJuego.getWidth() - gameOverLabel.getPreferredSize().width) / 2, // Centrar horizontalmente
-            (panelJuego.getHeight() - gameOverLabel.getPreferredSize().height) / 2, // Centrar verticalmente
-            gameOverLabel.getPreferredSize().width,
-            gameOverLabel.getPreferredSize().height
-        );
-        
-        panelJuego.add(gameOverLabel);
-        
-        panelJuego.revalidate();
-        panelJuego.repaint();
+        this.revalidate();
+        this.repaint();
     }
 }
