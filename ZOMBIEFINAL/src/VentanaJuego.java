@@ -312,19 +312,6 @@ public class VentanaJuego extends JFrame{
                 panelJuego.revalidate();
                 panelJuego.repaint();
                 funcionAtacar();
-                
-                Arma armaSeleccionada = getArmaSeleccionada();
-
-                if (armaSeleccionada != null) {
-                    atacarZombieSeleccionado(armaSeleccionada); 
-                } else {
-                    limpiarPanel();
-                    panelJuego.revalidate();
-                    panelJuego.repaint();
-                    funcionAtacar();
-                    System.out.println("Por favor, selecciona un arma antes de atacar.");
-                }
-
             }
         };
         radioBoton2.addActionListener(accionAtacar);
@@ -686,7 +673,7 @@ public class VentanaJuego extends JFrame{
 
             if (supervivienteActual.getAccionesDisponibles() == 0) {
                 indiceActual--;
-                if (indiceActual >= supervivientes.size()) {
+                if (indiceActual < 0) {
                     indiceActual = 3;
                 }
                 Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
@@ -757,12 +744,9 @@ public class VentanaJuego extends JFrame{
         listaActivas.setBounds(30, 275, 100, 20);
         listaActivas.addItem("");
         listaActivas.setSelectedItem("");
-        ActionListener accionLista = new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                armaSeleccionada1 = (String) listaActivas.getSelectedItem();
-                System.out.println("Arma seleccionada: " + armaSeleccionada1);
-            }
+        ActionListener accionLista = (ActionEvent e) -> {
+            armaSeleccionada1 = (String) listaActivas.getSelectedItem();
+            System.out.println("Arma seleccionada: " + armaSeleccionada1);
         };
         listaActivas.addActionListener(accionLista);
         panelJuego.add(listaActivas); 
@@ -777,10 +761,10 @@ public class VentanaJuego extends JFrame{
         panelJuego.add(Atacar);
         Atacar.setBorderPainted(false);
 
-        ActionListener accionBoton4 = new ActionListener() {
+        ActionListener atacar = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Ataque ataque = new Ataque(armaSeleccionada1,supervivienteActual,x,y, ventana);
+                Ataque ataque = new Ataque(armaSeleccionada1, supervivienteActual, x, y, ventana);
                 Arma armaSeleccionada = supervivienteActual.getInventario().obtenerArmaPorNombre(armaSeleccionada1);
                 if (armaSeleccionada1 == null || armaSeleccionada1.trim().isEmpty()) {
                             System.out.println("No se seleccionó un arma válida.");
@@ -789,7 +773,7 @@ public class VentanaJuego extends JFrame{
                 if (supervivienteActual.gastarAccion()) {
                         
                         atacarZombieSeleccionado(armaSeleccionada);
-                        accionesTotales++;
+                        
                         System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
                     } else {
                         System.out.println("Movimiento no válido o acciones agotadas.");
@@ -817,13 +801,15 @@ public class VentanaJuego extends JFrame{
                 actualizarIconos();
             }
         };
-        Atacar.addActionListener(accionBoton4);
+        Atacar.addActionListener(atacar);
     }
 
     public int calcularDistancia(int x1, int y1, int x2, int y2) {
-        return (int) Math.round(Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)));
+        int distancia = (int) Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        System.out.println("La distancia calculada es: " + distancia);
+        return distancia;
     }
-            
+     
     public void funcionQuedarse(){
         // Boton Moverse
         SiguienteTurno = new JButton();
@@ -948,21 +934,20 @@ public class VentanaJuego extends JFrame{
                 // Obtener las opciones de armas para el JComboBox
                 String[] opcionesArmas = superviviente.getInventario().obtenerNombresArmasNA().toArray(new String[0]);
 
-                // JComboBox 1: Armas activas
+                // primera opcion armas activas
                 listaArmas = new JComboBox(opcionesArmas);
                 listaArmas.setBounds(30, 275, 50, 20);
-                listaArmas.addItem(" "); // Añadir un espacio para la opción "ninguna"
+                listaArmas.addItem(" ");
                 listaArmas.setSelectedItem(" ");
                 panelJuego.add(listaArmas);
 
-                // JComboBox 2: Segunda opción para elegir arma
+                // segunda opción para elegir arma
                 listaArmas2 = new JComboBox(opcionesArmas);
                 listaArmas2.setBounds(90, 275, 50, 20);
-                listaArmas2.addItem("Ninguna"); // Añadir la opción "Ninguna"
+                listaArmas2.addItem("Ninguna");
                 listaArmas2.setSelectedItem("Ninguna");
                 panelJuego.add(listaArmas2);
 
-                // Botón Seleccionar
                 Seleccionar = new JButton();
                 Seleccionar.setBounds(35, 300, 100, 30);
                 Seleccionar.setEnabled(true);
@@ -980,7 +965,7 @@ public class VentanaJuego extends JFrame{
 
                         if (!seleccion.equals(" ")) {
                             armaSeleccionada1 = (String) listaArmas.getSelectedItem();
-                            listaArmas2.removeItem(armaSeleccionada1);// Limpiar ese elemento
+                            listaArmas2.removeItem(armaSeleccionada1);
                         }
                     }
                 });
@@ -1133,7 +1118,7 @@ public class VentanaJuego extends JFrame{
             Zombi zombieAtacado = buscarZombie(coordenadaXSeleccionada, coordenadaYSeleccionada);
             if (zombieAtacado != null) {
                 
-                int distancia = calcularDistancia(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado.getX(), zombieAtacado.getY());
+                int distancia = calcularDistancia(supervivienteActual.getX(), supervivienteActual.getY(), zombieAtacado.getX(), zombieAtacado.getY());
 
                 int resultado = zombieAtacado.reaccionAtaques(armaSeleccionada, distancia );
                 switch (resultado) {
@@ -1151,6 +1136,7 @@ public class VentanaJuego extends JFrame{
                         actualizarIconos();
                         panelJuego.revalidate();
                         panelJuego.repaint();
+                        accionesTotales++;
                         break;
                     case 2: 
                         System.out.println("¡Zombie eliminado!");
@@ -1168,6 +1154,7 @@ public class VentanaJuego extends JFrame{
                         actualizarIconos();
                         panelJuego.revalidate();
                         panelJuego.repaint();
+                        accionesTotales++;
                         break;
                 }
             } else {
@@ -1220,10 +1207,12 @@ public class VentanaJuego extends JFrame{
         }
 
         if (casilla.tieneSuperviviente()) {
-            if (casilla.tieneZombie()) contenido += "\n\n"; 
-                Superviviente superviviente = buscarSuperviviente(x, y); 
+            List<Superviviente> supervivientesCasilla = tablero.tablero[x][y].getSupervivientes();
+            for (Superviviente superviviente : supervivientesCasilla) {
+                if (casilla.tieneZombie()) contenido += "\n"; 
                 contenido += "Contiene: " + superviviente.getNombre() + "\nVida: " + superviviente.getSalud() +
-                     "\nInventario: " + superviviente.getInventario().obtenerNombres();
+                     "\nInventario: " + superviviente.getInventario().obtenerNombres()+"\n";
+            }
         }
 
         if (!casilla.tieneZombie() && !casilla.tieneSuperviviente() && !esMeta) {
