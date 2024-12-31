@@ -2,6 +2,7 @@
 
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 
@@ -11,8 +12,11 @@ public class EstadoJuego implements Serializable {
     private Set<Zombi> zombies; 
     private int coordenadaX;
     private int coordenadaY;
-
-    public EstadoJuego(int turno, Set<Zombi> zombies, int x, int y) {
+    private List<Superviviente> supervivientes;
+    private int indiceActual;
+    
+    public EstadoJuego(List<Superviviente> supervivientes, int turno, Set<Zombi> zombies, int x, int y, int indiceActual) {
+        this.supervivientes = supervivientes;
         this.turno = turno;
         this.zombies = zombies;
         this.coordenadaX = x;

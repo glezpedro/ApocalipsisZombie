@@ -265,7 +265,7 @@ public class VentanaJuego extends JFrame{
            public void actionPerformed(ActionEvent e) {
                try {
             // Crear el objeto EstadoJuego con los datos actuales
-                    EstadoJuego estado = new EstadoJuego(contadorTurnos, zombies, tablero.coordenadaXSeleccionada, tablero.coordenadaYSeleccionada);
+                    EstadoJuego estado = new EstadoJuego(supervivientes, contadorTurnos, zombies, tablero.coordenadaXSeleccionada, tablero.coordenadaYSeleccionada, indiceActual);
                     FileOutputStream fileOut = new FileOutputStream("partidaGuardada.dat");
                     ObjectOutputStream out = new ObjectOutputStream(fileOut);
                     out.writeObject(estado);
@@ -291,11 +291,10 @@ public class VentanaJuego extends JFrame{
        ActionListener accionMoverse = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               //FALTA PONER QUE SE MUEVA
                limpiarPanel();
+               funcionMoverse();
                panelJuego.revalidate(); //para que se muestre en pantalla
                panelJuego.repaint();
-               funcionMoverse();
            }
        };
        radioBoton1.addActionListener(accionMoverse);
@@ -339,11 +338,10 @@ public class VentanaJuego extends JFrame{
        ActionListener accionBuscar = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               //FALTA PONER QUE SEA TURNO DE ZOMBI
                limpiarPanel();
+               funcionBuscar();
                panelJuego.revalidate(); //para que se muestre en pantalla
                panelJuego.repaint();
-               funcionBuscar();
            }
        };
        radioBoton4.addActionListener(accionBuscar);
@@ -844,7 +842,7 @@ public class VentanaJuego extends JFrame{
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
                         indiceActual--;
                         if (indiceActual >= supervivientes.size()) {
-                            indiceActual = 3;
+                            indiceActual = 2;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                         siguienteSuperviviente.resetearAcciones();

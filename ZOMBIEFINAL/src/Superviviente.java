@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -5,7 +6,7 @@ import java.util.Random;
 import java.util.Set;
 
 
-public class Superviviente implements Activable {
+public class Superviviente implements Activable, Serializable{
     private String nombre;
     private int salud;
     private Equipo inventario; 
