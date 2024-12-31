@@ -162,9 +162,8 @@ public class VentanaJuego extends JFrame{
 
                     // actualizar  interfaz
                     colocarPanelJuego();
-                    for (Zombi zombie : zombies) {
-                        tablero.botonesTablero[zombie.getX()][zombie.getY()].setIcon(new ImageIcon(getClass().getResource("/resources/zombiN.png")));
-                    }
+                    actualizarIconos();
+ 
                     System.out.println("Partida cargada correctamente.");
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -271,7 +270,6 @@ public class VentanaJuego extends JFrame{
                     out.writeObject(estado);
                     out.close();
                     fileOut.close();
-                    
                     System.out.println("Partida guardada correctamente.");
                 } catch (Exception ex) {
                     ex.printStackTrace();
