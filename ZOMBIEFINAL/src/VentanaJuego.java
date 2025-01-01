@@ -34,6 +34,8 @@ public class VentanaJuego extends JFrame{
     public int accionesTotales = 0;
     private final VentanaJuego ventana;
     private Arma armaSeleccionada; // Agregamos esta variable para el arma seleccionada
+    private List<Almacen_Ataques> registroAtaques = new ArrayList<>();
+
 
     public VentanaJuego(){
         setSize(450,450);
@@ -764,7 +766,7 @@ public class VentanaJuego extends JFrame{
                 Arma armaSeleccionada = supervivienteActual.getInventario().obtenerArmaPorNombre(armaSeleccionada1);
                 if (armaSeleccionada1 == null || armaSeleccionada1.trim().isEmpty()) {
                             System.out.println("No se seleccionó un arma válida.");
-                            return; // Salir del método si no hay selección válid
+                            return; 
                         }
                 if (supervivienteActual.gastarAccion()) {
                         
@@ -840,7 +842,7 @@ public class VentanaJuego extends JFrame{
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
                         indiceActual--;
                         if (indiceActual >= supervivientes.size()) {
-                            indiceActual = 2;
+                            indiceActual = 3;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                         siguienteSuperviviente.resetearAcciones();
@@ -1104,66 +1106,88 @@ public class VentanaJuego extends JFrame{
         return null; 
     }
      
+   
     public void atacarZombieSeleccionado(Arma armaSeleccionada) {
         int coordenadaXSeleccionada = tablero.getCoordenadaXSeleccionada();
         int coordenadaYSeleccionada = tablero.getCoordenadaYSeleccionada();
 
         Superviviente supervivienteActual = supervivientes.get(indiceActual);
-        
-        if (coordenadaXSeleccionada != -1 && coordenadaYSeleccionada != -1) {
-            Zombi zombieAtacado = buscarZombie(coordenadaXSeleccionada, coordenadaYSeleccionada);
-            if (zombieAtacado != null) {
-                
-                int distancia = calcularDistancia(supervivienteActual.getX(), supervivienteActual.getY(), zombieAtacado.getX(), zombieAtacado.getY());
+        List<Integer> valoresDados = new ArrayList<>();
 
-                int resultado = zombieAtacado.reaccionAtaques(armaSeleccionada, distancia );
-                switch (resultado) {
-                    case 0:
-                        System.out.println("El zombie sigue vivo, El Arma no tiene alcanze.");
-                        actualizarEtiqueta("El zombie sigue vivo, El Arma no tiene alcanze.");
-                        break;
-                    case 1:
-                        System.out.println("¡Zombie eliminado!");
-                        actualizarEtiqueta("¡Zombie eliminado!");
-                        tablero.botonesTablero[coordenadaXSeleccionada][coordenadaYSeleccionada].setIcon(null);
-                        tablero.tablero[coordenadaXSeleccionada][coordenadaYSeleccionada].setHayZombie(false);
-                        tablero.tablero[coordenadaXSeleccionada][coordenadaYSeleccionada].eliminarZombie(zombieAtacado);
-                        zombies.remove(zombieAtacado);
-                        actualizarIconos();
-                        panelJuego.revalidate();
-                        panelJuego.repaint();
-                        accionesTotales++;
-                        break;
-                    case 2: 
-                        System.out.println("¡Zombie eliminado!");
-                        actualizarEtiqueta("¡Zombie eliminado!");
-                        if(supervivienteActual.getX() == coordenadaXSeleccionada && supervivienteActual.getY() == coordenadaYSeleccionada){
-                            System.out.println("¡Zombie eliminado, pero su sangre tóxica causó daño!");
-                            actualizarEtiqueta("¡Zombie eliminado, pero su sangre tóxica causó daño!");
-                            supervivienteActual.envenenar();
-                            supervivienteActual.aplicarEfectos();
-                        }
-                        tablero.botonesTablero[coordenadaXSeleccionada][coordenadaYSeleccionada].setIcon(null);
-                        tablero.tablero[coordenadaXSeleccionada][coordenadaYSeleccionada].setHayZombie(false);
-                        tablero.tablero[coordenadaXSeleccionada][coordenadaYSeleccionada].eliminarZombie(zombieAtacado);
-                        zombies.remove(zombieAtacado);
-                        actualizarIconos();
-                        panelJuego.revalidate();
-                        panelJuego.repaint();
-                        accionesTotales++;
-                        break;
+        int exitos = armaSeleccionada.lanzarDados(valoresDados);
+        System.out.println("Éxitos iniciales: " + exitos);
+
+        while (exitos > 0) {
+            if (coordenadaXSeleccionada != -1 && coordenadaYSeleccionada != -1) {
+                Zombi zombieAtacado = buscarZombie(coordenadaXSeleccionada, coordenadaYSeleccionada);
+                if (zombieAtacado != null) {
+                    int distancia = calcularDistancia(supervivienteActual.getX(), supervivienteActual.getY(), zombieAtacado.getX(), zombieAtacado.getY());
+                    int resultado = zombieAtacado.reaccionAtaques(armaSeleccionada, distancia);
+                    String resultadoTexto = "";
+
+                    switch (resultado) {
+                        case 0:
+                            resultadoTexto = "El zombie sigue vivo, el arma no tiene alcance o potencia suficiente.";
+                            break;
+                        case 1:
+                            resultadoTexto = "¡Zombie eliminado!";
+                            actualizarEtiqueta("¡Zombie eliminado!");
+                            eliminarZombieDeTablero(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
+                            exitos--;
+                            break;
+                        case 2:
+                            resultadoTexto = "¡Zombie tóxico eliminado!";
+                            actualizarEtiqueta("¡Zombie tóxico eliminado!");
+                            eliminarZombieDeTablero(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
+                            if (supervivienteActual.getX() == coordenadaXSeleccionada && supervivienteActual.getY() == coordenadaYSeleccionada) {
+                                resultadoTexto += " El superviviente ha recibido daño por sangre tóxica.";
+                                supervivienteActual.envenenar();
+                                supervivienteActual.aplicarEfectos();
+                            }
+                            exitos--;
+                            break;
+                    }
+
+                    registroAtaques.add(new Almacen_Ataques(
+                        supervivienteActual.getNombre(),
+                        zombieAtacado.getIdentificador(),
+                        new ArrayList<>(valoresDados), // Copiar valores de dados
+                        resultadoTexto
+                    ));
+
+                    System.out.println(resultadoTexto);
+                } else {
+                    System.out.println("No hay un zombie en la casilla seleccionada.");
+                    break;
                 }
             } else {
-                System.out.println("No hay un zombie en esa casilla.");
+                System.out.println("Por favor, selecciona una casilla válida antes de atacar.");
+                break;
             }
-        } else {
-            System.out.println("Por favor, selecciona una casilla antes de atacar.");
         }
+
         actualizarIconos();
         panelJuego.revalidate();
         panelJuego.repaint();
+
+        System.out.println("El ataque ha finalizado. Éxitos restantes: " + exitos);
+    }
+    
+    public void mostrarRegistroAtaques() {
+        System.out.println("Registro de ataques:");
+        for (Almacen_Ataques registro : registroAtaques) {
+            System.out.println(registro);
+        }
+    }
+    
+    private void eliminarZombieDeTablero(int x, int y, Zombi zombie) {
+        tablero.botonesTablero[x][y].setIcon(null);
+        tablero.tablero[x][y].setHayZombie(false);
+        tablero.tablero[x][y].eliminarZombie(zombie);
+        zombies.remove(zombie);
     }
 
+    
     private Zombi buscarZombie(int x, int y) {
         for (Zombi zombie : zombies) {
             if (zombie.getX() == x && zombie.getY() == y) {

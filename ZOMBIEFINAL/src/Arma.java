@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Random;
 
 public class Arma extends Equipo{
@@ -8,17 +9,15 @@ public class Arma extends Equipo{
     private int valorExito;
     private boolean activa;
 
-    // Constructor para inicializar el arma
     public Arma(String nombre, int potencia, int alcance, int numDados, int valorExito) {
         this.nombre = nombre;
         this.potencia = potencia;
         this.alcance = alcance;
         this.numDados = numDados;
         this.valorExito = valorExito;
-        this.activa = false; // Por defecto, el arma no está activa
+        this.activa = false; 
     }
 
-    // Getters y setters
     public String getNombre() {
         return nombre;
     }
@@ -49,17 +48,18 @@ public class Arma extends Equipo{
     }
    
 
-    // Método para lanzar dados y calcular éxitos
-    public int lanzarDados() {
+    public int lanzarDados(List<Integer> valoresDados) {
         Random random = new Random();
         int exitos = 0;
 
         for (int i = 0; i < numDados; i++) {
-            int resultado = random.nextInt(6) + 1; // Dado de 6 caras
+            int resultado = random.nextInt(6) + 1;
+            valoresDados.add(resultado); // Guardar los valores de los dados
             if (resultado >= valorExito) {
                 exitos++;
             }
         }
         return exitos;
     }
+
 }

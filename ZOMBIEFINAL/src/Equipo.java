@@ -52,7 +52,6 @@ public class Equipo implements Serializable {
             return;
         }
 
-        // Lista de objetos
         List<Object> posiblesItems = List.of(
             new Arma("Espada", 1, 0, 1, 2),
             new Arma("Pistola", 2, 1, 3, 3),

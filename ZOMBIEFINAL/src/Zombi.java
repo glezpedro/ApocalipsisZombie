@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class Zombi implements Serializable, Activable {
+public class Zombi implements Serializable {
     private static final Random random = new Random();
     private static int contador = 1;
 
@@ -68,7 +68,7 @@ public class Zombi implements Serializable, Activable {
         }
     }
     
-    @Override
+    
     public void atacar(List<Superviviente> supervivientes) {
         for (Superviviente s : supervivientes) {
             if (this.coordenadaX == s.getX() && this.coordenadaY == s.getY()) {
@@ -81,13 +81,11 @@ public class Zombi implements Serializable, Activable {
         System.out.println("El zombi " + identificador + " no encuentra a ningún superviviente.");
     }
 
-    @Override
     public int[] getCoordenadas() {
         return new int[]{coordenadaX, coordenadaY};
     }
     
     
-    @Override
     public void moverse(int objetivoX, int objetivoY) {
 
         for (int i = 0; i < activaciones; i++) {

@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.Set;
 
 
-public class Superviviente implements Activable, Serializable{
+public class Superviviente implements Serializable{
     private String nombre;
     private int salud;
     private Equipo inventario; 
@@ -38,6 +38,9 @@ public class Superviviente implements Activable, Serializable{
         this.isEliminado = false; 
     }
     
+   
+   
+    
     public void recibirHerida() {
         salud--;
     }
@@ -54,7 +57,6 @@ public class Superviviente implements Activable, Serializable{
         }
     }
 
-    @Override
     public int[] getCoordenadas() {
         return new int[]{coordenadaX, coordenadaY};
     }
@@ -62,6 +64,7 @@ public class Superviviente implements Activable, Serializable{
     public Equipo getInventario() {
         return inventario;
     }
+  
 
     public int getSalud() {
         return salud;
@@ -83,25 +86,6 @@ public class Superviviente implements Activable, Serializable{
         return isEliminado;
     }
     
-    
-    @Override
-    public void atacar(List<Superviviente> supervivientes) {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    public void atacar(List<Zombi> zombis, Arma arma) {
-        for (Zombi zombi : zombis) {
-            int distancia = Math.abs(zombi.getX() - coordenadaX) + Math.abs(zombi.getY() - coordenadaY);
-            if (distancia <= arma.getAlcance()) {
-                System.out.println(nombre + " ataca al zombi " + zombi.getX() + "," + zombi.getY() + " con " + arma.getNombre());
-                if (zombi.reaccionAtaques(arma, distancia) == 1) {
-                    System.out.println("¡El zombi ha sido eliminado!");
-                }
-                return;
-            }
-        }
-        System.out.println("No hay zombis en el alcance.");
-    }
     
     public static void seleccionarCoordenadasAleatorias() {
         if (coordenadaSeleccionada == null) {
@@ -152,7 +136,6 @@ public class Superviviente implements Activable, Serializable{
         
     }
     
-    @Override
     public void moverse(int nuevaX, int nuevaY) {
         if (nuevaX < 0 || nuevaY < 0) {
             System.out.println("Movimiento fuera de los límites.");
