@@ -12,6 +12,10 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.io.File;
+import javax.swing.JFileChooser;
 
 
 public class VentanaJuego extends JFrame{
@@ -149,24 +153,29 @@ public class VentanaJuego extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    // leer el archvo guardado
-                    FileInputStream fileIn = new FileInputStream("partidaGuardada.dat");
-                    ObjectInputStream in = new ObjectInputStream(fileIn);
-                    EstadoJuego estado = (EstadoJuego) in.readObject();
-                    in.close();
-                    fileIn.close();
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setDialogTitle("Seleccionar partida guardada");
+                    int seleccion = fileChooser.showOpenDialog(null);
 
-                    // rrestaurar  datos guardados
-                    contadorTurnos = estado.getTurno();
-                    zombies = estado.getZombies();
-                    tablero.coordenadaXSeleccionada = estado.getCoordenadaX();
-                    tablero.coordenadaYSeleccionada = estado.getCoordenadaY();
+                    if (seleccion == JFileChooser.APPROVE_OPTION) {
+                        File archivoSeleccionado = fileChooser.getSelectedFile();
 
-                    // actualizar  interfaz
-                    colocarPanelJuego();
-                    actualizarIconos();
- 
-                    System.out.println("Partida cargada correctamente.");
+                        FileInputStream fileIn = new FileInputStream(archivoSeleccionado);
+                        ObjectInputStream in = new ObjectInputStream(fileIn);
+                        EstadoJuego estado = (EstadoJuego) in.readObject();
+                        in.close();
+                        fileIn.close();
+
+                        contadorTurnos = estado.getTurno();
+                        zombies = estado.getZombies();
+                        tablero.coordenadaXSeleccionada = estado.getCoordenadaX();
+                        tablero.coordenadaYSeleccionada = estado.getCoordenadaY();
+
+                        colocarPanelJuego();
+                        actualizarIconos();
+
+                        System.out.println("Partida cargada correctamente desde: " + archivoSeleccionado.getName());
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     System.out.println("Error al cargar la partida.");
@@ -264,15 +273,29 @@ public class VentanaJuego extends JFrame{
        ActionListener accionBoton5 = new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
-               try {
-            // Crear el objeto EstadoJuego con los datos actuales
-                    EstadoJuego estado = new EstadoJuego(supervivientes, contadorTurnos, zombies, tablero.coordenadaXSeleccionada, tablero.coordenadaYSeleccionada, indiceActual);
-                    FileOutputStream fileOut = new FileOutputStream("partidaGuardada.dat");
+                try {
+                    // Crear el objeto EstadoJuego con los datos actuales
+                    EstadoJuego estado = new EstadoJuego(
+                        supervivientes,
+                        contadorTurnos,
+                        zombies,
+                        tablero.coordenadaXSeleccionada,
+                        tablero.coordenadaYSeleccionada,
+                        indiceActual
+                    );
+
+                    // Guardar el objeto en un archivo con un nombre dinámico
+                    LocalDateTime ahora = LocalDateTime.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+                    String nombreArchivo = "partida_" + ahora.format(formatter) + ".dat";
+
+                    FileOutputStream fileOut = new FileOutputStream(nombreArchivo);
                     ObjectOutputStream out = new ObjectOutputStream(fileOut);
                     out.writeObject(estado);
                     out.close();
                     fileOut.close();
-                    System.out.println("Partida guardada correctamente.");
+
+                    System.out.println("Partida guardada correctamente en: " + nombreArchivo);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     System.out.println("Error al guardar la partida.");
@@ -1151,7 +1174,7 @@ public class VentanaJuego extends JFrame{
                     registroAtaques.add(new Almacen_Ataques(
                         supervivienteActual.getNombre(),
                         zombieAtacado.getIdentificador(),
-                        new ArrayList<>(valoresDados), // Copiar valores de dados
+                        new ArrayList<>(valoresDados), 
                         resultadoTexto
                     ));
 

@@ -1,4 +1,4 @@
-
+    
 
 
 import java.io.Serializable;
@@ -14,18 +14,33 @@ public class EstadoJuego implements Serializable {
     private int coordenadaY;
     private List<Superviviente> supervivientes;
     private int indiceActual;
-    
-    public EstadoJuego(List<Superviviente> supervivientes, int turno, Set<Zombi> zombies, int x, int y, int indiceActual) {
+
+    public EstadoJuego(List<Superviviente> supervivientes, int turno, Set<Zombi> zombies, int coordenadaX, int coordenadaY, int indiceActual) {
         this.supervivientes = supervivientes;
         this.turno = turno;
         this.zombies = zombies;
-        this.coordenadaX = x;
-        this.coordenadaY = y;
+        this.coordenadaX = coordenadaX;
+        this.coordenadaY = coordenadaY;
+        this.indiceActual = indiceActual;
     }
 
-    public int getTurno() { return turno; }
-    public Set<Zombi> getZombies() { return zombies; }
-    public int getCoordenadaX() { return coordenadaX; }
-    public int getCoordenadaY() { return coordenadaY; }
+    public int getTurno() {
+        return turno;
+    }
+    public Set<Zombi> getZombies() {
+        return zombies;
+    }
+    public int getCoordenadaX() {
+        return coordenadaX;
+    }
+    public int getCoordenadaY() {
+        return coordenadaY;
+    }
+    public List<Superviviente> getSupervivientes() {
+        return supervivientes;
+    }
+    public int getIndiceActual() {
+        return indiceActual;
+    }
 }
 
