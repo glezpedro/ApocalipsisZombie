@@ -1254,7 +1254,7 @@ public class VentanaJuego extends JFrame{
             for (Superviviente superviviente : supervivientesCasilla) {
                 if (casilla.tieneZombie()) contenido += "\n"; 
                 contenido += "Contiene: " + superviviente.getNombre() + "\nVida: " + superviviente.getSalud() +
-                     "\nInventario: " + superviviente.getInventario().obtenerNombres()+"\n";
+                     "\nInventario: " + superviviente.getInventario().obtenerNombres()+"\n\n";
             }
         }
 
