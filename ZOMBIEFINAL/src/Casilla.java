@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Casilla {
+public class Casilla implements Serializable{
     private Coordenada posicion;
     private boolean explorada;
     private boolean hayZombie;

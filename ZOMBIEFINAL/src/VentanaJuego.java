@@ -39,6 +39,8 @@ public class VentanaJuego extends JFrame{
     private final VentanaJuego ventana;
     private Arma armaSeleccionada; // Agregamos esta variable para el arma seleccionada
     private List<Almacen_Ataques> registroAtaques = new ArrayList<>();
+    
+
 
 
     public VentanaJuego(){
@@ -166,10 +168,15 @@ public class VentanaJuego extends JFrame{
                         in.close();
                         fileIn.close();
 
+                        tablero = estado.getTablero();
                         contadorTurnos = estado.getTurno();
                         zombies = estado.getZombies();
-                        tablero.coordenadaXSeleccionada = estado.getCoordenadaX();
-                        tablero.coordenadaYSeleccionada = estado.getCoordenadaY();
+                        metaX = estado.getMetaX();
+                        metaY = estado.getMetaY();
+                        registroAtaques = estado.getRegistroAtaques();
+                        accionesTotales = estado.getAccionesTotales();
+                        supervivientes = estado.getSupervivientes();
+                        indiceActual = estado.getIndiceActual();
 
                         colocarPanelJuego();
                         actualizarIconos();
@@ -271,20 +278,21 @@ public class VentanaJuego extends JFrame{
        SalirGuardar.setBorderPainted(false);
 
        ActionListener accionBoton5 = new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 try {
-                    // Crear el objeto EstadoJuego con los datos actuales
                     EstadoJuego estado = new EstadoJuego(
+                        tablero,
                         supervivientes,
                         contadorTurnos,
                         zombies,
-                        tablero.coordenadaXSeleccionada,
-                        tablero.coordenadaYSeleccionada,
-                        indiceActual
+                        indiceActual,
+                        registroAtaques,
+                        metaX,
+                        metaY,
+                        accionesTotales
                     );
 
-                    // Guardar el objeto en un archivo con un nombre dinámico
                     LocalDateTime ahora = LocalDateTime.now();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
                     String nombreArchivo = "partida_" + ahora.format(formatter) + ".dat";
@@ -301,9 +309,8 @@ public class VentanaJuego extends JFrame{
                     System.out.println("Error al guardar la partida.");
                 }
                 System.exit(0); // Salir del juego
-
-               }
-       };
+            }
+        };
        SalirGuardar.addActionListener(accionBoton5);
     }
     
@@ -345,9 +352,8 @@ public class VentanaJuego extends JFrame{
        ActionListener accionQuedarse = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               //FALTA PONER QUE SEA TURNO DE ZOMBI
                limpiarPanel();
-               panelJuego.revalidate(); //para que se muestre en pantalla
+               panelJuego.revalidate(); 
                panelJuego.repaint();
                funcionQuedarse();
            }
@@ -363,7 +369,7 @@ public class VentanaJuego extends JFrame{
             public void actionPerformed(ActionEvent e) {
                limpiarPanel();
                funcionBuscar();
-               panelJuego.revalidate(); //para que se muestre en pantalla
+               panelJuego.revalidate(); 
                panelJuego.repaint();
            }
        };
@@ -376,9 +382,8 @@ public class VentanaJuego extends JFrame{
        ActionListener accionElegir = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               //FALTA PONER QUE SEA TURNO DE ZOMBI
                limpiarPanel();
-               panelJuego.revalidate(); //para que se muestre en pantalla
+               panelJuego.revalidate(); 
                panelJuego.repaint();
                funcionElegirArma();
            }
@@ -1196,12 +1201,7 @@ public class VentanaJuego extends JFrame{
         System.out.println("El ataque ha finalizado. Éxitos restantes: " + exitos);
     }
     
-    public void mostrarRegistroAtaques() {
-        System.out.println("Registro de ataques:");
-        for (Almacen_Ataques registro : registroAtaques) {
-            System.out.println(registro);
-        }
-    }
+   
     
     private void eliminarZombieDeTablero(int x, int y, Zombi zombie) {
         tablero.botonesTablero[x][y].setIcon(null);
@@ -1294,7 +1294,6 @@ public class VentanaJuego extends JFrame{
                 Casilla casilla = tablero.tablero[x][y];
                 List<Superviviente> supervivientesEnCasilla = casilla.getSupervivientes();
 
-                // mira si hay supervivientes en la casilla actual
                 if (!supervivientesEnCasilla.isEmpty() && zombi.getCategoria().equals("TOXICO")) {
                     Superviviente primerSuperviviente = supervivientesEnCasilla.get(0);
                     primerSuperviviente.envenenar();
@@ -1309,17 +1308,14 @@ public class VentanaJuego extends JFrame{
                     }
                 }
 
-                // busca el superviviente cercano
                 Superviviente objetivo = encontrarSupervivienteCercano(x, y);
                 if (objetivo != null) {
                     int xObjetivo = objetivo.getX();
                     int yObjetivo = objetivo.getY();
 
-                    // calcula la posición del zombi
                     int nuevaX = x + Integer.signum(xObjetivo - x);
                     int nuevaY = y + Integer.signum(yObjetivo - y);
 
-                    // mueve al zombi si la posición es válida
                     if (tablero.esPosicionValida(nuevaX, nuevaY)) {
                         tablero.tablero[nuevaX][nuevaY].agregarZombie(zombi);
                         tablero.tablero[nuevaX][nuevaY].setHayZombie(true);

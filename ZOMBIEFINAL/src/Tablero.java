@@ -3,13 +3,14 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 
-public class Tablero {
+public class Tablero implements Serializable{
     private Coordenada dimension;
     private Coordenada objetivo;
     public Casilla[][]tablero;
