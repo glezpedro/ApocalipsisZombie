@@ -820,6 +820,7 @@ public class VentanaJuego extends JFrame{
                         }
                 if(!ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)){
                         System.out.println("Zombie fuera del alcance.");
+                        actualizarEtiqueta("Zombie fuera del alcance.");
                 }else{
                     if (supervivienteActual.gastarAccion() && ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)) {
 
@@ -974,6 +975,8 @@ public class VentanaJuego extends JFrame{
     
     private String armaSeleccionada1 = "";
     private String armaSeleccionada2 = "";
+    private String armaSeleccionada3 = ""; //El arma que se desactiva
+
 
     public void funcionElegirArma() {
         // Texto Elegir Arma:
@@ -991,7 +994,48 @@ public class VentanaJuego extends JFrame{
 
         // ---------------------------------------------------------------
         if (superviviente != null) {
-            if (!superviviente.getInventario().obtenerObjetos().isEmpty()) {
+            if (superviviente.getInventario().obtenerArmasActivas().size()==2) {
+                etiqueta1.setText("Desactivar Arma:");
+                // Obtener las opciones de armas para el JComboBox
+                String[] opcionesArmas = superviviente.getInventario().obtenerNombresArmasActivas().toArray(new String[0]);
+
+                // primera opcion armas activas
+                listaArmas = new JComboBox(opcionesArmas);
+                listaArmas.setBounds(30, 275, 100, 20);
+                listaArmas.addItem(" ");
+                listaArmas.setSelectedItem(" ");
+                panelJuego.add(listaArmas);
+                
+                Seleccionar = new JButton();
+                Seleccionar.setBounds(35, 300, 100, 30);
+                Seleccionar.setEnabled(true);
+                Seleccionar.setBackground(Color.red);
+                ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/Seleccionar.png"));
+                Seleccionar.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(100, 30, Image.SCALE_AREA_AVERAGING)));
+                Seleccionar.setOpaque(false);
+                panelJuego.add(Seleccionar);
+                Seleccionar.setBorderPainted(false);
+                
+                listaArmas.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String seleccion = (String) listaArmas.getSelectedItem();
+
+                        if (!seleccion.equals(" ")) {
+                            armaSeleccionada3 = (String) listaArmas.getSelectedItem();
+                        }
+                    }
+                });
+                Seleccionar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        superviviente.getInventario().desactivarArma(armaSeleccionada3);  
+                            
+                        actualizarEtiqueta("Has desactivado "+armaSeleccionada3+".");          
+                    }
+                });
+            }
+            else if (!superviviente.getInventario().obtenerObjetos().isEmpty()) {
                 // Obtener las opciones de armas para el JComboBox
                 String[] opcionesArmas = superviviente.getInventario().obtenerNombresArmasNA().toArray(new String[0]);
 
@@ -1074,9 +1118,7 @@ public class VentanaJuego extends JFrame{
                             etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
                             panelJuego.revalidate();
                             panelJuego.repaint();
-                        }
-
-                         
+                        }                    
                     }
                 });
             } else {
@@ -1231,10 +1273,12 @@ public class VentanaJuego extends JFrame{
                     System.out.println(resultadoTexto);
                 } else {
                     System.out.println("No hay un zombie en la casilla seleccionada.");
+                    actualizarEtiqueta("No hay un zombie en la casilla seleccionada.");
                     break;
                 }
             } else {
                 System.out.println("Por favor, selecciona una casilla válida antes de atacar.");
+                actualizarEtiqueta("Por favor, selecciona una casilla válida antes de atacar.");
                 break;
             }
         }
