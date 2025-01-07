@@ -1,7 +1,8 @@
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ataque {
+public class Ataque implements Serializable{
     private int[] dados;
     private String resultados;
     private VentanaJuego ventana;

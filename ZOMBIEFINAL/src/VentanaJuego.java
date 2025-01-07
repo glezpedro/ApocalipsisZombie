@@ -354,7 +354,6 @@ public class VentanaJuego extends JFrame{
        ActionListener accionAtacar = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Limpia el panel de opciones
                 limpiarPanel();
                 panelJuego.revalidate();
                 panelJuego.repaint();
@@ -808,46 +807,63 @@ public class VentanaJuego extends JFrame{
         ActionListener atacar = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Ataque ataque = new Ataque(armaSeleccionada1, supervivienteActual, x, y, ventana);
+                //Ataque ataque = new Ataque(armaSeleccionada1, supervivienteActual, x, y, ventana);
                 Arma armaSeleccionada = supervivienteActual.getInventario().obtenerArmaPorNombre(armaSeleccionada1);
+                
+                int coordenadaXSeleccionada = tablero.getCoordenadaXSeleccionada();
+                int coordenadaYSeleccionada = tablero.getCoordenadaYSeleccionada();
+                Zombi zombieAtacado = buscarZombie(coordenadaXSeleccionada, coordenadaYSeleccionada);
+                
                 if (armaSeleccionada1 == null || armaSeleccionada1.trim().isEmpty()) {
                             System.out.println("No se seleccionó un arma válida.");
                             return; 
                         }
-                if (supervivienteActual.gastarAccion()) {
-                        
-                        atacarZombieSeleccionado(armaSeleccionada);
-                        
-                        System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
-                    } else {
-                        System.out.println("Movimiento no válido o acciones agotadas.");
-                    }
-                
-                if (accionesTotales == 12) {
-                        System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
-                        accionarZombies();
-                        colocarZombieFinDeRonda();
-                        actualizarTurno(); 
-                    }
+                if(!ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)){
+                        System.out.println("Zombie fuera del alcance.");
+                }else{
+                    if (supervivienteActual.gastarAccion() && ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)) {
 
-                if (supervivienteActual.getAccionesDisponibles() == 0) {
-                    indiceActual--;
-                    if (indiceActual >= supervivientes.size()) {
-                        indiceActual = 3;
-                    }
-                    Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
-                    siguienteSuperviviente.resetearAcciones();
-                    System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
-                    etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
-                    panelJuego.revalidate();
-                    panelJuego.repaint();
-                }   
+                            atacarZombieSeleccionado(armaSeleccionada);
+
+                            System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                        } else {
+                            System.out.println("Movimiento no válido o acciones agotadas.");
+                        }
+
+                    if (accionesTotales == 12) {
+                            System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+                            accionarZombies();
+                            colocarZombieFinDeRonda();
+                            actualizarTurno(); 
+                        }
+
+                    if (supervivienteActual.getAccionesDisponibles() == 0) {
+                        indiceActual--;
+                        if (indiceActual >= supervivientes.size()) {
+                            indiceActual = 3;
+                        }
+                        Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+                        siguienteSuperviviente.resetearAcciones();
+                        System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                        etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+                        panelJuego.revalidate();
+                        panelJuego.repaint();
+                    } 
+                }
                 actualizarIconos();
             }
         };
         Atacar.addActionListener(atacar);
     }
 
+    public boolean ataqueValido(Arma arma, Superviviente supervivienteActual, Zombi zombieAtacado){
+        
+        int distancia = calcularDistancia(supervivienteActual.getX(), supervivienteActual.getY(), zombieAtacado.getX(), zombieAtacado.getY());
+        
+        return(distancia < arma.getPotencia() );
+        
+    }
+    
     public int calcularDistancia(int x1, int y1, int x2, int y2) {
         int distancia = (int) Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
         System.out.println("La distancia calculada es: " + distancia);
@@ -1163,12 +1179,15 @@ public class VentanaJuego extends JFrame{
 
         int exitos = armaSeleccionada.lanzarDados(valoresDados);
         System.out.println("Éxitos iniciales: " + exitos);
-
+        
+        
+        
         while (exitos > 0) {
             if (coordenadaXSeleccionada != -1 && coordenadaYSeleccionada != -1) {
                 Zombi zombieAtacado = buscarZombie(coordenadaXSeleccionada, coordenadaYSeleccionada);
+                int distancia = calcularDistancia(supervivienteActual.getX(), supervivienteActual.getY(), zombieAtacado.getX(), zombieAtacado.getY());
+
                 if (zombieAtacado != null) {
-                    int distancia = calcularDistancia(supervivienteActual.getX(), supervivienteActual.getY(), zombieAtacado.getX(), zombieAtacado.getY());
                     int resultado = zombieAtacado.reaccionAtaques(armaSeleccionada, distancia);
                     String resultadoTexto = "";
 
@@ -1181,6 +1200,12 @@ public class VentanaJuego extends JFrame{
                             actualizarEtiqueta("¡Zombie eliminado!");
                             eliminarZombieDeTablero(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
                             exitos--;
+                            registroAtaques.add(new Almacen_Ataques(
+                                supervivienteActual.getNombre(),
+                                zombieAtacado.getIdentificador(),
+                                new ArrayList<>(valoresDados), 
+                                resultadoTexto
+                            ));
                             break;
                         case 2:
                             resultadoTexto = "¡Zombie tóxico eliminado!";
@@ -1191,16 +1216,17 @@ public class VentanaJuego extends JFrame{
                                 supervivienteActual.envenenar();
                                 supervivienteActual.aplicarEfectos();
                             }
+                            registroAtaques.add(new Almacen_Ataques(
+                                supervivienteActual.getNombre(),
+                                zombieAtacado.getIdentificador(),
+                                new ArrayList<>(valoresDados), 
+                                resultadoTexto
+                            ));
                             exitos--;
                             break;
                     }
                     
-                    registroAtaques.add(new Almacen_Ataques(
-                        supervivienteActual.getNombre(),
-                        zombieAtacado.getIdentificador(),
-                        new ArrayList<>(valoresDados), 
-                        resultadoTexto
-                    ));
+                    
 
                     System.out.println(resultadoTexto);
                 } else {
