@@ -20,7 +20,7 @@ import javax.swing.JFileChooser;
 
 public class VentanaJuego extends JFrame{
     public JPanel panel, panelJuego, panelSimular, panelTablero;
-    private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular;
+    private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular, Ataques;
     private int contadorTurnos;
     private final int numZombies = 3;
     private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar;
@@ -39,7 +39,6 @@ public class VentanaJuego extends JFrame{
     private final VentanaJuego ventana;
     private Arma armaSeleccionada; // Agregamos esta variable para el arma seleccionada
     private List<Almacen_Ataques> registroAtaques = new ArrayList<>();
-    
 
 
 
@@ -312,6 +311,25 @@ public class VentanaJuego extends JFrame{
             }
         };
        SalirGuardar.addActionListener(accionBoton5);
+       // Ataques
+       Ataques = new JButton();
+       Ataques.setBounds(280, 360, 93, 40);
+       Ataques.setEnabled(true);
+       Ataques.setBackground(Color.red);
+       ImageIcon imagen6 = new ImageIcon(getClass().getResource("/resources/Ataques.png"));
+       Ataques.setIcon(new ImageIcon(imagen6.getImage().getScaledInstance(93, 40, Image.SCALE_AREA_AVERAGING)));
+       Ataques.setOpaque(false);
+       Ataques.setBorderPainted(false);
+       panelJuego.add(Ataques);
+
+       ActionListener accionBoton6 = new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               if (registroAtaques.isEmpty()) actualizarEtiqueta("No hay ataques");
+               else actualizarEtiqueta(registroAtaques.toString());
+           }
+       };
+       Ataques.addActionListener(accionBoton6);
     }
     
     private void colocarRadioBotones(){
@@ -901,11 +919,12 @@ public class VentanaJuego extends JFrame{
                @Override
                public void actionPerformed(ActionEvent e) {
                    System.out.println("Buscando");
-                   buscar();
+                   
                    
                    Superviviente supervivienteActual = supervivientes.get(indiceActual);
                    
                    if (supervivienteActual.gastarAccion()) {
+                        buscar();
                         accionesTotales++;
                         System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
                     } else {
@@ -1175,7 +1194,7 @@ public class VentanaJuego extends JFrame{
                             exitos--;
                             break;
                     }
-
+                    
                     registroAtaques.add(new Almacen_Ataques(
                         supervivienteActual.getNombre(),
                         zombieAtacado.getIdentificador(),
