@@ -33,6 +33,8 @@ public class Ataque implements Serializable {
                     switch (resultado) {
                         case 0:
                             resultadoTexto = "El zombie sigue vivo, el arma no tiene alcance o potencia suficiente.";
+                            ventana.actualizarEtiqueta("El zombie sigue vivo, el arma no tiene alcance o potencia suficiente.");
+                            exitos--;
                             break;
                         case 1:
                             resultadoTexto = "¡Zombie eliminado!";

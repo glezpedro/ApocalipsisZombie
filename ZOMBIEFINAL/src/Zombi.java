@@ -110,7 +110,10 @@ public class Zombi implements Serializable {
     }
 
     public int reaccionAtaques(Arma arma, int distancia) {
-        if (distancia > arma.getAlcance()) return 0;
+        if (distancia > arma.getAlcance()) {
+            System.out.println("El arma esta fuera del alcance");
+            return 0;
+        }
 
         int potenciaTotal = arma.getPotencia();
         if (potenciaTotal >= aguante) {

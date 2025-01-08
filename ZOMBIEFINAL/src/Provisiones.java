@@ -1,6 +1,9 @@
 
+import java.io.Serializable;
 
-public class Provisiones extends Equipo {
+
+
+public class Provisiones extends Equipo implements Serializable{
     private String nombre;
     private int valorEnergetico;
     private String caducidad; // Se cambia a String para manejar fechas simples

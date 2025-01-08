@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.List;
 
-public class Almacen_Ataques {
+public class Almacen_Ataques implements Serializable{
     private String atacante;
     private int objetivo;
     private List<Integer> valoresDados;

@@ -2,8 +2,9 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-class BackgroundPanel extends JPanel {
+class BackgroundPanel extends JPanel implements Serializable{
     private Image backgroundImage;
 
     public BackgroundPanel(String imagePath) {

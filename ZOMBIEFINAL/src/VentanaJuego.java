@@ -15,10 +15,11 @@ import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.io.File;
+import java.io.Serializable;
 import javax.swing.JFileChooser;
 
 
-public class VentanaJuego extends JFrame{
+public class VentanaJuego extends JFrame implements Serializable{
     public JPanel panel, panelJuego, panelSimular, panelTablero;
     private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular, Ataques;
     private int contadorTurnos;

@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class Arma extends Equipo{
+public class Arma extends Equipo implements Serializable{
     private String nombre;
     private int potencia;
     private int alcance;
