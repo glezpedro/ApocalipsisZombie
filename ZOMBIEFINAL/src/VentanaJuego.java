@@ -696,22 +696,27 @@ public class VentanaJuego extends JFrame{
 
             boolean movimientoValido = esMovimientoValido(viejaXY[0], viejaXY[1], nuevaX, nuevaY);            
             
-            if (supervivienteActual.gastarAccion() && movimientoValido == true) {
-                tablero.tablero[viejaXY[0]][viejaXY[1]].eliminarSuperviviente(supervivienteActual);
-                tablero.tablero[nuevaX][nuevaY].agregarSuperviviente(supervivienteActual);
-                supervivienteActual.moverse(nuevaX, nuevaY);
+            if (movimientoValido == true) {
+                if(supervivienteActual.gastarAccion()){
+                    tablero.tablero[viejaXY[0]][viejaXY[1]].eliminarSuperviviente(supervivienteActual);
+                    tablero.tablero[nuevaX][nuevaY].agregarSuperviviente(supervivienteActual);
+                    supervivienteActual.moverse(nuevaX, nuevaY);
 
-                actualizarIconoSuper(viejaXY[0], viejaXY[1]);
-                actualizarIconoSuper(nuevaX, nuevaY);
-                tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
-                tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
-                
-                
-                System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
-                accionesTotales++;
+                    actualizarIconoSuper(viejaXY[0], viejaXY[1]);
+                    actualizarIconoSuper(nuevaX, nuevaY);
+                    tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
+                    tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
+
+
+                    System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                    accionesTotales++;
+                }else{
+                    System.out.println("Acciones agotadas.");
+                    actualizarEtiqueta("Acciones agotadas.");
+                }
             } else {
-                System.out.println("Movimiento no válido o acciones agotadas.");
-                actualizarEtiqueta("Movimiento no válido o acciones agotadas.");
+                System.out.println("Movimiento no válido.");
+                actualizarEtiqueta("Movimiento no válido.");
             }
             
             if(accionesTotales == 12){
@@ -829,14 +834,17 @@ public class VentanaJuego extends JFrame{
                         System.out.println("Zombie fuera del alcance.");
                         actualizarEtiqueta("Zombie fuera del alcance.");
                 }else{
-                    if (supervivienteActual.gastarAccion() && ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)) {
-
+                    if (ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)) {
+                        if(supervivienteActual.gastarAccion() ){
                             ataque.atacarZombieF(armaSeleccionada, supervivienteActual, coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
 
                             System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
-                        } else {
-                            System.out.println("Movimiento no válido o acciones agotadas.");
-                        }
+                        }else{
+                            System.out.println("Acciones agotadas.");
+                        }  
+                    } else {
+                            System.out.println("Movimiento no válido.");
+                    }
 
                     if (accionesTotales == 12) {
                             System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
