@@ -24,17 +24,18 @@ public class VentanaJuego extends JFrame{
     private int contadorTurnos;
     private final int numZombies = 3;
     private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar;
-    private JLabel etiqueta1, etiqueta2, etiqueta3, etiquetaTurnos;
+    private JLabel etiqueta1, etiqueta2, etiqueta3;
+    public JLabel etiquetaTurnos;
     private JComboBox<String> listaArmas,listaArmas2, listaActivas;  
     private JTextArea etiquetaStatus;
     private JScrollPane scrollPanel;
     public Set<Zombi> zombies;
     Set<Point> posicionesUsadas = new HashSet<>();
     Tablero tablero;
-    private List<Superviviente> supervivientes = new ArrayList<>();
+    public List<Superviviente> supervivientes = new ArrayList<>();
     private int metaX;
     private int metaY;
-    private int indiceActual = 3;
+    public int indiceActual = 3;
     public int accionesTotales = 0;
     private final VentanaJuego ventana;
     private Arma armaSeleccionada; // Agregamos esta variable para el arma seleccionada

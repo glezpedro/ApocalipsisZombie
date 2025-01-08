@@ -49,6 +49,7 @@ public class Ataque implements Serializable {
 
     private void manejarResultadoAtaque(int x, int y, List<Integer> valoresDados, Superviviente superviviente, Zombi zombie, int resultado) {
         String resultadoTexto = "";
+        Superviviente supervivienteActual = ventana.supervivientes.get(ventana.indiceActual);
         switch (resultado) {
             case 0:
                 resultadoTexto = "El zombie sigue vivo, el arma no tiene alcance o potencia suficiente.";
@@ -71,6 +72,20 @@ public class Ataque implements Serializable {
                 }
                 break;
         }
+        ventana.accionesTotales++;
+        System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+        if(ventana.accionesTotales == 12) ventana.actualizarTurno();
+        if (supervivienteActual.getAccionesDisponibles() == 0) {
+            ventana.indiceActual--;
+            if (ventana.indiceActual >= ventana.supervivientes.size()) ventana.indiceActual = 3;
+            Superviviente siguienteSuperviviente = ventana.supervivientes.get(ventana.indiceActual);
+            siguienteSuperviviente.resetearAcciones();
+            System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+            ventana.etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+            ventana.panelJuego.revalidate();
+            ventana.panelJuego.repaint();
+        }
+        ventana.actualizarIconos();
         ventana.registroAtaques.add(new Almacen_Ataques(superviviente.getNombre(), zombie.getIdentificador(), new ArrayList<>(valoresDados), resultadoTexto));
         System.out.println(resultadoTexto);
     }
