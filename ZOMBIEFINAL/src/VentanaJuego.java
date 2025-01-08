@@ -818,10 +818,51 @@ public class VentanaJuego extends JFrame{
 
                 // Crear una instancia de Ataque y pasar this como referencia de ventana
                 Ataque ataque = new Ataque(VentanaJuego.this);
-                ataque.atacarZombie(armaSeleccionada, supervivienteActual, coordenadaXSeleccionada, coordenadaYSeleccionada);
+                
+                Zombi zombieAtacado = buscarZombie(coordenadaXSeleccionada, coordenadaYSeleccionada);
+                
+                if (armaSeleccionada1 == null || armaSeleccionada1.trim().isEmpty()) {
+                            System.out.println("No se seleccionó un arma válida.");
+                            return; 
+                        }
+                if(!ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)){
+                        System.out.println("Zombie fuera del alcance.");
+                        actualizarEtiqueta("Zombie fuera del alcance.");
+                }else{
+                    if (supervivienteActual.gastarAccion() && ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)) {
+
+                            ataque.atacarZombieF(armaSeleccionada, supervivienteActual, coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
+
+                            System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                        } else {
+                            System.out.println("Movimiento no válido o acciones agotadas.");
+                        }
+
+                    if (accionesTotales == 12) {
+                            System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+                            accionarZombies();
+                            colocarZombieFinDeRonda();
+                            actualizarTurno(); 
+                        }
+
+                    if (supervivienteActual.getAccionesDisponibles() == 0) {
+                        indiceActual--;
+                        if (indiceActual >= supervivientes.size()) {
+                            indiceActual = 3;
+                        }
+                        Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+                        siguienteSuperviviente.resetearAcciones();
+                        System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                        etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+                        panelJuego.revalidate();
+                        panelJuego.repaint();
+                    } 
+                }
+                actualizarIconos();
             }
         };
         Atacar.addActionListener(atacar);
+        
     }
 
     public boolean ataqueValido(Arma arma, Superviviente supervivienteActual, Zombi zombieAtacado){
