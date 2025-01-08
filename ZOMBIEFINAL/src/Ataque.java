@@ -65,6 +65,7 @@ public class Ataque implements Serializable {
                 eliminarZombieDeTablero(x, y, zombie);
                 if (superviviente.getX() == x && superviviente.getY() == y) {
                     resultadoTexto += " El superviviente ha recibido daño por sangre tóxica.";
+                    ventana.actualizarEtiqueta("¡Zombie tóxico eliminado!, El superviviente ha recibido daño por sangre tóxica.");
                     superviviente.envenenar();
                     superviviente.aplicarEfectos();
                 }

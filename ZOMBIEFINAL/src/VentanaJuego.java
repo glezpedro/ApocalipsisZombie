@@ -80,6 +80,8 @@ public class VentanaJuego extends JFrame{
         this.getContentPane().remove(panel); 
         this.getContentPane().add(panelJuego);
 
+        //Añade instrucciones
+        actualizarEtiqueta("Para moverse o atacar, primero selecciona la casilla deseada y luego presiona el botón correspondiente (Moverse/Atacar).");
         // Recarga el panel para asegurarse que este se muestra
         this.revalidate();
         this.repaint();
@@ -641,7 +643,11 @@ public class VentanaJuego extends JFrame{
         for (Superviviente s : supervivientes) {
             s.resetearAcciones();
         }
-
+        
+        accionarZombies();
+        colocarZombieFinDeRonda();
+        actualizarIconos();
+        
         indiceActual = 3;
         finJuego();
         panelJuego.revalidate();
@@ -652,11 +658,11 @@ public class VentanaJuego extends JFrame{
     
     public void funcionMoverse(){
         // Texto Elegir Casila:
-        etiqueta2 = new JLabel("Elegir Casilla:", SwingConstants.CENTER); // Creamos etiqueta
+        etiqueta2 = new JLabel("Casilla Seleccionada:", SwingConstants.CENTER); // Creamos etiqueta
         etiqueta2.setBounds(10, 245, 150, 30);
         etiqueta2.setOpaque(true); // Asi podemos poner background
         etiqueta2.setForeground(Color.black);
-        etiqueta2.setFont(new Font("arial", Font.BOLD, 13)); // estableze el font se puede usar 0123 para typo de letra
+        etiqueta2.setFont(new Font("arial", Font.BOLD, 12)); // estableze el font se puede usar 0123 para typo de letra
         panelJuego.add(etiqueta2);
         etiqueta2.setOpaque(false);
         // Texto x e y
@@ -710,8 +716,6 @@ public class VentanaJuego extends JFrame{
             if(accionesTotales == 12){
                 actualizarTurno();
                 System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
-                accionarZombies();
-                colocarZombieFinDeRonda();
             }
 
             if (supervivienteActual.getAccionesDisponibles() == 0) {
@@ -858,10 +862,8 @@ public class VentanaJuego extends JFrame{
                     }
                     
                     if (accionesTotales == 12) {
+                        actualizarTurno();
                         System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
-                        accionarZombies();
-                        colocarZombieFinDeRonda();
-                        actualizarTurno(); 
                     }
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
@@ -911,10 +913,8 @@ public class VentanaJuego extends JFrame{
                     }
                    
                     if (accionesTotales == 12) {
-                        System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
-                        accionarZombies();
-                        colocarZombieFinDeRonda();
                         actualizarTurno(); 
+                        System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
                     } 
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
@@ -938,7 +938,6 @@ public class VentanaJuego extends JFrame{
     private String armaSeleccionada1 = "";
     private String armaSeleccionada2 = "";
     private String armaSeleccionada3 = ""; //El arma que se desactiva
-
 
     public void funcionElegirArma() {
         // Texto Elegir Arma:
@@ -1063,10 +1062,8 @@ public class VentanaJuego extends JFrame{
                         }
 
                         if (accionesTotales == 12) {
-                            System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
-                            accionarZombies();
-                            colocarZombieFinDeRonda();
                             actualizarTurno(); 
+                            System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
                         }
                         
                         if (supervivienteActual.getAccionesDisponibles() == 0) {
@@ -1214,10 +1211,12 @@ public class VentanaJuego extends JFrame{
         if (casilla.tieneSuperviviente()) {
             List<Superviviente> supervivientesCasilla = tablero.tablero[x][y].getSupervivientes();
             for (Superviviente superviviente : supervivientesCasilla) {
-                if (casilla.tieneZombie()) contenido += "\n"; 
+                if (casilla.tieneZombie()) contenido += "\n";
+                contenido += "---------------\n";
                 contenido += "Contiene: " + superviviente.getNombre() + "\nVida: " + superviviente.getSalud() +
-                     "\nInventario: " + superviviente.getInventario().obtenerNombres()+"\n\n";
+                     "\nInventario: " + superviviente.getInventario().obtenerNombres()+"\n";
             }
+            contenido += "---------------";
         }
 
         if (!casilla.tieneZombie() && !casilla.tieneSuperviviente() && !esMeta) {
@@ -1464,6 +1463,8 @@ public class VentanaJuego extends JFrame{
                 }
             }
         }
+        panelJuego.revalidate();
+        panelJuego.repaint();
     }
     
 }
