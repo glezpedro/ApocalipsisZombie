@@ -14,10 +14,10 @@ public class VentanaJuego extends JFrame implements Serializable{
     private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular, Ataques;
     private int contadorTurnos;
     private final int numZombies = 3;
-    private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar;
+    private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar, zombisEliminadosOrde;
     private JLabel etiqueta1, etiqueta2, etiqueta3;
     public JLabel etiquetaTurnos;
-    private JComboBox<String> listaArmas,listaArmas2, listaActivas, añadirZombi;  
+    private JComboBox<String> listaArmas,listaArmas2, listaActivas, añadirZombi, listaSuper;  
     private JTextArea etiquetaStatus;
     private JScrollPane scrollPanel;
     public Set<Zombi> zombies;
@@ -31,8 +31,6 @@ public class VentanaJuego extends JFrame implements Serializable{
     private final VentanaJuego ventana;
     private Arma armaSeleccionada; // Agregamos esta variable para el arma seleccionada
     public List<Almacen_Ataques> registroAtaques;
-
-
 
     public VentanaJuego(){
         this.registroAtaques = new ArrayList<>();
@@ -242,6 +240,8 @@ public class VentanaJuego extends JFrame implements Serializable{
         etiquetaTurnos.setOpaque(false);
     }
     
+    private String SuperSeleccionado = "";
+    
     private void colocarBotonesJuego(){
        // Atras
        Atras = new JButton();
@@ -317,7 +317,7 @@ public class VentanaJuego extends JFrame implements Serializable{
        Ataques.setOpaque(false);
        Ataques.setBorderPainted(false);
        panelJuego.add(Ataques);
-
+       
        ActionListener accionBoton6 = new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -345,7 +345,45 @@ public class VentanaJuego extends JFrame implements Serializable{
                 
                 btnZombisElim.addActionListener(ev -> {
                     if (Ataque.zombisEliminados.isEmpty()) actualizarEtiqueta("No hay zombis eliminados.");
-                    else actualizarEtiqueta(Ataque.zombisEliminados.toString());
+                    else {
+                        limpiarPanel();
+                        etiqueta1 = new JLabel("Elegir Superviviente:", SwingConstants.CENTER); // Creamos etiqueta
+                        etiqueta1.setBounds(30, 245, 120, 30);
+                        etiqueta1.setOpaque(true); // Asi podemos poner background
+                        etiqueta1.setForeground(Color.black);
+                        etiqueta1.setFont(new Font("arial", Font.BOLD, 10)); // estableze el font se puede usar 0123 para typo de letra
+                        panelJuego.add(etiqueta1);
+                        etiqueta1.setOpaque(false);
+                        
+                        JButton zombisEliminadosOrde = new JButton("Por orden");
+                        panelJuego.add(zombisEliminadosOrde);
+                        zombisEliminadosOrde.setBounds(30, 300, 100, 20);
+                        ActionListener accionListaOrd = (ActionEvent a) -> {
+                            panelJuego.remove(zombisEliminadosOrde);
+                            panelJuego.revalidate();
+                            panelJuego.repaint();
+                            actualizarEtiqueta(Ataque.zombisEliminados.toString());
+                            
+                        };
+                        zombisEliminadosOrde.addActionListener(accionListaOrd);
+                        //
+                        List<String> opcionesSuperLista = new ArrayList<>();
+                        for (Superviviente s : supervivientes) opcionesSuperLista.add(s.getNombre());
+                        String[] opcionesSuper = opcionesSuperLista.toArray(new String[0]);
+                        
+                        listaSuper = new JComboBox(opcionesSuper);
+                        listaSuper.setBounds(30, 275, 100, 20);
+                        ActionListener accionLista = (ActionEvent a) -> {
+                            panelJuego.remove(zombisEliminadosOrde);
+                            panelJuego.revalidate();
+                            panelJuego.repaint();
+                            SuperSeleccionado = (String) listaSuper.getSelectedItem();
+                            System.out.println("Superviviente seleccionado: " + SuperSeleccionado);
+                            actualizarEtiqueta(Ataque.obtenerZombisEliminadosPorSuperviviente(SuperSeleccionado));
+                        };
+                        listaSuper.addActionListener(accionLista);
+                        panelJuego.add(listaSuper); 
+                    }
                 });
                 
                 nuevaVentana.add(btnSupervivientes);
@@ -1658,6 +1696,12 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
             panelJuego.remove(scrollPanel);
             scrollPanel = null;
         }
+        if (listaSuper != null) {
+            panelJuego.remove(listaSuper);
+        }
+        if (zombisEliminadosOrde != null) {
+            panelJuego.remove(zombisEliminadosOrde);
+        }
     panelJuego.revalidate();
     panelJuego.repaint();
     }
@@ -1707,11 +1751,11 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
             panelSimular.remove(etiquetaStatus);
             etiquetaStatus = null;
         }
-        
         if (scrollPanel != null) {
             panelSimular.remove(scrollPanel);
             scrollPanel = null;
         }
+
     panelSimular.revalidate();
     panelSimular.repaint();
     }

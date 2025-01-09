@@ -1,9 +1,12 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Ataque implements Serializable {
-    public static List<String> zombisEliminados = new ArrayList<>();
+    public static Map<String, List<String>> zombisEliminados = new HashMap<>();
     private VentanaJuego ventana;
 
     public Ataque(VentanaJuego ventana) {
@@ -39,7 +42,7 @@ public class Ataque implements Serializable {
                         case 1:
                             resultadoTexto = "¡Zombie eliminado!";
                             ventana.actualizarEtiqueta("¡Zombie eliminado!");
-                            zombisEliminados.add("Zombi: "+zombieAtacado.getIdentificador()+", Categoria: "+zombieAtacado.getCategoria()+", Por: "+ supervivienteActual.getNombre());
+                            agregarZombiEliminado(zombieAtacado, supervivienteActual.getNombre());
                             eliminarZombieDeTablero(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
                             exitos--;
                             ventana.registroAtaques.add(new Almacen_Ataques(
@@ -52,7 +55,7 @@ public class Ataque implements Serializable {
                         case 2:
                             resultadoTexto = "¡Zombie tóxico eliminado!";
                             ventana.actualizarEtiqueta("¡Zombie tóxico eliminado!");
-                            zombisEliminados.add("Zombi: "+zombieAtacado.getIdentificador()+", Categoria: "+zombieAtacado.getCategoria()+", Por: "+ supervivienteActual.getNombre());
+                            agregarZombiEliminado(zombieAtacado, supervivienteActual.getNombre());
                             eliminarZombieDeTablero(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
                             if (supervivienteActual.getX() == coordenadaXSeleccionada && supervivienteActual.getY() == coordenadaYSeleccionada) {
                                 resultadoTexto += " El superviviente ha recibido daño por sangre tóxica.";
@@ -93,9 +96,23 @@ public class Ataque implements Serializable {
     }
     
     
+    public static void agregarZombiEliminado(Zombi zombieAtacado, String nombreSuperviviente) {
+        zombisEliminados.putIfAbsent(nombreSuperviviente, new ArrayList<>());
+        zombisEliminados.get(nombreSuperviviente).add(
+            "Zombi: " + zombieAtacado.getIdentificador() + 
+            ", Categoria: " + zombieAtacado.getCategoria()
+        );
+        zombisEliminados.get(nombreSuperviviente).sort(Comparator.comparing(z -> z.split(": ")[1]));
+    }
     
-    
-    
+    public static String obtenerZombisEliminadosPorSuperviviente(String nombreSuperviviente) {
+        if (zombisEliminados.containsKey(nombreSuperviviente)) {
+            return "Zombis eliminados por " + nombreSuperviviente + ": " + String.join(", ", zombisEliminados.get(nombreSuperviviente));
+        } else {
+            return nombreSuperviviente + " no ha eliminado ningún zombi aún.";
+        }
+    }
+
     private void eliminarZombieDeTablero(int x, int y, Zombi zombie) {
         ventana.tablero.botonesTablero[x][y].setIcon(null);
         ventana.tablero.tablero[x][y].setHayZombie(false);
