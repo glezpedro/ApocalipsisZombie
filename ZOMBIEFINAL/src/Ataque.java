@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ataque implements Serializable {
-    
+    public static List<String> zombisEliminados = new ArrayList<>();
     private VentanaJuego ventana;
 
     public Ataque(VentanaJuego ventana) {
@@ -39,6 +39,7 @@ public class Ataque implements Serializable {
                         case 1:
                             resultadoTexto = "¡Zombie eliminado!";
                             ventana.actualizarEtiqueta("¡Zombie eliminado!");
+                            zombisEliminados.add("Zombi: "+zombieAtacado.getIdentificador()+", Categoria: "+zombieAtacado.getCategoria()+", Por: "+ supervivienteActual.getNombre());
                             eliminarZombieDeTablero(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
                             exitos--;
                             ventana.registroAtaques.add(new Almacen_Ataques(
@@ -51,6 +52,7 @@ public class Ataque implements Serializable {
                         case 2:
                             resultadoTexto = "¡Zombie tóxico eliminado!";
                             ventana.actualizarEtiqueta("¡Zombie tóxico eliminado!");
+                            zombisEliminados.add("Zombi: "+zombieAtacado.getIdentificador()+", Categoria: "+zombieAtacado.getCategoria()+", Por: "+ supervivienteActual.getNombre());
                             eliminarZombieDeTablero(coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
                             if (supervivienteActual.getX() == coordenadaXSeleccionada && supervivienteActual.getY() == coordenadaYSeleccionada) {
                                 resultadoTexto += " El superviviente ha recibido daño por sangre tóxica.";

@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -14,6 +15,7 @@ public class Zombi implements Serializable {
     private int coordenadaX;
     private int coordenadaY;
     private String categoria;
+    public static List<String> superAtacados = new ArrayList<>();;
 
     public Zombi(TipoZombie tipo, int x, int y, String categoria) {
         this.identificador = contador++;
@@ -74,6 +76,7 @@ public class Zombi implements Serializable {
             if (this.coordenadaX == s.getX() && this.coordenadaY == s.getY()) {
                 int danio = (this.tipo == TipoZombie.ABOMINACION) ? 3 : 1;
                 System.out.println("¡El zombi " + identificador + " ha mordido al superviviente causando " + danio + " puntos de daño!");
+                superAtacados.add("El zombi " + identificador + " ha mordido a "+s.getNombre()+" causando " + danio + " puntos de daño.");
                 s.aplicarEfectos();
                 return;
             }

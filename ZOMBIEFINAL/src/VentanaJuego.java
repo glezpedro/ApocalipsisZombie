@@ -321,8 +321,37 @@ public class VentanaJuego extends JFrame implements Serializable{
        ActionListener accionBoton6 = new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
-               if (registroAtaques.isEmpty()) actualizarEtiqueta("No hay ataques");
-               else actualizarEtiqueta(registroAtaques.toString());
+               
+                JFrame nuevaVentana = new JFrame("Lista de Ataques");
+                nuevaVentana.setSize(300, 120);
+                nuevaVentana.setLocationRelativeTo(null); //Pone la ventana en el centro
+                nuevaVentana.setResizable(false);
+                nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                nuevaVentana.setLayout(new FlowLayout()); 
+
+                JButton btnSupervivientes = new JButton("Ataques Supervivientes");
+                JButton btnZombis = new JButton("Ataques Zombis");
+                JButton btnZombisElim = new JButton("Zombis Eliminados");
+                
+                btnSupervivientes.addActionListener(ev -> {
+                    if (registroAtaques.isEmpty()) actualizarEtiqueta("No hay ataques");
+                    else actualizarEtiqueta(registroAtaques.toString()); 
+                });
+
+                btnZombis.addActionListener(ev -> {
+                    if (Zombi.superAtacados.isEmpty()) actualizarEtiqueta("No hay Supervivientes atacados.");
+                    else actualizarEtiqueta(Zombi.superAtacados.toString());
+                });
+                
+                btnZombisElim.addActionListener(ev -> {
+                    if (Ataque.zombisEliminados.isEmpty()) actualizarEtiqueta("No hay zombis eliminados.");
+                    else actualizarEtiqueta(Ataque.zombisEliminados.toString());
+                });
+                
+                nuevaVentana.add(btnSupervivientes);
+                nuevaVentana.add(btnZombis);
+                nuevaVentana.add(btnZombisElim);
+                nuevaVentana.setVisible(true);
            }
        };
        Ataques.addActionListener(accionBoton6);
