@@ -41,6 +41,15 @@ public class Zombi implements Serializable {
                 break;
         }
     }
+    
+    public static Zombi crearZombiElegido(TipoZombie tipo, String categoria) {
+    if (!categoria.equals("NORMAL") && !categoria.equals("BERSERKER") && !categoria.equals("TOXICO")) {
+        throw new IllegalArgumentException("Categoría inválida. Debe ser NORMAL, BERSERKER o TOXICO.");
+    }
+
+    // Crear el zombi con las propiedades específicas
+    return new Zombi(tipo, random.nextInt(10), random.nextInt(10), categoria);
+}
 
     public static Zombi crearZombiAleatorio() {
         String categoria = seleccionarCategoriaAleatoria();

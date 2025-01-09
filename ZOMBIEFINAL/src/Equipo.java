@@ -87,6 +87,29 @@ public class Equipo implements Serializable {
         System.out.println("Se añadió al inventario: " + 
             (itemRandom instanceof Arma ? ((Arma) itemRandom).getNombre() : ((Provisiones) itemRandom).getNombre()));
     }
+    
+    public static Arma elegirArma(String nombreArma) {
+    
+    List<Object> posiblesItems = List.of(
+            new Arma("Espada", 1, 0, 1, 2),
+            new Arma("Pistola", 2, 1, 3, 3),
+            new Arma("Rifle", 3, 2, 5, 5),
+            new Provisiones("Agua", 0, "2025-12-31"),
+            new Provisiones("Barrita Energética", 250, "2024-08-15"),
+            new Provisiones("Galletas de avena", 150, "2026-01-10")
+        );    
+        
+    for (Object item : posiblesItems) {
+        if (item instanceof Arma) {
+            Arma arma = (Arma) item;
+            if (arma.getNombre().equalsIgnoreCase(nombreArma)) {
+                return arma; // Devuelve el arma encontrada
+            }
+        }
+    }
+    throw new IllegalArgumentException("Arma no encontrada: " + nombreArma);
+}
+
 
     public List<String> obtenerNombresArmasNA() {
         List<String> nombres = new ArrayList<>();

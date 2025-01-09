@@ -627,9 +627,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         System.out.println("Zombi Creado: " + zombiSeleccionado);
     }
         });
-
-// Mostrar la ventana
-panelSimular.setVisible(true);
+            panelSimular.setVisible(true);
 
         
 

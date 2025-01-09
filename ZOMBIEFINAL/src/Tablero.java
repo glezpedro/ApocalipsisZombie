@@ -65,10 +65,10 @@ public class Tablero implements Serializable{
         ventana.colocarZombiesInicio();
     }
     public void colocarTablero2(){
-        ventana.panelTablero = new JPanel();
-        ventana.panelTablero.setLayout(new GridLayout(10,10));
-        ventana.panelTablero.setBounds(190,115,210,210);
-        ventana.panelSimular.add(ventana.panelTablero);
+        ventana.panelTablero2 = new JPanel();
+        ventana.panelTablero2.setLayout(new GridLayout(10,10));
+        ventana.panelTablero2.setBounds(190,115,210,210);
+        ventana.panelSimular.add(ventana.panelTablero2);
 
         Border border = BorderFactory.createLineBorder(Color.black, 1);
         
@@ -98,7 +98,7 @@ public class Tablero implements Serializable{
                         ventana.actualizarEtiquetaCoordenadas(coordenadaXSeleccionada, coordenadaYSeleccionada);
                     }
                 });
-                ventana.panelTablero.add(button);
+                ventana.panelTablero2.add(button);
             }     
         }
     }
