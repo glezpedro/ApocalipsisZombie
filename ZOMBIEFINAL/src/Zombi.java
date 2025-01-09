@@ -85,7 +85,6 @@ public class Zombi implements Serializable {
             if (this.coordenadaX == s.getX() && this.coordenadaY == s.getY()) {
                 int danio = (this.tipo == TipoZombie.ABOMINACION) ? 3 : 1;
                 System.out.println("¡El zombi " + identificador + " ha mordido al superviviente causando " + danio + " puntos de daño!");
-                superAtacados.add("El zombi " + identificador + " ha mordido a "+s.getNombre()+" causando " + danio + " puntos de daño.");
                 s.aplicarEfectos();
                 return;
             }

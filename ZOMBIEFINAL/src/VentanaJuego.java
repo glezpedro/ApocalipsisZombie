@@ -653,6 +653,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         
 
     }
+    
     public void colocarZombiesInicio(){
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
         ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
@@ -845,7 +846,6 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         panelJuego.revalidate();
         panelJuego.repaint();
     }
-
 
     public void actualizarTurno() {
         System.out.println("Iniciando un nuevo turno...");
@@ -1880,6 +1880,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
                     primerSuperviviente.recibirHerida();
 
                     System.out.println("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
+                    Zombi.superAtacados.add("Zombi: "+zombi.getIdentificador()+", Categoria: "+zombi.getCategoria()+", Mordió: "+ primerSuperviviente.getNombre()+"\n---------------\n");
                     actualizarEtiqueta("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
                     if (primerSuperviviente.getSalud() == 0) {
                         tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
