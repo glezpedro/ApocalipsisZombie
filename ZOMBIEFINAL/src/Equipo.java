@@ -1,7 +1,6 @@
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
 
 public class Equipo implements Serializable {
     private static final int MAX_OBJETOS = 5; // Límite del inventario general
