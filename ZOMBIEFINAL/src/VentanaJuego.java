@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 public class VentanaJuego extends JFrame implements Serializable{
     public JPanel panel, panelJuego, panelSimular, panelTablero, panelTablero2;
-    private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar, Simular, Ataques;
+    private JButton NuevaPartida, RetomarPartida, Salir, Atras, SalirGuardar,Simulacion, Simular, Ataques;
     private int contadorTurnos;
     private final int numZombies = 3;
     private JButton Moverse, Atacar, SiguienteTurno, Seleccionar, Buscar, zombisEliminadosOrde;
@@ -94,6 +94,8 @@ public class VentanaJuego extends JFrame implements Serializable{
         
         this.getContentPane().remove(panel); 
         this.getContentPane().add(panelSimular);
+        
+        actualizarEtiqueta("Para moverse o atacar, primero selecciona la casilla deseada y luego presiona el botón correspondiente (Moverse/Atacar).");
 
         this.revalidate();
         this.repaint();  
@@ -102,6 +104,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         colocarBotonesSimular();
         tablero.colocarTablero2();
         colocarRadioBotonesSim();
+        colocarMetaSim();
     }
 
     private void colocarEtiquetasMain (){
@@ -241,6 +244,26 @@ public class VentanaJuego extends JFrame implements Serializable{
     }
     
     private String SuperSeleccionado = "";
+    
+    private void colocarEtiquetasSimular(){
+        JLabel etiqueta = new JLabel("Zombie Game", SwingConstants.CENTER); // Creamos etiqueta
+        etiqueta.setBounds(25, 30, 400, 65);
+        etiqueta.setOpaque(true); // Asi podemos poner background
+        etiqueta.setForeground(Color.white);
+        etiqueta.setFont(new Font("chiller", Font.BOLD, 80)); // estableze el font se puede usar 0123 para typo de letra
+        panelSimular.add(etiqueta);
+        etiqueta.setOpaque(false);
+        // Etiqueta Turnos
+        contadorTurnos = 0;
+        etiquetaTurnos = new JLabel("Turno Rojo", SwingConstants.CENTER); // Creamos etiqueta
+        etiquetaTurnos.setBounds(30, 105, 100, 35);
+        etiquetaTurnos.setOpaque(true); // Asi podemos poner background
+        etiquetaTurnos.setForeground(Color.black);
+        etiquetaTurnos.setFont(new Font("chiller", Font.BOLD, 25)); // estableze el font se puede usar 0123 para typo de letra
+        panelSimular.add(etiquetaTurnos);
+        etiquetaTurnos.setOpaque(false);
+    }
+    
     
     private void colocarBotonesJuego(){
        // Atras
@@ -395,6 +418,151 @@ public class VentanaJuego extends JFrame implements Serializable{
        Ataques.addActionListener(accionBoton6);
     }
     
+    private void colocarBotonesSimular(){
+       // Atras
+       Atras = new JButton();
+       Atras.setBounds(20, 360, 40, 40);
+       Atras.setEnabled(true);
+       Atras.setBackground(Color.red);
+       ImageIcon imagen4 = new ImageIcon(getClass().getResource("/resources/Atras.png"));
+       Atras.setIcon(new ImageIcon(imagen4.getImage().getScaledInstance(200, 40, Image.SCALE_AREA_AVERAGING)));
+       Atras.setOpaque(false);
+       Atras.setBorderPainted(false);
+       panelSimular.add(Atras);
+
+       ActionListener accionBoton4 = new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               colocarPanelMain();
+           }
+       };
+       Atras.addActionListener(accionBoton4);
+       
+       Simulacion = new JButton();
+       Simulacion.setBounds(70, 360, 200, 40);
+       Simulacion.setEnabled(true);
+       Simulacion.setBackground(Color.blue);
+       ImageIcon imagen5 = new ImageIcon(getClass().getResource("/resources/Simulacion-removebg-preview.png"));
+       Simulacion.setIcon(new ImageIcon(imagen5.getImage().getScaledInstance(200, 40, Image.SCALE_AREA_AVERAGING)));
+       Simulacion.setOpaque(false);
+       panelSimular.add(Simulacion);
+       Simulacion.setBorderPainted(false);
+
+       ActionListener accionBoton5 = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame nuevaVentanaS = new JFrame("Añadir Elementos");
+                nuevaVentanaS.setSize(300,120);
+                nuevaVentanaS.setLocationRelativeTo(null); //Pone la ventana en el centro
+                nuevaVentanaS.setResizable(false);
+                nuevaVentanaS.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                nuevaVentanaS.setLayout(new FlowLayout()); 
+
+                JButton btnSupervivientes = new JButton("Añadir Supervivientes");
+                JButton btnZombis = new JButton("Añadir Zombis");
+                
+                 btnSupervivientes.addActionListener(ev -> {
+                  colocarSupervivientesSim(); 
+                });
+                
+                nuevaVentanaS.add(btnSupervivientes);
+                nuevaVentanaS.add(btnZombis);
+                nuevaVentanaS.setVisible(true);
+            }
+        };
+          
+       Simulacion.addActionListener(accionBoton5);
+       
+       // Ataques
+       Ataques = new JButton();
+       Ataques.setBounds(280, 360, 93, 40);
+       Ataques.setEnabled(true);
+       Ataques.setBackground(Color.red);
+       ImageIcon imagen6 = new ImageIcon(getClass().getResource("/resources/Ataques.png"));
+       Ataques.setIcon(new ImageIcon(imagen6.getImage().getScaledInstance(93, 40, Image.SCALE_AREA_AVERAGING)));
+       Ataques.setOpaque(false);
+       Ataques.setBorderPainted(false);
+       panelSimular.add(Ataques);
+       
+       ActionListener accionBoton6 = new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               
+                
+               
+                JFrame nuevaVentana = new JFrame("Lista de Ataques");
+                nuevaVentana.setSize(300, 120);
+                nuevaVentana.setLocationRelativeTo(null); //Pone la ventana en el centro
+                nuevaVentana.setResizable(false);
+                nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                nuevaVentana.setLayout(new FlowLayout()); 
+
+                JButton btnSupervivientes = new JButton("Ataques Supervivientes");
+                JButton btnZombis = new JButton("Ataques Zombis");
+                JButton btnZombisElim = new JButton("Zombis Eliminados");
+                
+                btnSupervivientes.addActionListener(ev -> {
+                    if (registroAtaques.isEmpty()) actualizarEtiqueta("No hay ataques");
+                    else actualizarEtiqueta(registroAtaques.toString()); 
+                });
+
+                btnZombis.addActionListener(ev -> {
+                    if (Zombi.superAtacados.isEmpty()) actualizarEtiqueta("No hay Supervivientes atacados.");
+                    else actualizarEtiqueta(Zombi.superAtacados.toString());
+                });
+                
+                btnZombisElim.addActionListener(ev -> {
+                    if (Ataque.zombisEliminados.isEmpty()) actualizarEtiqueta("No hay zombis eliminados.");
+                    else {
+                        limpiarPanelSim();
+                        etiqueta1 = new JLabel("Elegir Superviviente:", SwingConstants.CENTER); // Creamos etiqueta
+                        etiqueta1.setBounds(30, 245, 120, 30);
+                        etiqueta1.setOpaque(true); // Asi podemos poner background
+                        etiqueta1.setForeground(Color.black);
+                        etiqueta1.setFont(new Font("arial", Font.BOLD, 10)); // estableze el font se puede usar 0123 para typo de letra
+                        panelSimular.add(etiqueta1);
+                        etiqueta1.setOpaque(false);
+                        
+                        JButton zombisEliminadosOrde = new JButton("Por orden");
+                        panelSimular.add(zombisEliminadosOrde);
+                        zombisEliminadosOrde.setBounds(30, 300, 100, 20);
+                        ActionListener accionListaOrd = (ActionEvent a) -> {
+                            panelSimular.remove(zombisEliminadosOrde);
+                            panelSimular.revalidate();
+                            panelSimular.repaint();
+                            actualizarEtiqueta(Ataque.zombisEliminados.toString());
+                            
+                        };
+                        zombisEliminadosOrde.addActionListener(accionListaOrd);
+                        //
+                        List<String> opcionesSuperLista = new ArrayList<>();
+                        for (Superviviente s : supervivientes) opcionesSuperLista.add(s.getNombre());
+                        String[] opcionesSuper = opcionesSuperLista.toArray(new String[0]);
+                        
+                        listaSuper = new JComboBox(opcionesSuper);
+                        listaSuper.setBounds(30, 275, 100, 20);
+                        ActionListener accionLista = (ActionEvent a) -> {
+                            panelSimular.remove(zombisEliminadosOrde);
+                            panelSimular.revalidate();
+                            panelSimular.repaint();
+                            SuperSeleccionado = (String) listaSuper.getSelectedItem();
+                            System.out.println("Superviviente seleccionado: " + SuperSeleccionado);
+                            actualizarEtiqueta(Ataque.obtenerZombisEliminadosPorSuperviviente(SuperSeleccionado));
+                        };
+                        listaSuper.addActionListener(accionLista);
+                        panelSimular.add(listaSuper); 
+                    }
+                });
+                
+                nuevaVentana.add(btnSupervivientes);
+                nuevaVentana.add(btnZombis);
+                nuevaVentana.add(btnZombisElim);
+                nuevaVentana.setVisible(true);
+           }
+       };
+       Ataques.addActionListener(accionBoton6);
+    }
+    
     private void colocarRadioBotones(){
        JRadioButton radioBoton1 = new JRadioButton("Moverse", false); // El booleano es para saber si aparece seleccionado o no
        radioBoton1.setBounds(30, 140, 150, 15);
@@ -481,106 +649,93 @@ public class VentanaJuego extends JFrame implements Serializable{
     }
     
     private void colocarRadioBotonesSim(){
-       JRadioButton radioBoton10 = new JRadioButton("Añadir Zombi", false); // El booleano es para saber si aparece seleccionado o no
-       radioBoton10.setBounds(20, 140, 150, 15);
-       radioBoton10.setOpaque(false);
-       ActionListener accionAñadirZombi = new ActionListener() {
+       JRadioButton radioBoton1 = new JRadioButton("Moverse", false); // El booleano es para saber si aparece seleccionado o no
+       radioBoton1.setBounds(30, 140, 150, 15);
+       radioBoton1.setOpaque(false);
+       ActionListener accionMoverse = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                limpiarPanelSim();
+               funcionMoverseSim();
                panelSimular.revalidate(); //para que se muestre en pantalla
                panelSimular.repaint();
-               colocarZombiSimulacion();
            }
        };
-       panelSimular.add(radioBoton10);
-       JRadioButton radioBoton11 = new JRadioButton("Añadir Superviviente", false);
-       radioBoton11.setBounds(20, 160, 130, 15);
-       radioBoton11.setOpaque(false);
-       ActionListener accionAñadirSuperviviente = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Limpia el panel de opciones
-                limpiarPanelSim();
-                panelSimular.revalidate();
-                panelSimular.repaint();
-            }
-       };
-       panelSimular.add(radioBoton11);
-       JRadioButton radioBoton12 = new JRadioButton("Atacar", false);
-       radioBoton12.setBounds(20, 180, 150, 15);
-       radioBoton12.setOpaque(false);
+       radioBoton1.addActionListener(accionMoverse);
+       panelSimular.add(radioBoton1);
+        
+       JRadioButton radioBoton2 = new JRadioButton("Atacar", false);
+       radioBoton2.setBounds(30, 160, 150, 15);
+       radioBoton2.setOpaque(false);
        ActionListener accionAtacar = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Limpia el panel de opciones
                 limpiarPanelSim();
                 panelSimular.revalidate();
                 panelSimular.repaint();
                 funcionAtacarSim();
-                    }
+            }
         };
-        radioBoton12.addActionListener(accionAtacar);
-        panelSimular.add(radioBoton12);
+        radioBoton2.addActionListener(accionAtacar);
+        panelSimular.add(radioBoton2);
         
-       JRadioButton radioBoton13 = new JRadioButton("Elegir arma", false);
-       radioBoton13.setBounds(20, 200, 150, 15);
-       radioBoton13.setOpaque(false);
+       JRadioButton radioBoton3 = new JRadioButton("Quedarse", false);
+       radioBoton3.setBounds(30, 180, 150, 15);
+       radioBoton3.setOpaque(false);
+       ActionListener accionQuedarse = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               limpiarPanelSim();
+               panelSimular.revalidate(); 
+               panelSimular.repaint();
+               funcionQuedarseSim();
+           }
+       };
+       radioBoton3.addActionListener(accionQuedarse);
+       panelSimular.add(radioBoton3);
+       
+       JRadioButton radioBoton4 = new JRadioButton("Buscar", false);
+       radioBoton4.setBounds(30, 200, 150, 15);
+       radioBoton4.setOpaque(false);
+       ActionListener accionBuscar = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               limpiarPanelSim();
+               funcionBuscarSim();
+               panelSimular.revalidate(); 
+               panelSimular.repaint();
+           }
+       };
+       radioBoton4.addActionListener(accionBuscar);
+       panelSimular.add(radioBoton4);
+       
+       JRadioButton radioBoton5 = new JRadioButton("Elegir arma", false);
+       radioBoton5.setBounds(30, 220, 150, 15);
+       radioBoton5.setOpaque(false);
        ActionListener accionElegir = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                limpiarPanelSim();
                panelSimular.revalidate(); 
                panelSimular.repaint();
-               funcionElegirArmaSim();
+               funcionElegirArma();
            }
        };
-       radioBoton13.addActionListener(accionElegir);
-       panelSimular.add(radioBoton13);
+       radioBoton5.addActionListener(accionElegir);
+       panelSimular.add(radioBoton5);
         
-        ButtonGroup grupoRadioBotonesSim = new ButtonGroup();
-       grupoRadioBotonesSim.add(radioBoton10);
-       grupoRadioBotonesSim.add(radioBoton11);
-       grupoRadioBotonesSim.add(radioBoton12);
-       grupoRadioBotonesSim.add(radioBoton13);
-     }
-    
-    private void colocarEtiquetasSimular(){
-        JLabel etiqueta1 = new JLabel("Zombie Game", SwingConstants.CENTER); // Creamos etiqueta
-        etiqueta1.setBounds(25, 30, 400, 65);
-        etiqueta1.setForeground(Color.white);
-        etiqueta1.setFont(new Font("chiller", Font.BOLD, 80)); // estableze el font se puede usar 0123 para typo de letra
-        panelSimular.add(etiqueta1);
-        etiqueta1.setOpaque(false);
-        JLabel etiqueta2 = new JLabel("Simulación", SwingConstants.CENTER);
-        etiqueta2.setBounds(35, 105, 100, 35);
-        etiqueta2.setForeground(Color.black);
-        etiqueta2.setFont(new Font("chiller", Font.BOLD, 31)); // estableze el font se puede usar 0123 para typo de letra
-        panelSimular.add(etiqueta2);
-        etiqueta2.setOpaque(false);
-        
-    }    
-    
-    private void colocarBotonesSimular(){
-       // Atras
-       Atras = new JButton();
-       Atras.setBounds(20, 360, 40, 40);
-       Atras.setEnabled(true);
-       Atras.setBackground(Color.red);
-       ImageIcon imagen4 = new ImageIcon(getClass().getResource("/resources/Atras.png"));
-       Atras.setIcon(new ImageIcon(imagen4.getImage().getScaledInstance(200, 40, Image.SCALE_AREA_AVERAGING)));
-       Atras.setOpaque(false);
-       panelSimular.add(Atras);
-       Atras.setBorderPainted(false);
+       ButtonGroup grupoRadioBotones = new ButtonGroup();
+       grupoRadioBotones.add(radioBoton1);
+       grupoRadioBotones.add(radioBoton2);
+       grupoRadioBotones.add(radioBoton3);
+       grupoRadioBotones.add(radioBoton4);
+       grupoRadioBotones.add(radioBoton5);
 
-       ActionListener accionBoton4 = new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent e) {
-               colocarPanelMain();
-           }
-       };
-       Atras.addActionListener(accionBoton4);
     }
+    
+       
+    
+   
     
     public void colocarZombiSimulacion(){
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
@@ -825,15 +980,19 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
     }
     
     public void colocarSupervivientesSim() {
-        ImageIcon iconoMeta = new ImageIcon(getClass().getResource("/resources/meta.png"));
-
-        supervivientes = Superviviente.crearSupervivientes();
+        
+        supervivientes = Superviviente.crearSupervivienteSim();
         
         for (Superviviente superviviente : supervivientes) {
             int x = superviviente.getX();
             int y = superviviente.getY();
-            String color = superviviente.getNombre().toLowerCase();  
+            
             tablero.tablero[x][y].agregarSuperviviente(superviviente);
+            String color = superviviente.getNombre().toLowerCase();  
+            
+            
+            
+            
 
             ImageIcon iconoSuperviviente = null;
             switch (color) {
@@ -860,29 +1019,23 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
             System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: " + x + ", Y: " + y);
 
             tablero.tablero[x][y].setHaySuperviviente(true);
+            
 
-            if (x == 0 && y == 0) {
-                tablero.botonesTablero[9][9].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
-                metaX = 9;
-                metaY = 9;
-            } else if (x == 9 && y == 9) {
-                tablero.botonesTablero[0][0].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
-                metaX = 0;
-                metaY = 0;
-            } else if (x == 9 && y == 0) {
-                tablero.botonesTablero[0][9].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
-                metaX = 0;
-                metaY = 9;
-            } else if (x == 0 && y == 9) {
-                tablero.botonesTablero[9][0].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
-                metaX = 9;
-                metaY = 0;
-            }
+            
         }
 
         // Actualizar la interfaz gráfica
-        panelJuego.revalidate();
-        panelJuego.repaint();
+        panelSimular.revalidate();
+        panelSimular.repaint();
+        
+        
+    }
+    
+    public void colocarMetaSim(){
+        ImageIcon iconoMeta = new ImageIcon(getClass().getResource("/resources/meta.png"));
+        tablero.botonesTablero[9][9].setIcon(new ImageIcon(iconoMeta.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+                metaX = 9;
+                metaY = 9;
     }
 
     public void actualizarTurno() {
@@ -902,6 +1055,25 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         finJuego();
         panelJuego.revalidate();
         panelJuego.repaint();
+        System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
+        etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
+    }
+    
+    public void actualizarTurnoSim() {
+        System.out.println("Iniciando un nuevo turno...");
+        
+        accionesTotales = 0;
+        
+        for (Superviviente s : supervivientes) {
+            s.resetearAcciones();
+        }
+       
+        actualizarIconos();
+        
+        indiceActual = 3;
+        finJuego();
+        panelSimular.revalidate();
+        panelSimular.repaint();
         System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
         etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
     }
@@ -985,6 +1157,92 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
                 etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
                 panelJuego.revalidate();
                 panelJuego.repaint();
+            }
+
+            actualizarIconos();
+        }};
+        Moverse.addActionListener(accionBoton4);
+    }
+    
+    public void funcionMoverseSim(){
+        // Texto Elegir Casila:
+        etiqueta2 = new JLabel("Casilla Seleccionada:", SwingConstants.CENTER); // Creamos etiqueta
+        etiqueta2.setBounds(10, 245, 150, 30);
+        etiqueta2.setOpaque(true); // Asi podemos poner background
+        etiqueta2.setForeground(Color.black);
+        etiqueta2.setFont(new Font("arial", Font.BOLD, 12)); // estableze el font se puede usar 0123 para typo de letra
+        panelSimular.add(etiqueta2);
+        etiqueta2.setOpaque(false);
+        // Texto x e y
+        etiqueta3 = new JLabel("X: "+tablero.getCoordenadaXSeleccionada()+"          Y: "+tablero.getCoordenadaYSeleccionada(), SwingConstants.CENTER); // Creamos etiqueta
+        etiqueta3.setBounds(25, 275, 100, 20);
+        etiqueta3.setOpaque(true); // Asi podemos poner background
+        etiqueta3.setForeground(Color.black);
+        etiqueta3.setFont(new Font("arial", Font.BOLD, 15)); // estableze el font se puede usar 0123 para typo de letra
+        panelSimular.add(etiqueta3);
+        etiqueta3.setOpaque(false);
+        panelSimular.add(etiqueta3); 
+        // Boton Moverse
+        Moverse = new JButton();
+        Moverse.setBounds(55, 300, 62, 26);
+        Moverse.setEnabled(true);
+        Moverse.setBackground(Color.red);
+        ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/Moverse.png"));
+        Moverse.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(62, 26, Image.SCALE_AREA_AVERAGING)));
+        Moverse.setOpaque(false);
+        panelSimular.add(Moverse);
+        Moverse.setBorderPainted(false);
+
+        ActionListener accionBoton4 = new ActionListener() {
+            @Override    
+            public void actionPerformed(ActionEvent e) {
+            Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+            int nuevaX = tablero.getCoordenadaXSeleccionada();
+            int nuevaY = tablero.getCoordenadaYSeleccionada();
+            int[] viejaXY = supervivienteActual.getCoordenadas();
+
+            boolean movimientoValido = esMovimientoValido(viejaXY[0], viejaXY[1], nuevaX, nuevaY);            
+            
+            if (movimientoValido == true) {
+                if(supervivienteActual.gastarAccion()){
+                    tablero.tablero[viejaXY[0]][viejaXY[1]].eliminarSuperviviente(supervivienteActual);
+                    tablero.tablero[nuevaX][nuevaY].agregarSuperviviente(supervivienteActual);
+                    supervivienteActual.moverse(nuevaX, nuevaY);
+
+                    actualizarIconoSuper(viejaXY[0], viejaXY[1]);
+                    actualizarIconoSuper(nuevaX, nuevaY);
+                    tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
+                    tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
+
+                    actualizarIconos();
+                    accionesTotales++; 
+                    System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                     
+                }else{
+                    System.out.println("Acciones agotadas.");
+                    actualizarEtiqueta("Acciones agotadas.");
+                }
+            } else {
+                System.out.println("Movimiento no válido.");
+                actualizarEtiqueta("Movimiento no válido.");
+            }
+            
+            if(accionesTotales == 12){
+                actualizarTurno();
+                System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+            }
+
+            if (supervivienteActual.getAccionesDisponibles() == 0) {
+                indiceActual--;
+                if (indiceActual < 0) {
+                    indiceActual = 3;
+                }
+                Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+                siguienteSuperviviente.resetearAcciones();
+                System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+                panelSimular.revalidate();
+                panelSimular.repaint();
             }
 
             actualizarIconos();
@@ -1126,11 +1384,11 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
     public void funcionAtacarSim(){
         // Texto Elegir Arma:
         etiqueta1 = new JLabel("Elegir Arma:", SwingConstants.CENTER); // Creamos etiqueta
-        etiqueta1.setBounds(15, 245, 100, 30);
+        etiqueta1.setBounds(30, 245, 100, 30);
         etiqueta1.setOpaque(true); // Asi podemos poner background
         etiqueta1.setForeground(Color.black);
         etiqueta1.setFont(new Font("arial", Font.BOLD, 15)); // estableze el font se puede usar 0123 para typo de letra
-        panelJuego.add(etiqueta1);
+        panelSimular.add(etiqueta1);
         etiqueta1.setOpaque(false);
         
         Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
@@ -1183,7 +1441,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
                     if (ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)) {
                         if(supervivienteActual.gastarAccion() ){
                             ataque.atacarZombieF(armaSeleccionada, supervivienteActual, coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
-
+                            accionesTotales++;
                             System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
                         }else{
                             System.out.println("Acciones agotadas.");
@@ -1201,7 +1459,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
                         indiceActual--;
-                        if (indiceActual >= supervivientes.size()) {
+                        if (indiceActual < 0) {
                             indiceActual = 3;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
@@ -1280,6 +1538,53 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         SiguienteTurno.addActionListener(accionBoton4);
     }
     
+    public void funcionQuedarseSim(){
+        // Boton Moverse
+        SiguienteTurno = new JButton();
+        SiguienteTurno.setBounds(25, 275, 120, 25);
+        SiguienteTurno.setEnabled(true);
+        SiguienteTurno.setBackground(Color.red);
+        ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/SiguienteTurno.png"));
+        SiguienteTurno.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(120, 25, Image.SCALE_AREA_AVERAGING)));
+        SiguienteTurno.setOpaque(false);
+        panelSimular.add(SiguienteTurno);
+        SiguienteTurno.setBorderPainted(false);
+
+        ActionListener accionBoton4 = new ActionListener() {
+               @Override
+               public void actionPerformed(ActionEvent e) {
+                   Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+
+                    if (supervivienteActual.gastarAccion()) {
+                        accionesTotales++;
+                        System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                    } else {
+                        System.out.println("Movimiento no válido o acciones agotadas.");
+                    }
+                    
+                    if (accionesTotales == 12) {
+                        actualizarTurno();
+                        System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+                    }
+
+                    if (supervivienteActual.getAccionesDisponibles() == 0) {
+                        indiceActual--;
+                        if (indiceActual < 0) {
+                            indiceActual = 3;
+                        }
+                        Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+                        siguienteSuperviviente.resetearAcciones();
+                        System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                        etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+                        panelSimular.revalidate();
+                        panelSimular.repaint();
+                    }
+                    actualizarIconos();
+           }
+        };
+        SiguienteTurno.addActionListener(accionBoton4);
+    }
+    
     public void funcionBuscar(){
         // boton Buscar
         Buscar = new JButton();
@@ -1324,6 +1629,57 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
                         etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
                         panelJuego.revalidate();
                         panelJuego.repaint();
+                    }
+                    actualizarIconos();
+           }
+        };
+        Buscar.addActionListener(accionBoton4);
+    }
+    
+    public void funcionBuscarSim(){
+        // boton Buscar
+        Buscar = new JButton();
+        Buscar.setBounds(35, 265, 100, 40);
+        Buscar.setEnabled(true);
+        Buscar.setBackground(Color.red);
+        ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/Buscar.png"));
+        Buscar.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(100, 40, Image.SCALE_AREA_AVERAGING)));
+        Buscar.setOpaque(false);
+        panelSimular.add(Buscar);
+        Buscar.setBorderPainted(false);
+
+        ActionListener accionBoton4 = new ActionListener() {
+               @Override
+               public void actionPerformed(ActionEvent e) {
+                   System.out.println("Buscando");
+                   
+                   
+                   Superviviente supervivienteActual = supervivientes.get(indiceActual);
+                   
+                   if (supervivienteActual.gastarAccion()) {
+                        buscar();
+                        accionesTotales++;
+                        System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+                    } else {
+                        System.out.println("Acción no valida o acciones agotadas.");
+                    }
+                   
+                    if (accionesTotales == 12) {
+                        actualizarTurno(); 
+                        System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+                    } 
+
+                    if (supervivienteActual.getAccionesDisponibles() == 0) {
+                        indiceActual--;
+                        if (indiceActual < 0) {
+                            indiceActual = 3;
+                        }
+                        Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+                        siguienteSuperviviente.resetearAcciones();
+                        System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+                        etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+                        panelSimular.revalidate();
+                        panelSimular.repaint();
                     }
                     actualizarIconos();
            }
@@ -1484,154 +1840,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         }
     }
     
-    public void funcionElegirArmaSim(){
-        // Texto Elegir Arma:
-        etiqueta1 = new JLabel("Elegir Armas activas:", SwingConstants.CENTER); // Creamos etiqueta
-        etiqueta1.setBounds(28, 245, 120, 30);
-        etiqueta1.setOpaque(true); // Así podemos poner background
-        etiqueta1.setForeground(Color.black);
-        etiqueta1.setFont(new Font("arial", Font.CENTER_BASELINE, 12)); // Establece el font
-        panelSimular.add(etiqueta1);
-        etiqueta1.setOpaque(false);
-
-        int x = tablero.getCoordenadaXSeleccionada();
-        int y = tablero.getCoordenadaYSeleccionada();
-        Superviviente superviviente = supervivientes.get(indiceActual); 
-
-        // ---------------------------------------------------------------
-        if (superviviente != null) {
-            if (superviviente.getInventario().obtenerArmasActivas().size()==2) {
-                etiqueta1.setText("Desactivar Arma:");
-                // Obtener las opciones de armas para el JComboBox
-                String[] opcionesArmas = superviviente.getInventario().obtenerNombresArmasActivas().toArray(new String[0]);
-
-                // primera opcion armas activas
-                listaArmas = new JComboBox(opcionesArmas);
-                listaArmas.setBounds(30, 275, 100, 20);
-                listaArmas.addItem(" ");
-                listaArmas.setSelectedItem(" ");
-                panelSimular.add(listaArmas);
-                
-                Seleccionar = new JButton();
-                Seleccionar.setBounds(35, 300, 100, 30);
-                Seleccionar.setEnabled(true);
-                Seleccionar.setBackground(Color.red);
-                ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/Seleccionar.png"));
-                Seleccionar.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(100, 30, Image.SCALE_AREA_AVERAGING)));
-                Seleccionar.setOpaque(false);
-                panelSimular.add(Seleccionar);
-                Seleccionar.setBorderPainted(false);
-                
-                listaArmas.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String seleccion = (String) listaArmas.getSelectedItem();
-
-                        if (!seleccion.equals(" ")) {
-                            armaSeleccionada3 = (String) listaArmas.getSelectedItem();
-                        }
-                    }
-                });
-                Seleccionar.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        superviviente.getInventario().desactivarArma(armaSeleccionada3);  
-                            
-                        actualizarEtiqueta("Has desactivado "+armaSeleccionada3+".");          
-                    }
-                });
-            }
-            else if (!superviviente.getInventario().obtenerObjetos().isEmpty()) {
-                // Obtener las opciones de armas para el JComboBox
-                String[] opcionesArmas = superviviente.getInventario().obtenerNombresArmasNA().toArray(new String[0]);
-
-                // primera opcion armas activas
-                listaArmas = new JComboBox(opcionesArmas);
-                listaArmas.setBounds(30, 275, 50, 20);
-                listaArmas.addItem(" ");
-                listaArmas.setSelectedItem(" ");
-                panelSimular.add(listaArmas);
-
-                // segunda opción para elegir arma
-                listaArmas2 = new JComboBox(opcionesArmas);
-                listaArmas2.setBounds(90, 275, 50, 20);
-                listaArmas2.addItem("Ninguna");
-                listaArmas2.setSelectedItem("Ninguna");
-                panelSimular.add(listaArmas2);
-
-                Seleccionar = new JButton();
-                Seleccionar.setBounds(35, 300, 100, 30);
-                Seleccionar.setEnabled(true);
-                Seleccionar.setBackground(Color.red);
-                ImageIcon imagen1 = new ImageIcon(getClass().getResource("/resources/Seleccionar.png"));
-                Seleccionar.setIcon(new ImageIcon(imagen1.getImage().getScaledInstance(100, 30, Image.SCALE_AREA_AVERAGING)));
-                Seleccionar.setOpaque(false);
-                panelSimular.add(Seleccionar);
-                Seleccionar.setBorderPainted(false);
-
-                listaArmas.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String seleccion = (String) listaArmas.getSelectedItem();
-
-                        if (!seleccion.equals(" ")) {
-                            armaSeleccionada1 = (String) listaArmas.getSelectedItem();
-                            listaArmas2.removeItem(armaSeleccionada1);
-                        }
-                    }
-                });
-
-                listaArmas2.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        armaSeleccionada2 = (String) listaArmas2.getSelectedItem();
-                        listaArmas.removeItem(armaSeleccionada2);
-
-                    }
-                });
-
-                Seleccionar.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        superviviente.getInventario().activarArma(armaSeleccionada1);  
-                        superviviente.getInventario().activarArma(armaSeleccionada2);
-                            
-                        actualizarEtiqueta("Has seleccionado "+armaSeleccionada1+" y "+armaSeleccionada2+".");
-                        
-                        Superviviente supervivienteActual = supervivientes.get(indiceActual);
-                        if (supervivienteActual.gastarAccion()) {
-                            accionesTotales++;
-                            System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
-                        } else {
-                            System.out.println("Movimiento no válido o acciones agotadas.");
-                        }
-
-                        if (accionesTotales == 12) {
-                            actualizarTurno(); 
-                            System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
-                        }
-                        
-                        if (supervivienteActual.getAccionesDisponibles() == 0) {
-                            indiceActual--;
-                            if (indiceActual >= supervivientes.size()) {
-                                indiceActual = 3;
-                            }
-                            Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
-                            siguienteSuperviviente.resetearAcciones();
-                            System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
-                            etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
-                            panelSimular.revalidate();
-                            panelSimular.repaint();
-                        }                    
-                    }
-                });
-            } else {
-                actualizarEtiqueta("Superviviente sin armas.");
-            }
-        } else {
-            actualizarEtiqueta("Seleccione una casilla con Superviviente.");
-        }
-    }
+    
     
     public void buscar (){
         Superviviente superviviente = supervivientes.get(indiceActual); 
@@ -1736,7 +1945,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
             panelSimular.remove(Buscar);
         }
         if (Seleccionar != null) {
-            panelJuego.remove(Seleccionar);
+            panelSimular.remove(Seleccionar);
         }
         if (etiqueta1 != null) {
             panelSimular.remove(etiqueta1);
@@ -1864,7 +2073,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         if (!casilla.tieneZombie() && !casilla.tieneSuperviviente() && !esMeta) {
             contenido = "Casilla Vacia.";
         }
-        actualizarEtiqueta(contenido);  
+        actualizarEtiquetaSim(contenido);  
     }
     
     public void actualizarEtiqueta(String contenido){
@@ -1889,7 +2098,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
     } 
     
     public void actualizarEtiquetaSim(String contenido){
-        limpiarPanel();
+        limpiarPanelSim();
         etiquetaStatus = new JTextArea(contenido);
         etiquetaStatus.setEditable(false);
         etiquetaStatus.setLineWrap(true);
@@ -1964,6 +2173,61 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         });
     }
     
+    public void accionarZombiesSim() {
+        for (Zombi zombi : zombies) {
+            for (int i = 0; i < zombi.getActivaciones(); i++) {
+                int x = zombi.getX();
+                int y = zombi.getY();
+
+                Casilla casilla = tablero.tablero[x][y];
+                List<Superviviente> supervivientesEnCasilla = casilla.getSupervivientes();
+
+                if (!supervivientesEnCasilla.isEmpty() && zombi.getCategoria().equals("TOXICO")) {
+                    Superviviente primerSuperviviente = supervivientesEnCasilla.get(0);
+                    primerSuperviviente.envenenar();
+                    primerSuperviviente.recibirHerida();
+
+                    System.out.println("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
+                    Zombi.superAtacados.add("Zombi: "+zombi.getIdentificador()+", Categoria: "+zombi.getCategoria()+", Mordió: "+ primerSuperviviente.getNombre()+"\n---------------\n");
+                    actualizarEtiqueta("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
+                    if (primerSuperviviente.getSalud() == 0) {
+                        tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
+                        tablero.tablero[x][y].setHaySuperviviente(false);
+                        tablero.botonesTablero[x][y].setIcon(null);
+                        finJuego();
+                    }
+                }
+
+                Superviviente objetivo = encontrarSupervivienteCercano(x, y);
+                if (objetivo != null) {
+                    int xObjetivo = objetivo.getX();
+                    int yObjetivo = objetivo.getY();
+
+                    int nuevaX = x + Integer.signum(xObjetivo - x);
+                    int nuevaY = y + Integer.signum(yObjetivo - y);
+
+                    if (tablero.esPosicionValida(nuevaX, nuevaY)) {
+                        tablero.tablero[x][y].eliminarZombie(zombi);
+                        tablero.tablero[x][y].setHayZombie(false);
+                        tablero.botonesTablero[x][y].setIcon(null);
+                        
+                        tablero.tablero[nuevaX][nuevaY].agregarZombie(zombi);
+                        tablero.tablero[nuevaX][nuevaY].setHayZombie(true);
+                        actualizarIconoZombie(nuevaX, nuevaY);
+
+                        zombi.moverse(nuevaX, nuevaY);
+                        System.out.println("Zombi movido de (" + x + ", " + y + ") a (" + nuevaX + ", " + nuevaY + ")");
+                    }
+                }
+            }
+        }
+        actualizarIconosSim();
+        SwingUtilities.invokeLater(() -> {
+            panelSimular.revalidate();
+            panelSimular.repaint();
+        });
+    }
+    
     private Superviviente encontrarSupervivienteCercano(int x, int y) {
         Superviviente masCercano = null;
         int distanciaMinima = Integer.MAX_VALUE;
@@ -2030,6 +2294,59 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         tablero.botonesTablero[x][y].repaint();
         panelJuego.revalidate();
         panelJuego.repaint();
+    }
+    
+    public void actualizarIconoZombieSim(int x, int y) {
+        Casilla casilla = tablero.tablero[x][y];
+        Zombi zombi = buscarZombie(x,y);
+        tablero.botonesTablero[x][y].setIcon(null); 
+        ImageIcon iconoZombie = null;
+        
+        if (zombi!=null) {
+
+            switch (zombi.getCategoria()) {
+                case "NORMAL":
+                    if (zombi.getTipo() == TipoZombie.CAMINANTE) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
+                    } else if (zombi.getTipo() == TipoZombie.CORREDOR) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiNC.png"));
+                    } else if (zombi.getTipo() == TipoZombie.ABOMINACION) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
+                    }
+                    break;
+
+                case "TOXICO":
+                    if (zombi.getTipo() == TipoZombie.CAMINANTE) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiT.png"));
+                    } else if (zombi.getTipo() == TipoZombie.CORREDOR) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiTC.png"));
+                    } else if (zombi.getTipo() == TipoZombie.ABOMINACION) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiTA.png"));
+                    }
+                    break;
+
+                case "BERSERKER":
+                    if (zombi.getTipo() == TipoZombie.CAMINANTE) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiB.png"));
+                    } else if (zombi.getTipo() == TipoZombie.CORREDOR) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiBC.png"));
+                    } else if (zombi.getTipo() == TipoZombie.ABOMINACION) {
+                        iconoZombie = new ImageIcon(getClass().getResource("/resources/zombiBA.png"));
+                    }
+                    break;
+            }
+
+            if (iconoZombie != null) {
+                tablero.botonesTablero[x][y].setIcon(new ImageIcon(
+                    iconoZombie.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)
+                ));
+            }
+        }
+
+        tablero.botonesTablero[x][y].revalidate();
+        tablero.botonesTablero[x][y].repaint();
+        panelSimular.revalidate();
+        panelSimular.repaint();
     }
     
     private void finJuego() {
@@ -2117,6 +2434,52 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         this.repaint();
     }
     
+    private void mostrarGameStatusFinalSimular(Boolean status) {
+        this.getContentPane().removeAll();
+        
+        Atras = new JButton();
+        Atras.setBounds(20, 360, 40, 40);
+        Atras.setEnabled(true);
+        Atras.setBackground(Color.red);        
+        ImageIcon imagen4 = new ImageIcon(getClass().getResource("/resources/Atras.png"));
+        Atras.setIcon(new ImageIcon(imagen4.getImage().getScaledInstance(200, 40, Image.SCALE_AREA_AVERAGING)));
+        Atras.setOpaque(false);
+        Atras.setBorderPainted(false);
+        this.add(Atras);
+
+        ActionListener accionBoton4 = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                colocarPanelMain();
+            }
+        };
+        Atras.addActionListener(accionBoton4);
+       
+        panel = new BackgroundPanel("/resources/woods.png"); 
+        panel.setLayout(null);
+        this.getContentPane().add(panel);
+        JLabel gameStatus = new JLabel("", SwingConstants.CENTER);
+        gameStatus.setBounds(25, 180, 400, 65);
+        gameStatus.setOpaque(true); // Asi podemos poner background
+        gameStatus.setForeground(Color.red);
+        gameStatus.setFont(new Font("chiller", Font.BOLD, 80)); // estableze el font se puede usar 0123 para typo de letra
+        panel.add(gameStatus); //agregamos la etiqueta al panel
+        gameStatus.setOpaque(false);
+        
+        if (status) {
+            gameStatus.setText("¡Victoria!");
+            gameStatus.setForeground(Color.green);
+        }
+        else gameStatus.setText("Derrota");
+        
+        panel.add(gameStatus);
+        
+        panelSimular.revalidate();
+        panelSimular.repaint();
+        this.revalidate();
+        this.repaint();
+    }
+    
     public void actualizarIconos(){
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
@@ -2129,6 +2492,20 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         } 
         panelJuego.revalidate();
         panelJuego.repaint();
+    }
+    
+    public void actualizarIconosSim(){
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 10; y++) {
+                if (tablero.tablero[x][y].hayZombies()) {
+                    for (Zombi zombi : tablero.tablero[x][y].getZombies())
+                    actualizarIconoZombie(zombi.getX(), zombi.getY());
+                }
+                if (tablero.tablero[x][y].haySupervivientes()) actualizarIconoSuper(x, y);
+            }
+        } 
+        panelSimular.revalidate();
+        panelSimular.repaint();
     }
     
 }
