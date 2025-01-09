@@ -1,13 +1,10 @@
 
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.Serializable;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
+import javax.swing.*;
+import javax.swing.border.*;
+
 
 
 public class Tablero implements Serializable{

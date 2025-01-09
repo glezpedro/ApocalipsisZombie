@@ -1,22 +1,12 @@
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.event.*;
 import javax.swing.*;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 import java.util.List;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.io.File;
-import java.io.Serializable;
-import javax.swing.JFileChooser;
+
 
 
 public class VentanaJuego extends JFrame implements Serializable{
@@ -33,18 +23,20 @@ public class VentanaJuego extends JFrame implements Serializable{
     public Set<Zombi> zombies;
     Set<Point> posicionesUsadas = new HashSet<>();
     Tablero tablero;
-    public List<Superviviente> supervivientes = new ArrayList<>();
+    public List<Superviviente> supervivientes;
     private int metaX;
     private int metaY;
     public int indiceActual = 3;
     public int accionesTotales = 0;
     private final VentanaJuego ventana;
     private Arma armaSeleccionada; // Agregamos esta variable para el arma seleccionada
-    public List<Almacen_Ataques> registroAtaques = new ArrayList<>();
+    public List<Almacen_Ataques> registroAtaques;
 
 
 
     public VentanaJuego(){
+        this.registroAtaques = new ArrayList<>();
+        this.supervivientes = new ArrayList<>();
         setSize(450,450);
         setLocationRelativeTo(null); //Pone la ventana en el centro
         setResizable(false); //Si podemos o no hacerla mas grade o pequeña
