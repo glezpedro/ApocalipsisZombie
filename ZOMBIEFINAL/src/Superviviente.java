@@ -119,7 +119,7 @@ public class Superviviente implements Serializable{
 
         for (int i = 0; i < 4; i++) {
             String nombre = COLORES[i];
-            int salud = random.nextInt(50) + 50;
+            int salud = random.nextInt(11) + 5;
             int maxHeridas = random.nextInt(3) + 3;
 
             Superviviente superviviente = new Superviviente(nombre, salud, maxHeridas);

@@ -701,8 +701,9 @@ public class VentanaJuego extends JFrame implements Serializable{
                     tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
 
                     actualizarIconos();
+                    accionesTotales++; 
                     System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
-                    accionesTotales++;  
+                     
                 }else{
                     System.out.println("Acciones agotadas.");
                     actualizarEtiqueta("Acciones agotadas.");
@@ -830,7 +831,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                     if (ataqueValido(armaSeleccionada, supervivienteActual, zombieAtacado)) {
                         if(supervivienteActual.gastarAccion() ){
                             ataque.atacarZombieF(armaSeleccionada, supervivienteActual, coordenadaXSeleccionada, coordenadaYSeleccionada, zombieAtacado);
-
+                            accionesTotales++;
                             System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
                         }else{
                             System.out.println("Acciones agotadas.");
@@ -1304,6 +1305,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                     primerSuperviviente.recibirHerida();
 
                     System.out.println("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
+                    actualizarEtiqueta("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
                     if (primerSuperviviente.getSalud() == 0) {
                         tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
                         tablero.tablero[x][y].setHaySuperviviente(false);
@@ -1321,16 +1323,15 @@ public class VentanaJuego extends JFrame implements Serializable{
                     int nuevaY = y + Integer.signum(yObjetivo - y);
 
                     if (tablero.esPosicionValida(nuevaX, nuevaY)) {
-                        tablero.tablero[nuevaX][nuevaY].agregarZombie(zombi);
-                        tablero.tablero[nuevaX][nuevaY].setHayZombie(true);
-
-                        actualizarIconoZombie(nuevaX, nuevaY);
-
                         tablero.tablero[x][y].eliminarZombie(zombi);
                         tablero.tablero[x][y].setHayZombie(false);
                         tablero.botonesTablero[x][y].setIcon(null);
-                        zombi.moverse(nuevaX, nuevaY);
+                        
+                        tablero.tablero[nuevaX][nuevaY].agregarZombie(zombi);
+                        tablero.tablero[nuevaX][nuevaY].setHayZombie(true);
+                        actualizarIconoZombie(nuevaX, nuevaY);
 
+                        zombi.moverse(nuevaX, nuevaY);
                         System.out.println("Zombi movido de (" + x + ", " + y + ") a (" + nuevaX + ", " + nuevaY + ")");
                     }
                 }
@@ -1362,9 +1363,9 @@ public class VentanaJuego extends JFrame implements Serializable{
         Casilla casilla = tablero.tablero[x][y];
         Zombi zombi = buscarZombie(x,y);
         tablero.botonesTablero[x][y].setIcon(null); 
-
+        ImageIcon iconoZombie = null;
+        
         if (zombi!=null) {
-            ImageIcon iconoZombie = null;
 
             switch (zombi.getCategoria()) {
                 case "NORMAL":
@@ -1500,12 +1501,12 @@ public class VentanaJuego extends JFrame implements Serializable{
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (tablero.tablero[x][y].hayZombies()) {
-                    for (Zombi zombi: tablero.tablero[x][y].getZombies())
+                    for (Zombi zombi : tablero.tablero[x][y].getZombies())
                     actualizarIconoZombie(zombi.getX(), zombi.getY());
                 }
                 if (tablero.tablero[x][y].haySupervivientes()) actualizarIconoSuper(x, y);
             }
-        }
+        } 
         panelJuego.revalidate();
         panelJuego.repaint();
     }
