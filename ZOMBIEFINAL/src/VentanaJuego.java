@@ -708,9 +708,9 @@ public class VentanaJuego extends JFrame implements Serializable{
                     tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
                     tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
 
-
+                    actualizarIconos();
                     System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
-                    accionesTotales++;
+                    accionesTotales++;  
                 }else{
                     System.out.println("Acciones agotadas.");
                     actualizarEtiqueta("Acciones agotadas.");
@@ -856,7 +856,7 @@ public class VentanaJuego extends JFrame implements Serializable{
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
                         indiceActual--;
-                        if (indiceActual >= supervivientes.size()) {
+                        if (indiceActual < 0) {
                             indiceActual = 3;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
@@ -919,7 +919,7 @@ public class VentanaJuego extends JFrame implements Serializable{
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
                         indiceActual--;
-                        if (indiceActual >= supervivientes.size()) {
+                        if (indiceActual < 0) {
                             indiceActual = 3;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
@@ -970,7 +970,7 @@ public class VentanaJuego extends JFrame implements Serializable{
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
                         indiceActual--;
-                        if (indiceActual >= supervivientes.size()) {
+                        if (indiceActual < 0) {
                             indiceActual = 3;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
@@ -1119,7 +1119,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                         
                         if (supervivienteActual.getAccionesDisponibles() == 0) {
                             indiceActual--;
-                            if (indiceActual >= supervivientes.size()) {
+                            if (indiceActual < 0) {
                                 indiceActual = 3;
                             }
                             Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
@@ -1368,10 +1368,10 @@ public class VentanaJuego extends JFrame implements Serializable{
     
     public void actualizarIconoZombie(int x, int y) {
         Casilla casilla = tablero.tablero[x][y];
-        List<Zombi> zombiesEnCelda = casilla.getZombies();
+        Zombi zombi = buscarZombie(x,y);
         tablero.botonesTablero[x][y].setIcon(null); 
 
-        for (Zombi zombi : zombiesEnCelda) {
+        if (zombi!=null) {
             ImageIcon iconoZombie = null;
 
             switch (zombi.getCategoria()) {
@@ -1507,11 +1507,11 @@ public class VentanaJuego extends JFrame implements Serializable{
     public void actualizarIconos(){
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
-                if (tablero.tablero[x][y].haySupervivientes()) actualizarIconoSuper(x, y);
                 if (tablero.tablero[x][y].hayZombies()) {
                     for (Zombi zombi: tablero.tablero[x][y].getZombies())
-                    actualizarIconoZombie(x, y);
+                    actualizarIconoZombie(zombi.getX(), zombi.getY());
                 }
+                if (tablero.tablero[x][y].haySupervivientes()) actualizarIconoSuper(x, y);
             }
         }
         panelJuego.revalidate();
