@@ -99,11 +99,11 @@ public class Superviviente implements Serializable{
                     int salud = random.nextInt(11)+ 5;
                     int maxHeridas = random.nextInt(3) + 3;
                     
-                    Superviviente superviviente = new Superviviente(nombre, salud, maxHeridas);
-                    superviviente.coordenadaX = coordenadaSeleccionada[0];  
-                    superviviente.coordenadaY = coordenadaSeleccionada[1];
+                    Superviviente supervivientesim = new Superviviente(nombre, salud, maxHeridas);
+                    supervivientesim.coordenadaX = coordenadaSeleccionada[0];  
+                    supervivientesim.coordenadaY = coordenadaSeleccionada[1];
 
-            supervivienteSIm.add(superviviente);
+            supervivienteSIm.add(supervivientesim);
         }
 
         return supervivienteSIm;
