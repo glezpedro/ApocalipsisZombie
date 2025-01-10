@@ -94,7 +94,7 @@ public class Superviviente implements Serializable{
     }
     private static int numSuperviviente = 0;
     
-    public static List<Superviviente> crearSupervivienteSim(){
+    public static List<Superviviente> crearSupervivienteSim(int x, int y){
         List<Superviviente> supervivienteSIm = new ArrayList<>();
                     
                     String nombre = COLORES[numSuperviviente];
@@ -102,8 +102,8 @@ public class Superviviente implements Serializable{
                     int maxHeridas = random.nextInt(3) + 3;
                     numSuperviviente++;
                     Superviviente supervivientesim = new Superviviente(nombre, salud, maxHeridas);
-                    supervivientesim.coordenadaX = coordenadaSeleccionada[0];  
-                    supervivientesim.coordenadaY = coordenadaSeleccionada[1];
+                    supervivientesim.coordenadaX = x;  
+                    supervivientesim.coordenadaY = y;
 
             supervivienteSIm.add(supervivientesim);
         
