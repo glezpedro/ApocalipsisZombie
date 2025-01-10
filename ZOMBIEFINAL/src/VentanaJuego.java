@@ -302,6 +302,11 @@ public class VentanaJuego extends JFrame implements Serializable{
        ActionListener accionBoton5 = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        tablero.botonesTablero[i][j].setIcon(null);
+                    }
+                }
                 try {
                     EstadoJuego estado = new EstadoJuego(
                         tablero,
@@ -2018,7 +2023,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         Casilla casilla = tablero.tablero[x][y];
 
         if(metaX == x && metaY == y){
-            contenido = "Es la Meta.";
+            contenido = "Es la Meta.\n";
             esMeta = true;
         }
         
@@ -2055,7 +2060,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         Casilla casilla = tablero.tablero[x][y];
 
         if(metaX == x && metaY == y){
-            contenido = "Es la Meta.";
+            contenido = "Es la Meta.\n";
             esMeta = true;
         }
         
