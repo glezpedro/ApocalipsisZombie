@@ -104,7 +104,7 @@ public class Superviviente implements Serializable{
                     Superviviente supervivientesim = new Superviviente(nombre, salud, maxHeridas);
                     supervivientesim.coordenadaX = x;  
                     supervivientesim.coordenadaY = y;
-
+                    
             supervivienteSIm.add(supervivientesim);
         
 

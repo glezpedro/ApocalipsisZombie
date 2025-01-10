@@ -258,8 +258,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         etiqueta.setOpaque(false);
         // Etiqueta Turnos
         contadorTurnos = 0;
-        etiquetaTurnos = new JLabel("Turno ", SwingConstants.CENTER); // Creamos etiqueta
-        etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
+        etiquetaTurnos = new JLabel("Simulación", SwingConstants.CENTER); // Creamos etiqueta
         etiquetaTurnos.setBounds(30, 105, 100, 35);
         etiquetaTurnos.setOpaque(true); // Asi podemos poner background
         etiquetaTurnos.setForeground(Color.black);
