@@ -78,11 +78,12 @@ public class VentanaJuego extends JFrame implements Serializable{
         this.revalidate();
         this.repaint();
         
-        colocarEtiquetasJuego();
+        
         colocarBotonesJuego();
         colocarRadioBotones();
         tablero.colocarTablero();
         colocarSupervivientes();
+        colocarEtiquetasJuego();
     }
 
     private void colocarPanelSimular() {
@@ -100,11 +101,12 @@ public class VentanaJuego extends JFrame implements Serializable{
         this.revalidate();
         this.repaint();  
         
-        colocarEtiquetasSimular();
+        
         colocarBotonesSimular();
         tablero.colocarTablero2();
         colocarRadioBotonesSim();
         colocarMetaSim();
+        colocarEtiquetasSimular();
     }
 
     private void colocarEtiquetasMain (){
@@ -234,7 +236,8 @@ public class VentanaJuego extends JFrame implements Serializable{
         etiqueta.setOpaque(false);
         // Etiqueta Turnos
         contadorTurnos = 0;
-        etiquetaTurnos = new JLabel("Turno Rojo", SwingConstants.CENTER); // Creamos etiqueta
+        etiquetaTurnos = new JLabel("Turno", SwingConstants.CENTER); // Creamos etiqueta
+        etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
         etiquetaTurnos.setBounds(30, 105, 100, 35);
         etiquetaTurnos.setOpaque(true); // Asi podemos poner background
         etiquetaTurnos.setForeground(Color.black);
@@ -255,7 +258,8 @@ public class VentanaJuego extends JFrame implements Serializable{
         etiqueta.setOpaque(false);
         // Etiqueta Turnos
         contadorTurnos = 0;
-        etiquetaTurnos = new JLabel("Turno Rojo", SwingConstants.CENTER); // Creamos etiqueta
+        etiquetaTurnos = new JLabel("Turno ", SwingConstants.CENTER); // Creamos etiqueta
+        etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
         etiquetaTurnos.setBounds(30, 105, 100, 35);
         etiquetaTurnos.setOpaque(true); // Asi podemos poner background
         etiquetaTurnos.setForeground(Color.black);
