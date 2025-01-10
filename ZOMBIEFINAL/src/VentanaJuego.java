@@ -452,7 +452,7 @@ public class VentanaJuego extends JFrame implements Serializable{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame nuevaVentanaS = new JFrame("Añadir Elementos");
-                nuevaVentanaS.setSize(300,120);
+                nuevaVentanaS.setSize(300,240);
                 nuevaVentanaS.setLocationRelativeTo(null); //Pone la ventana en el centro
                 nuevaVentanaS.setResizable(false);
                 nuevaVentanaS.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -464,6 +464,10 @@ public class VentanaJuego extends JFrame implements Serializable{
                  btnSupervivientes.addActionListener(ev -> {
                   colocarSupervivientesSim(); 
                 });
+                 
+                 btnZombis.addActionListener(ev -> {
+                     colocarZombiSimulacion();
+                 });
                 
                 nuevaVentanaS.add(btnSupervivientes);
                 nuevaVentanaS.add(btnZombis);
@@ -2189,7 +2193,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
 
                     System.out.println("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
                     Zombi.superAtacados.add("Zombi: "+zombi.getIdentificador()+", Categoria: "+zombi.getCategoria()+", Mordió: "+ primerSuperviviente.getNombre()+"\n---------------\n");
-                    actualizarEtiqueta("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
+                    actualizarEtiquetaSim("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
                     if (primerSuperviviente.getSalud() == 0) {
                         tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
                         tablero.tablero[x][y].setHaySuperviviente(false);
