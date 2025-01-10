@@ -96,7 +96,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         this.getContentPane().remove(panel); 
         this.getContentPane().add(panelSimular);
         
-        actualizarEtiqueta("Para moverse o atacar, primero selecciona la casilla deseada y luego presiona el botón correspondiente (Moverse/Atacar).");
+        actualizarEtiquetaSim("Para moverse o atacar, primero selecciona la casilla deseada y luego presiona el botón correspondiente (Moverse/Atacar).");
 
         this.revalidate();
         this.repaint();  
