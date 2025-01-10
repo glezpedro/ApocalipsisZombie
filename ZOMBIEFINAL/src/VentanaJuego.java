@@ -994,7 +994,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
     
     public void colocarSupervivientesSim() {
         
-        supervivientes = Superviviente.crearSupervivienteSim();
+        supervivientes = Superviviente.crearSupervivienteSim(tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
         
         for (Superviviente superviviente : supervivientes) {
             int x = superviviente.getX();
