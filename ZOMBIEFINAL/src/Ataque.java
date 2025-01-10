@@ -98,12 +98,14 @@ public class Ataque implements Serializable {
     
     public static void agregarZombiEliminado(Zombi zombieAtacado, String nombreSuperviviente) {
         zombisEliminados.putIfAbsent(nombreSuperviviente, new ArrayList<>());
-        zombisEliminados.get(nombreSuperviviente).add(
-            "Zombi: " + zombieAtacado.getIdentificador() + 
-            ", Categoria: " + zombieAtacado.getCategoria()
-        );
+        String zombiInfo = "Zombi: " + zombieAtacado.getIdentificador() +", Categoria: " + zombieAtacado.getCategoria();
+
+        if (!zombisEliminados.get(nombreSuperviviente).contains(zombiInfo)) {
+            zombisEliminados.get(nombreSuperviviente).add(zombiInfo);
+        }
         zombisEliminados.get(nombreSuperviviente).sort(Comparator.comparing(z -> z.split(": ")[1]));
     }
+
     
     public static String obtenerZombisEliminadosPorSuperviviente(String nombreSuperviviente) {
         if (zombisEliminados.containsKey(nombreSuperviviente)) {
