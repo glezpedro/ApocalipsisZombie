@@ -1131,8 +1131,9 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
                     actualizarIconoSuper(nuevaX, nuevaY);
                     if (tablero.tablero[viejaXY[0]][viejaXY[1]].getSupervivientes().size()<1) tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
                     tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
-
                     actualizarIconos();
+                    actualizarIconoZombie(viejaXY[0], viejaXY[1]);
+                    
                     accionesTotales++; 
                     System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
                      
