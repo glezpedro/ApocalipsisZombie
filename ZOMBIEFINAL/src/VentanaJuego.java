@@ -1053,14 +1053,14 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
         
         accionarZombies();
         colocarZombieFinDeRonda();
-        actualizarIconos();
+        
         
         indiceActual = 3;
         finJuego();
-        panelJuego.revalidate();
-        panelJuego.repaint();
+        actualizarIconos();
         System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
         etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
+        
     }
     
     public void actualizarTurnoSim() {
@@ -1129,7 +1129,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
 
                     actualizarIconoSuper(viejaXY[0], viejaXY[1]);
                     actualizarIconoSuper(nuevaX, nuevaY);
-                    tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
+                    if (tablero.tablero[viejaXY[0]][viejaXY[1]].getSupervivientes().size()<1) tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
                     tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
 
                     actualizarIconos();
