@@ -44,6 +44,33 @@ public class Equipo implements Serializable {
 
         System.out.println("No se encontró el arma " + nombreArma + " o ya está activa.");
     }
+    
+    public Arma obtenerArma(int opcion) {
+    // Lista de posibles armas
+    List<Arma> posiblesItems = List.of(
+        new Arma("Espada", 1, 0, 1, 2),
+        new Arma("Pistola", 2, 1, 3, 3),
+        new Arma("Rifle", 3, 2, 5, 5)
+    );
+
+    if (opcion < 1 || opcion > posiblesItems.size()) {
+        System.out.println("Opción no válida.");
+        return null; 
+    }
+
+    return posiblesItems.get(opcion - 1); // -1 porque la lista es 0-based
+}
+
+public void agregarArma(Arma armaElegida) {
+    if (objetos.size() >= MAX_OBJETOS) {
+        System.out.println("Inventario lleno. No se pueden agregar más objetos.");
+        return;
+    }
+
+    // Agregar el arma al inventario
+    objetos.add(armaElegida);
+    System.out.println(armaElegida.getNombre() + " ha sido agregada al inventario.");
+}
 
     public void agregarItem() {
         if (objetos.size() >= MAX_OBJETOS) {
@@ -89,7 +116,7 @@ public class Equipo implements Serializable {
     
     public static Arma elegirArma(String nombreArma) {
     
-    List<Object> posiblesItems = List.of(
+    List<Object> posiblesItems2 = List.of(
             new Arma("Espada", 1, 0, 1, 2),
             new Arma("Pistola", 2, 1, 3, 3),
             new Arma("Rifle", 3, 2, 5, 5),
@@ -98,7 +125,7 @@ public class Equipo implements Serializable {
             new Provisiones("Galletas de avena", 150, "2026-01-10")
         );    
         
-    for (Object item : posiblesItems) {
+    for (Object item : posiblesItems2) {
         if (item instanceof Arma) {
             Arma arma = (Arma) item;
             if (arma.getNombre().equalsIgnoreCase(nombreArma)) {
@@ -107,6 +134,8 @@ public class Equipo implements Serializable {
         }
     }
     throw new IllegalArgumentException("Arma no encontrada: " + nombreArma);
+    
+    
 }
 
 
