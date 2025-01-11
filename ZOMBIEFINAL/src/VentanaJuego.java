@@ -1977,6 +1977,12 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
             panelSimular.remove(scrollPanel);
             scrollPanel = null;
         }
+        if (listaSuper != null) {
+            panelSimular.remove(listaSuper);
+        }
+        if (zombisEliminadosOrde != null) {
+            panelSimular.remove(zombisEliminadosOrde);
+        }
 
     panelSimular.revalidate();
     panelSimular.repaint();
