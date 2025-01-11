@@ -749,115 +749,121 @@ public class VentanaJuego extends JFrame implements Serializable{
     
    
     
-    public void colocarZombiSimulacion(){
-        ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
-        ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
-        ImageIcon IconoZombiNC = new ImageIcon(getClass().getResource("/resources/zombiNC.png"));
-        ImageIcon IconoZombiT = new ImageIcon(getClass().getResource("/resources/zombiT.png"));
-        ImageIcon IconoZombiTA = new ImageIcon(getClass().getResource("/resources/zombiTA.png"));
-        ImageIcon IconoZombiTC = new ImageIcon(getClass().getResource("/resources/zombiTC.png"));
-        ImageIcon IconoZombiB = new ImageIcon(getClass().getResource("/resources/zombiB.png"));
-        ImageIcon IconoZombiBA = new ImageIcon(getClass().getResource("/resources/zombiBA.png"));
-        ImageIcon IconoZombiBC = new ImageIcon(getClass().getResource("/resources/zombiBC.png"));
-        
-        
-        Zombi crearZombiNormal1 = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "NORMAL");
-        System.out.println("Zombi Creado"+ crearZombiNormal1);
-        Zombi crearZombiNormal2 = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "NORMAL");
-        System.out.println("Zombi Creado"+ crearZombiNormal2);
-        Zombi crearZombiNormal3 = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "NORMAL");
-        System.out.println("Zombi Creado"+ crearZombiNormal3);
-        
-        Zombi crearZombiBerseker1 = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "BERSEKER");
-        System.out.println("Zombi Creado"+ crearZombiBerseker1);
-        Zombi crearZombiBerseker2 = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "BERSEKER");
-        System.out.println("Zombi Creado"+ crearZombiBerseker2);
-        Zombi crearZombiBerseker3 = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "BERSEKER");
-        System.out.println("Zombi Creado"+ crearZombiBerseker3);
-        
-        Zombi crearZombiToxico1 = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "TOXICO");
-        System.out.println("Zombi Creado"+ crearZombiToxico1);
-        Zombi crearZombiToxico2 = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "TOXICO");
-        System.out.println("Zombi Creado"+ crearZombiToxico2);
-        Zombi crearZombiToxico3 = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "TOXICO");
-        System.out.println("Zombi Creado"+ crearZombiToxico3);
-        
-        
-        if (crearZombiNormal1.getCategoria().equals("NORMAL") && crearZombiNormal1.getTipo() == TipoZombie.CAMINANTE) tablero.botonesTablero[crearZombiNormal1.getX()][crearZombiNormal1.getY()].setIcon(new ImageIcon(IconoZombiN.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
-            if (crearZombiNormal2.getCategoria().equals("NORMAL") && crearZombiNormal2.getTipo() == TipoZombie.CORREDOR) tablero.botonesTablero[crearZombiNormal2.getX()][crearZombiNormal2.getY()].setIcon(new ImageIcon(IconoZombiNC.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
-            if (crearZombiNormal3.getCategoria().equals("NORMAL") && crearZombiNormal3.getTipo() == TipoZombie.ABOMINACION) tablero.botonesTablero[crearZombiNormal3.getX()][crearZombiNormal3.getY()].setIcon(new ImageIcon(IconoZombiNA.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
-            if (crearZombiBerseker1.getCategoria().equals("BERSEKER") && crearZombiBerseker1.getTipo() == TipoZombie.CAMINANTE) tablero.botonesTablero[crearZombiBerseker1.getX()][crearZombiBerseker1.getY()].setIcon(new ImageIcon(IconoZombiB.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
-            if (crearZombiBerseker2.getCategoria().equals("BERSEKER") && crearZombiBerseker2.getTipo() == TipoZombie.CORREDOR) tablero.botonesTablero[crearZombiBerseker2.getX()][crearZombiBerseker2.getY()].setIcon(new ImageIcon(IconoZombiBC.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
-            if (crearZombiBerseker3.getCategoria().equals("BERSERKER") && crearZombiBerseker3.getTipo() == TipoZombie.ABOMINACION) tablero.botonesTablero[crearZombiBerseker3.getX()][crearZombiBerseker3.getY()].setIcon(new ImageIcon(IconoZombiBA.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
-            if (crearZombiToxico1.getCategoria().equals("TOXICO") && crearZombiToxico1.getTipo() == TipoZombie.CAMINANTE) tablero.botonesTablero[crearZombiToxico1.getX()][crearZombiToxico1.getY()].setIcon(new ImageIcon(IconoZombiT.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
-            if (crearZombiToxico2.getCategoria().equals("TOXICO") && crearZombiToxico2.getTipo() == TipoZombie.CORREDOR) tablero.botonesTablero[crearZombiToxico2.getX()][crearZombiToxico2.getY()].setIcon(new ImageIcon(IconoZombiTC.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
-            if (crearZombiToxico3.getCategoria().equals("TOXICO") && crearZombiToxico3.getTipo() == TipoZombie.ABOMINACION) tablero.botonesTablero[crearZombiToxico3.getX()][crearZombiToxico3.getY()].setIcon(new ImageIcon(IconoZombiTA.getImage().getScaledInstance(20,20,Image.SCALE_AREA_AVERAGING)));
+    public void colocarZombiSimulacion() {
+    // Iconos de los zombis
+    ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
+    ImageIcon IconoZombiNA = new ImageIcon(getClass().getResource("/resources/zombiNA.png"));
+    ImageIcon IconoZombiNC = new ImageIcon(getClass().getResource("/resources/zombiNC.png"));
+    ImageIcon IconoZombiT = new ImageIcon(getClass().getResource("/resources/zombiT.png"));
+    ImageIcon IconoZombiTA = new ImageIcon(getClass().getResource("/resources/zombiTA.png"));
+    ImageIcon IconoZombiTC = new ImageIcon(getClass().getResource("/resources/zombiTC.png"));
+    ImageIcon IconoZombiB = new ImageIcon(getClass().getResource("/resources/zombiB.png"));
+    ImageIcon IconoZombiBA = new ImageIcon(getClass().getResource("/resources/zombiBA.png"));
+    ImageIcon IconoZombiBC = new ImageIcon(getClass().getResource("/resources/zombiBC.png"));
 
-            List<Zombi> zombis = List.of(
-                crearZombiNormal1, crearZombiNormal2, crearZombiNormal3,
-                crearZombiBerseker1, crearZombiBerseker2, crearZombiBerseker3,
-                crearZombiToxico1, crearZombiToxico2, crearZombiToxico3
-                    );
+    // Limpiar el panel antes de agregar los nuevos componentes
+    limpiarPanelSim();
 
-            // Actualizar el estado del tablero para cada zombi
-            for (Zombi zombi : zombis) {
-               tablero.tablero[zombi.getX()][zombi.getY()].setHayZombie(true);
+    // Opciones para el JComboBox
+    String[] opcionesZombis = {
+        "",
+        "Caminante - Normal",
+        "Caminante - Berserker",
+        "Caminante - Tóxico",
+        "Corredor - Normal",
+        "Corredor - Berserker",
+        "Corredor - Tóxico",
+        "Abominación - Normal",
+        "Abominación - Berserker",
+        "Abominación - Tóxico"
+    };
+
+    // Crear el JComboBox
+    JComboBox<String> comboBoxZombis = new JComboBox<>(opcionesZombis);
+
+    // Configurar y agregar la etiqueta
+    etiqueta1 = new JLabel("Elegir Zombi:", SwingConstants.CENTER);
+    etiqueta1.setBounds(30, 245, 100, 30);
+    etiqueta1.setForeground(Color.black);
+    etiqueta1.setFont(new Font("chiller", Font.BOLD, 18));
+    etiqueta1.setOpaque(false); 
+    
+    panelSimular.add(etiqueta1);
+
+    // Configurar y agregar el JComboBox
+    panelSimular.add(comboBoxZombis);
+    comboBoxZombis.setBounds(30, 275, 115, 20);
+
+    // Agregar el ActionListener para el JComboBox
+    comboBoxZombis.addActionListener((ActionEvent e) -> {
+        String seleccion = (String) comboBoxZombis.getSelectedItem();
+        
+        // Verificar que no se haya seleccionado la opción vacía
+        if (seleccion == null || seleccion.isEmpty()) {
+            return; // Salir si no se seleccionó nada válido
+        }
+
+        Zombi zombiSeleccionado = null;
+
+        // Crear el zombi basado en la opción seleccionada
+        switch (seleccion) {
+            case "Caminante - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "NORMAL");
+            case "Caminante - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "BERSERKER");
+            case "Caminante - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "TOXICO");
+            case "Corredor - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "NORMAL");
+            case "Corredor - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "BERSERKER");
+            case "Corredor - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "TOXICO");
+            case "Abominación - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "NORMAL");
+            case "Abominación - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "BERSERKER");
+            case "Abominación - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "TOXICO");
+        }
+
+        if (zombiSeleccionado != null) {
+            // Obtener las coordenadas donde se hizo clic en el tablero
+            int x = tablero.getCoordenadaXSeleccionada();  // Método para obtener la coordenada X
+            int y = tablero.getCoordenadaYSeleccionada();  // Método para obtener la coordenada Y
+
+            // Asignar el icono correspondiente
+            ImageIcon iconoSeleccionado = switch (seleccion) {
+                case "Caminante - Normal" -> IconoZombiN;
+                case "Caminante - Berserker" -> IconoZombiB;
+                case "Caminante - Tóxico" -> IconoZombiT;
+                case "Corredor - Normal" -> IconoZombiNC;
+                case "Corredor - Berserker" -> IconoZombiBC;
+                case "Corredor - Tóxico" -> IconoZombiTC;
+                case "Abominación - Normal" -> IconoZombiNA;
+                case "Abominación - Berserker" -> IconoZombiBA;
+                case "Abominación - Tóxico" -> IconoZombiTA;
+                default -> null;
+            };
+
+            if (iconoSeleccionado != null) {
+                // Colocar el icono del zombi en la casilla seleccionada
+                tablero.botonesTablero[x][y]
+                        .setIcon(new ImageIcon(iconoSeleccionado.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
+
+                // Marcar que hay un zombi en esa casilla
+                tablero.tablero[x][y].setHayZombie(true);
+
+                System.out.println("Zombi creado: " + zombiSeleccionado.getCategoria() + ", " 
+                        + zombiSeleccionado.getTipo() + ", X: " + zombiSeleccionado.getX() 
+                        + ", Y: " + zombiSeleccionado.getY());
             }
-            
-           // Crear el JComboBox con las opciones
-String[] opcionesZombis = {
-    "Caminante - Normal",
-    "Caminante - Berserker",
-    "Caminante - Tóxico",
-    "Corredor - Normal",
-    "Corredor - Berserker",
-    "Corredor - Tóxico",
-    "Abominación - Normal",
-    "Abominación - Berserker",
-    "Abominación - Tóxico"
-};
 
-// Crear el JComboBox con las opciones
-JComboBox<String> comboBoxZombis = new JComboBox<>(opcionesZombis);
+            // Quitar el JComboBox y la etiqueta después de la selección
+            panelSimular.remove(comboBoxZombis);
+            panelSimular.remove(etiqueta1);
 
-// Agregar el JComboBox al frame
-panelSimular.add(new JLabel("Selecciona un zombi:"));
-panelSimular.add(comboBoxZombis);
-comboBoxZombis.setBounds(30, 275, 200, 20); // Asegúrate de ajustar el tamaño
+            // Actualizar el panel
+            panelSimular.revalidate();
+            panelSimular.repaint();
+        }
+    });
+}
 
-// Agregar el ActionListener al JComboBox
-comboBoxZombis.addActionListener((ActionEvent e) -> {
-    String seleccion = (String) comboBoxZombis.getSelectedItem();
-    Zombi zombiSeleccionado = null;
-    
-    // Crear el zombi basado en la opción seleccionada
-    switch (seleccion) {
-        case "Caminante - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "NORMAL");
-        case "Caminante - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "BERSEKER");
-        case "Caminante - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "TOXICO");
-        case "Corredor - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "NORMAL");
-        case "Corredor - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "BERSEKER");
-        case "Corredor - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "TOXICO");
-        case "Abominación - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "NORMAL");
-        case "Abominación - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "BERSEKER");
-        case "Abominación - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "TOXICO");
-    }
-    
-    
-    if (zombiSeleccionado != null) {
-        
-        tablero.botonesTablero[zombiSeleccionado.getX()][zombiSeleccionado.getY()].setIcon(new ImageIcon(IconoZombiN.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
-        tablero.tablero[zombiSeleccionado.getX()][zombiSeleccionado.getY()].setHayZombie(true); // Actualiza el estado del tablero
-        
-     
-        System.out.println("Zombi Creado: " + zombiSeleccionado);
-    }
-        });
-            panelSimular.setVisible(true);
 
-        
 
-    }
+
     
     public void colocarZombiesInicio(){
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
