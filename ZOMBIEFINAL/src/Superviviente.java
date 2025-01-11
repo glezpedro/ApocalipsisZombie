@@ -23,6 +23,7 @@ public class Superviviente implements Serializable{
     private static int[] coordenadaSeleccionada = null;
     private int viejaX;
     private int viejaY;
+    private int mordidas;
 
 
     private int accionesDisponibles = 3;  
@@ -36,6 +37,7 @@ public class Superviviente implements Serializable{
         this.envenenado = false; 
         this.coordenadaX = 0; 
         this.isEliminado = false; 
+        this.mordidas = 0;
     }
     
    
@@ -71,6 +73,12 @@ public class Superviviente implements Serializable{
     }
     public String getNombre() {
         return nombre;
+    }
+    public int getMordidas(){
+        return mordidas;
+    }
+    public void mordido(){
+        mordidas++;
     }
     
     

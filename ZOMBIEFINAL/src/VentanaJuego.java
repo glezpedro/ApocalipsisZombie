@@ -2361,6 +2361,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                     primerSuperviviente.recibirHerida();
 
                     System.out.println("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
+                    primerSuperviviente.mordido();
                     Zombi.superAtacados.add("Zombi: "+zombi.getIdentificador()+", Categoria: "+zombi.getCategoria()+", Mordió: "+ primerSuperviviente.getNombre()+"\n---------------\n");
                     actualizarEtiqueta("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
                     if (primerSuperviviente.getSalud() == 0) {
@@ -2583,6 +2584,13 @@ public class VentanaJuego extends JFrame implements Serializable{
 
         List<Superviviente> supervivientesEnMeta = casillaMeta.getSupervivientes();
         List<Superviviente> todosLosSupervivientes = supervivientes;
+        
+        for (Superviviente superviviente : todosLosSupervivientes) {
+            if (superviviente.getMordidas()  >= 2) {
+                    System.out.println("El superviviente "+superviviente.getNombre()+" ha muerto por acumulacion de heridas, fin de la partida.");
+                    mostrarGameStatusFinal(false);
+                }
+        }
         
         for (Superviviente superviviente : todosLosSupervivientes) {
             if (superviviente.getSalud()<1) {
