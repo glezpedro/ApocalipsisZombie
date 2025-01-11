@@ -77,7 +77,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         // Recarga el panel para asegurarse que este se muestra
         this.revalidate();
         this.repaint();
-        
+        indiceActual = 3;
         
         colocarBotonesJuego();
         colocarRadioBotones();
@@ -100,7 +100,7 @@ public class VentanaJuego extends JFrame implements Serializable{
 
         this.revalidate();
         this.repaint();  
-        
+        indiceActual = 0;
         
         colocarBotonesSimular();
         tablero.colocarTablero2();
@@ -1233,7 +1233,7 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
                      
                 }else{
                     System.out.println("Acciones agotadas.");
-                    actualizarEtiqueta("Acciones agotadas.");
+                    actualizarEtiquetaSim("Acciones agotadas.");
                 }
             } else {
                 System.out.println("Movimiento no válido.");
@@ -1246,9 +1246,9 @@ comboBoxZombis.addActionListener((ActionEvent e) -> {
             }
 
             if (supervivienteActual.getAccionesDisponibles() == 0) {
-                indiceActual--;
-                if (indiceActual < 0) {
-                    indiceActual = 3;
+                indiceActual++;
+                if (indiceActual == supervivientes.size()) {
+                    indiceActual = 0;
                 }
                 Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                 siguienteSuperviviente.resetearAcciones();
