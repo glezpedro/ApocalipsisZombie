@@ -44,13 +44,14 @@ public class Zombi implements Serializable {
         }
     }
     
-    public static Zombi crearZombiElegido(TipoZombie tipo, String categoria) {
-    if (!categoria.equals("NORMAL") && !categoria.equals("BERSERKER") && !categoria.equals("TOXICO")) {
-        throw new IllegalArgumentException("Categoría inválida. Debe ser NORMAL, BERSERKER o TOXICO.");
-    }
-
-    // Crear el zombi con las propiedades específicas
-    return new Zombi(tipo, random.nextInt(10), random.nextInt(10), categoria);
+    public  Zombi (TipoZombie tipo, String categoria, int x, int y) {
+        this.identificador = contador++;
+        this.tipo = tipo;
+        this.vivo = true;
+        this.coordenadaX = x;
+        this.coordenadaY = y;
+        this.categoria = categoria;
+        asignarAtributosSegunTipo(tipo);
 }
 
     public static Zombi crearZombiAleatorio() {
@@ -170,9 +171,4 @@ public class Zombi implements Serializable {
     public boolean estaVivo() {
         return vivo;
     }
-
-    
-
-    
-    
 }

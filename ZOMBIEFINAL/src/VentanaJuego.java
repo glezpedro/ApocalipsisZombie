@@ -746,7 +746,7 @@ public class VentanaJuego extends JFrame implements Serializable{
     }
     
        
-    
+    Zombi zombiSeleccionado;
    
     
     public void colocarZombiSimulacion() {
@@ -803,22 +803,21 @@ public class VentanaJuego extends JFrame implements Serializable{
             return; // Salir si no se seleccionó nada válido
         }
 
-        Zombi zombiSeleccionado = null;
-
         // Crear el zombi basado en la opción seleccionada
         switch (seleccion) {
-            case "Caminante - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "NORMAL");
-            case "Caminante - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "BERSERKER");
-            case "Caminante - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CAMINANTE, "TOXICO");
-            case "Corredor - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "NORMAL");
-            case "Corredor - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "BERSERKER");
-            case "Corredor - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.CORREDOR, "TOXICO");
-            case "Abominación - Normal" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "NORMAL");
-            case "Abominación - Berserker" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "BERSERKER");
-            case "Abominación - Tóxico" -> zombiSeleccionado = Zombi.crearZombiElegido(TipoZombie.ABOMINACION, "TOXICO");
+            case "Caminante - Normal" -> zombiSeleccionado =new Zombi(TipoZombie.CAMINANTE, "NORMAL", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
+            case "Caminante - Berserker" -> zombiSeleccionado =new Zombi(TipoZombie.CAMINANTE, "BERSERKER", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
+            case "Caminante - Tóxico" -> zombiSeleccionado =new Zombi(TipoZombie.CAMINANTE, "TOXICO", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
+            case "Corredor - Normal" -> zombiSeleccionado =new Zombi(TipoZombie.CORREDOR, "NORMAL", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
+            case "Corredor - Berserker" -> zombiSeleccionado =new Zombi(TipoZombie.CORREDOR, "BERSERKER", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
+            case "Corredor - Tóxico" -> zombiSeleccionado =new Zombi(TipoZombie.CORREDOR, "TOXICO", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
+            case "Abominación - Normal" -> zombiSeleccionado =new Zombi(TipoZombie.ABOMINACION, "NORMAL", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
+            case "Abominación - Berserker" -> zombiSeleccionado =new Zombi(TipoZombie.ABOMINACION, "BERSERKER", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
+            case "Abominación - Tóxico" -> zombiSeleccionado =new Zombi(TipoZombie.ABOMINACION, "TOXICO", tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
         }
 
         if (zombiSeleccionado != null) {
+            zombies.add(zombiSeleccionado);
             // Obtener las coordenadas donde se hizo clic en el tablero
             int x = tablero.getCoordenadaXSeleccionada();  // Método para obtener la coordenada X
             int y = tablero.getCoordenadaYSeleccionada();  // Método para obtener la coordenada Y
@@ -860,10 +859,6 @@ public class VentanaJuego extends JFrame implements Serializable{
         }
     });
 }
-
-
-
-
     
     public void colocarZombiesInicio(){
         ImageIcon IconoZombiN = new ImageIcon(getClass().getResource("/resources/zombiN.png"));
