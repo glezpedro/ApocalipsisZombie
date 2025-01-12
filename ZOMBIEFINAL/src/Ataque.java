@@ -23,7 +23,7 @@ public class Ataque implements Serializable {
         int exitos = armaSeleccionada.lanzarDados(valoresDados);
         System.out.println("Éxitos iniciales: " + exitos);
         
-        
+        if (exitos == 0) ventana.actualizarEtiqueta("Ataque sin exito.");
         
         while (exitos > 0) {
             if (coordenadaXSeleccionada != -1 && coordenadaYSeleccionada != -1) {
@@ -102,7 +102,7 @@ public class Ataque implements Serializable {
         int exitos = armaSeleccionada.lanzarDados(valoresDados);
         System.out.println("Éxitos iniciales: " + exitos);
         
-        
+        if (exitos == 0) ventana.actualizarEtiquetaSim("Ataque sin exito.");
         
         while (exitos > 0) {
             if (coordenadaXSeleccionada != -1 && coordenadaYSeleccionada != -1) {
@@ -166,6 +166,7 @@ public class Ataque implements Serializable {
                 break;
             }
         }
+        
 
         ventana.actualizarIconosSim();
         ventana.panelSimular.revalidate();
