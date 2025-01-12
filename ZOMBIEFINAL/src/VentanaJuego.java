@@ -1248,11 +1248,11 @@ public class VentanaJuego extends JFrame implements Serializable{
             // TURNOS SIMULACION
             if(accionesTotales == supervivientes.size()*3){
                 actualizarTurnoSim();
-                System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+                System.out.println("Moviendo Zombis y colocando nuevo Zombie "); 
             }
 
             if (supervivienteActual.getAccionesDisponibles() == 0) {
-                indiceActual++;
+                indiceActual--;
                 if (indiceActual == supervivientes.size()) {
                     indiceActual = 0;
                 }
