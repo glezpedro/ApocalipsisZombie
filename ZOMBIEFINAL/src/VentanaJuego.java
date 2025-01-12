@@ -1708,6 +1708,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                 if (armaSeleccionada != null) {
                     supervivienteActual.getInventario().agregarArmaEspecifica(armaSeleccionada);
                     System.out.println("Arma añadida al inventario: " + armaSeleccionada.getNombre());
+                    actualizarEtiquetaSim("Arma añadida al inventario: " + armaSeleccionada.getNombre());
                 }
             }
             // Si es una provisión
@@ -1732,13 +1733,14 @@ public class VentanaJuego extends JFrame implements Serializable{
                 if (provisionSeleccionada != null) {
                     supervivienteActual.getInventario().agregarProvisionEspecifica(provisionSeleccionada);
                     System.out.println("Provisión añadida al inventario: " + provisionSeleccionada.getNombre());
+                    actualizarEtiquetaSim("Provisión añadida al inventario: " + provisionSeleccionada.getNombre());
                 }
             }
         }
     };
     listaActivas.addActionListener(accionLista);
 }
-
+    
     
     private String armaSeleccionada1 = "";
     private String armaSeleccionada2 = "";
