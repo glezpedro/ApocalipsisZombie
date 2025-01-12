@@ -1081,10 +1081,12 @@ public class VentanaJuego extends JFrame implements Serializable{
         for (Superviviente s : supervivientes) {
             s.resetearAcciones();
         }
-       
-        actualizarIconos();
         
-        indiceActual = 3;
+        colocarZombieFinDeRonda();
+        accionarZombiesSim();
+        actualizarIconosSim();
+        
+        indiceActual = 0;
         finJuego();
         panelSimular.revalidate();
         panelSimular.repaint();
@@ -1242,8 +1244,8 @@ public class VentanaJuego extends JFrame implements Serializable{
                 actualizarEtiqueta("Movimiento no válido.");
             }
             
-            if(accionesTotales == 12){
-                actualizarTurno();
+            if(accionesTotales == supervivientes.size()*3){
+                actualizarTurnoSim();
                 System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
             }
 
@@ -1597,7 +1599,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                         panelSimular.revalidate();
                         panelSimular.repaint();
                     }
-                    actualizarIconos();
+                    actualizarIconosSim();
            }
         };
         SiguienteTurno.addActionListener(accionBoton4);
@@ -2425,7 +2427,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                         
                         tablero.tablero[nuevaX][nuevaY].agregarZombie(zombi);
                         tablero.tablero[nuevaX][nuevaY].setHayZombie(true);
-                        actualizarIconoZombie(nuevaX, nuevaY);
+                        actualizarIconoZombieSim(nuevaX, nuevaY);
 
                         zombi.moverse(nuevaX, nuevaY);
                         System.out.println("Zombi movido de (" + x + ", " + y + ") a (" + nuevaX + ", " + nuevaY + ")");
@@ -2711,7 +2713,7 @@ public class VentanaJuego extends JFrame implements Serializable{
             for (int y = 0; y < 10; y++) {
                 if (tablero.tablero[x][y].hayZombies()) {
                     for (Zombi zombi : tablero.tablero[x][y].getZombies())
-                    actualizarIconoZombie(zombi.getX(), zombi.getY());
+                    actualizarIconoZombieSim(zombi.getX(), zombi.getY());
                 }
                 if (tablero.tablero[x][y].haySupervivientes()) actualizarIconoSuper(x, y);
             }
