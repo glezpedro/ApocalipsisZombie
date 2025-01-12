@@ -7,6 +7,7 @@ public class Equipo implements Serializable {
     private static final int MAX_ARMAS = 2; // Límite de armas activas
     private List<Object> objetos = new ArrayList<>(); // Inventario general
     private List<Arma> armasActivas = new ArrayList<>(); // Armas activas
+    
 
     public Equipo() {}
 
@@ -26,6 +27,12 @@ public class Equipo implements Serializable {
         }
         return armasNA;
     }
+
+    public List<Object> getObjetos() {
+        return objetos;
+    }
+    
+    
 
     public void activarArma(String nombreArma) {
         if (armasActivas.size() >= MAX_ARMAS) {
