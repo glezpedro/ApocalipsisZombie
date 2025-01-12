@@ -487,6 +487,9 @@ public class VentanaJuego extends JFrame implements Serializable{
                  
                  btnInv.addActionListener(ev -> {
                     if (!Superviviente.listaSupervivienteSimulacion.isEmpty()) {
+                        for (Arma arma : Superviviente.listaSupervivienteSimulacion.getLast().getInventario().obtenerArmasActivas()) {
+                            Superviviente.listaSupervivienteSimulacion.getLast().getInventario().desactivarArma(arma.getNombre());
+                        }
                         Superviviente.listaSupervivienteSimulacion.getLast().getInventario().limpiarInventario();
                         actualizarEtiquetaSim("Inventario limpiado.");
                     } else actualizarEtiquetaSim("No existe Superviviente o no se ha podido limpiar.");
@@ -2376,21 +2379,28 @@ public class VentanaJuego extends JFrame implements Serializable{
                 Casilla casilla = tablero.tablero[x][y];
                 List<Superviviente> supervivientesEnCasilla = casilla.getSupervivientes();
 
-                if (!supervivientesEnCasilla.isEmpty() && zombi.getCategoria().equals("TOXICO")) {
+                if (!supervivientesEnCasilla.isEmpty()) {
                     Superviviente primerSuperviviente = supervivientesEnCasilla.get(0);
-                    primerSuperviviente.envenenar();
-                    primerSuperviviente.recibirHerida();
 
+                    primerSuperviviente.recibirHerida();
                     System.out.println("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
-                    primerSuperviviente.mordido();
-                    Zombi.superAtacados.add("Zombi: "+zombi.getIdentificador()+", Categoria: "+zombi.getCategoria()+", Mordió: "+ primerSuperviviente.getNombre()+"\n---------------\n");
+                    primerSuperviviente.mordido(); 
+
+                    if (zombi.getCategoria().equals("TOXICO")) {
+                        primerSuperviviente.envenenar();
+                        System.out.println(primerSuperviviente.getNombre()+"ha sido envenenado.");
+                    }
+
+                    Zombi.superAtacados.add("Zombi: " + zombi.getIdentificador() + ", Categoria: " + zombi.getCategoria() + ", Mordió: " + primerSuperviviente.getNombre() + "\n---------------\n");
                     actualizarEtiqueta("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
-                    if (primerSuperviviente.getSalud() == 0) {
+
+                    if (primerSuperviviente.getSalud() <= 0) {
                         tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
                         tablero.tablero[x][y].setHaySuperviviente(false);
                         tablero.botonesTablero[x][y].setIcon(null);
                         finJuego();
                     }
+                    break;
                 }
 
                 Superviviente objetivo = encontrarSupervivienteCercano(x, y);
@@ -2432,20 +2442,28 @@ public class VentanaJuego extends JFrame implements Serializable{
                 Casilla casilla = tablero.tablero[x][y];
                 List<Superviviente> supervivientesEnCasilla = casilla.getSupervivientes();
 
-                if (!supervivientesEnCasilla.isEmpty() && zombi.getCategoria().equals("TOXICO")) {
+                if (!supervivientesEnCasilla.isEmpty()) {
                     Superviviente primerSuperviviente = supervivientesEnCasilla.get(0);
-                    primerSuperviviente.envenenar();
-                    primerSuperviviente.recibirHerida();
 
+                    primerSuperviviente.recibirHerida();
                     System.out.println("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
-                    Zombi.superAtacados.add("Zombi: "+zombi.getIdentificador()+", Categoria: "+zombi.getCategoria()+", Mordió: "+ primerSuperviviente.getNombre()+"\n---------------\n");
+                    primerSuperviviente.mordido(); 
+
+                    if (zombi.getCategoria().equals("TOXICO")) {
+                        primerSuperviviente.envenenar();
+                        System.out.println(primerSuperviviente.getNombre()+"ha sido envenenado.");
+                    }
+
+                    Zombi.superAtacados.add("Zombi: " + zombi.getIdentificador() + ", Categoria: " + zombi.getCategoria() + ", Mordió: " + primerSuperviviente.getNombre() + "\n---------------\n");
                     actualizarEtiquetaSim("¡El zombi mordió a " + primerSuperviviente.getNombre() + "!");
-                    if (primerSuperviviente.getSalud() == 0) {
+
+                    if (primerSuperviviente.getSalud() <= 0) {
                         tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
                         tablero.tablero[x][y].setHaySuperviviente(false);
                         tablero.botonesTablero[x][y].setIcon(null);
                         finJuegoSim();
                     }
+                    break;
                 }
 
                 Superviviente objetivo = encontrarSupervivienteCercano(x, y);
