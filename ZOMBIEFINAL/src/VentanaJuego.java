@@ -844,7 +844,8 @@ public class VentanaJuego extends JFrame implements Serializable{
 
                 // Marcar que hay un zombi en esa casilla
                 tablero.tablero[x][y].setHayZombie(true);
-
+                tablero.tablero[zombiSeleccionado.getX()][zombiSeleccionado.getY()].agregarZombie(zombiSeleccionado);
+                
                 System.out.println("Zombi creado: " + zombiSeleccionado.getCategoria() + ", " 
                         + zombiSeleccionado.getTipo() + ", X: " + zombiSeleccionado.getX() 
                         + ", Y: " + zombiSeleccionado.getY());
@@ -879,6 +880,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                  nuevoZombie = Zombi.crearZombiAleatorio();
             } while (posicionesUsadas.contains(new Point(nuevoZombie.getX(), nuevoZombie.getY()))); 
                     
+            tablero.tablero[nuevoZombie.getX()][nuevoZombie.getY()].agregarZombie(nuevoZombie);
             zombies.add(nuevoZombie);
             posicionesUsadas.add(new Point(nuevoZombie.getX(), nuevoZombie.getY()));
             System.out.println("Zombie creado: " + nuevoZombie.getCategoria() + ", " + nuevoZombie.getTipo()+", X: "+ nuevoZombie.getX()+", Y: "+ nuevoZombie.getY());
@@ -913,7 +915,8 @@ public class VentanaJuego extends JFrame implements Serializable{
         do{
             nuevoZombie = Zombi.crearZombiAleatorio();
         } while (posicionesUsadas.contains(new Point(nuevoZombie.getX(), nuevoZombie.getY()))); 
-                    
+        
+        tablero.tablero[nuevoZombie.getX()][nuevoZombie.getY()].agregarZombie(nuevoZombie);
         zombies.add(nuevoZombie);
         posicionesUsadas.add(new Point(nuevoZombie.getX(), nuevoZombie.getY()));
         System.out.println("Zombie creado: " + nuevoZombie.getCategoria() + ", " + nuevoZombie.getTipo()+", X: "+ nuevoZombie.getX()+", Y: "+ nuevoZombie.getY());
@@ -2232,8 +2235,8 @@ public class VentanaJuego extends JFrame implements Serializable{
         }
         
         if (casilla.tieneZombie()) {
-            Zombi zombi = buscarZombie(x, y);
-            contenido += "Contiene: Zombi\nTipo: " + zombi.getTipo()+"\nCategoria: "+ zombi.getCategoria();
+            List<Zombi> zombisCasilla = tablero.tablero[x][y].getZombies();
+            for (Zombi zombi : zombisCasilla ) contenido += "Contiene: Zombi\nTipo: " + zombi.getTipo()+"\nCategoria: "+ zombi.getCategoria()+"\n";
         }
 
         if (casilla.tieneSuperviviente()) {
@@ -2269,8 +2272,8 @@ public class VentanaJuego extends JFrame implements Serializable{
         }
         
         if (casilla.tieneZombie()) {
-            Zombi zombi = buscarZombie(x, y);
-            contenido += "Contiene: Zombi\nTipo: " + zombi.getTipo()+"\nCategoria: "+ zombi.getCategoria();
+            List<Zombi> zombisCasilla = tablero.tablero[x][y].getZombies();
+            for (Zombi zombi : zombisCasilla ) contenido += "Contiene: Zombi\nTipo: " + zombi.getTipo()+"\nCategoria: "+ zombi.getCategoria()+"\n";
         }
 
         if (casilla.tieneSuperviviente()) {
