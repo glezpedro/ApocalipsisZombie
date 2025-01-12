@@ -1089,7 +1089,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         actualizarIconosSim();
         
         indiceActual = 0;
-        finJuego();
+        finJuegoSim();
         panelSimular.revalidate();
         panelSimular.repaint();
         System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
@@ -2429,7 +2429,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                         tablero.tablero[x][y].eliminarSuperviviente(primerSuperviviente);
                         tablero.tablero[x][y].setHaySuperviviente(false);
                         tablero.botonesTablero[x][y].setIcon(null);
-                        finJuego();
+                        finJuegoSim();
                     }
                 }
 
@@ -2630,6 +2630,53 @@ public class VentanaJuego extends JFrame implements Serializable{
         }
     }
     
+    private void finJuegoSim() {
+        
+        Casilla casillaMeta = tablero.tablero[metaX][metaY];
+
+        List<Superviviente> supervivientesEnMeta = casillaMeta.getSupervivientes();
+        List<Superviviente> todosLosSupervivientes = supervivientes;
+        
+        for (Superviviente superviviente : todosLosSupervivientes) {
+            if (superviviente.getMordidas()  >= 2) {
+                    System.out.println("El superviviente "+superviviente.getNombre()+" ha muerto por acumulacion de heridas, fin de la partida.");
+                    mostrarGameStatusFinalSim(false);
+                }
+        }
+        
+        for (Superviviente superviviente : todosLosSupervivientes) {
+            if (superviviente.getSalud()<1) {
+                    System.out.println("El superviviente "+superviviente.getNombre()+" ha muerto, fin de la partida.");
+                    mostrarGameStatusFinalSim(false);
+                }
+        }
+        
+        if (supervivientesEnMeta.containsAll(todosLosSupervivientes)) {
+            // Comprobar que todos los supervivientes tienen al menos una provisión
+            boolean todosConProvisiones = true;
+            for (Superviviente superviviente : todosLosSupervivientes) {
+                int cantidadProvisiones = 0;
+                for (Object item : superviviente.getInventario().obtenerObjetos()) {
+                    if (item instanceof Provisiones) cantidadProvisiones++;
+                }
+                if (cantidadProvisiones < 1) {
+                    System.out.println("El superviviente "+superviviente.getNombre()+ " no tiene suficientes provisiones.");
+                    todosConProvisiones = false;
+                    break;
+                } 
+            }
+
+            if (todosConProvisiones) {
+                System.out.println("¡Todos los supervivientes han llegado a la meta con provisiones! ¡Has ganado!");
+                mostrarGameStatusFinalSim(true);
+            } else {
+                System.out.println("No todos los supervivientes tienen provisiones suficientes.");
+                actualizarEtiqueta("No todos los supervivientes tienen provisiones suficientes.");
+            }
+        }
+    }
+
+    
     private void mostrarGameStatusFinal(Boolean status) {
         this.getContentPane().removeAll();
         
@@ -2676,7 +2723,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         this.repaint();
     }
     
-    private void mostrarGameStatusFinalSimular(Boolean status) {
+    private void mostrarGameStatusFinalSim(Boolean status) {
         this.getContentPane().removeAll();
         
         Atras = new JButton();
