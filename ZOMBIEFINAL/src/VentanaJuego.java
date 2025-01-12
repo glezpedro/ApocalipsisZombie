@@ -1087,7 +1087,6 @@ public class VentanaJuego extends JFrame implements Serializable{
         finJuego();
         actualizarIconos();
         System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
-        actualizarEtiqueta("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
         etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
         
     }
@@ -1110,7 +1109,6 @@ public class VentanaJuego extends JFrame implements Serializable{
         panelSimular.revalidate();
         panelSimular.repaint();
         System.out.println("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
-        actualizarEtiquetaSim("Turno reiniciado. Es el turno de " + supervivientes.get(indiceActual).getNombre());
         etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
     }
     
