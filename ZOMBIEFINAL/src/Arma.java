@@ -63,23 +63,6 @@ public class Arma extends Equipo implements Serializable{
         return exitos;
     }
     
-    public Arma obtenerArma(int opcion) {
-   
-    // Lista de posibles armas
-    List<Arma> posiblesItems = List.of(
-        new Arma("Espada", 1, 0, 1, 2),
-        new Arma("Pistola", 2, 1, 3, 3),
-        new Arma("Rifle", 3, 2, 5, 5)
-    );
-
-    // Validar la opción ingresada
-    if (opcion < 1 || opcion > posiblesItems.size()) {
-        System.out.println("Opción no válida.");
-        return null; // O puedes lanzar una excepción
-    }
-
-    // Retornar el arma seleccionada
-    return posiblesItems.get(opcion - 1); // -1 porque la lista es 0-based
-}
+    
 
 }

@@ -10,6 +10,7 @@ public class Casilla implements Serializable{
     private boolean haySuperviviente;
     private List<Superviviente> supervivientes = new ArrayList<>();
     private List<Zombi> zombies = new ArrayList<>();
+    private Zombi zombi;
 
     
     public Casilla(Coordenada posicion) {
@@ -52,6 +53,12 @@ public class Casilla implements Serializable{
     public List<Zombi> getZombies() {
         return zombies;
     }
+
+    
+    public void setZombi(Zombi zombi) {
+        this.zombi = zombi;
+    }
+    
 
     public void agregarZombie(Zombi z) {
         zombies.add(z);
