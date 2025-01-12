@@ -2746,9 +2746,17 @@ public class VentanaJuego extends JFrame implements Serializable{
             gameStatus.setForeground(Color.green);
         }
         else gameStatus.setText("Derrota");
-        
         panel.add(gameStatus);
         
+        JLabel creditos = new JLabel("<html>Créditos:<br>Angel Molinero Caja (Imágenes, GUI y lógica del juego)<br>Pedro González Martín (Lógica y guardado del juego)<br>Jorge Castellano Bajo (Simulación del juego)</html>", SwingConstants.CENTER);
+        creditos.setBounds(70, 340, 350, 65);
+        creditos.setFont(new Font("Arial", Font.BOLD, 12));
+        creditos.setForeground(Color.white);
+        creditos.setBorder(BorderFactory.createLineBorder(Color.white));
+        creditos.setOpaque(true);
+        creditos.setBackground(new Color(0, 0, 0, 150));
+        panel.add(creditos);
+                
         panelJuego.revalidate();
         panelJuego.repaint();
         this.revalidate();
@@ -2757,7 +2765,7 @@ public class VentanaJuego extends JFrame implements Serializable{
     
     private void mostrarGameStatusFinalSim(Boolean status) {
         this.getContentPane().removeAll();
-        
+
         Atras = new JButton();
         Atras.setBounds(20, 360, 40, 40);
         Atras.setEnabled(true);
@@ -2775,26 +2783,38 @@ public class VentanaJuego extends JFrame implements Serializable{
             }
         };
         Atras.addActionListener(accionBoton4);
-       
+
         panel = new BackgroundPanel("/resources/woods.png"); 
         panel.setLayout(null);
         this.getContentPane().add(panel);
+
         JLabel gameStatus = new JLabel("", SwingConstants.CENTER);
         gameStatus.setBounds(25, 180, 400, 65);
-        gameStatus.setOpaque(true); // Asi podemos poner background
+        gameStatus.setOpaque(true);
         gameStatus.setForeground(Color.red);
-        gameStatus.setFont(new Font("chiller", Font.BOLD, 80)); // estableze el font se puede usar 0123 para typo de letra
-        panel.add(gameStatus); //agregamos la etiqueta al panel
+        gameStatus.setFont(new Font("chiller", Font.BOLD, 80));
+        panel.add(gameStatus);
         gameStatus.setOpaque(false);
-        
+
         if (status) {
             gameStatus.setText("¡Victoria!");
             gameStatus.setForeground(Color.green);
+        } else {
+            gameStatus.setText("Derrota");
         }
-        else gameStatus.setText("Derrota");
-        
+
         panel.add(gameStatus);
-        
+
+        // Añadiendo créditos
+        JLabel creditos = new JLabel("<html>Créditos:<br>Angel Molinero Caja (Imágenes, GUI y lógica del juego)<br>Pedro González Martín (Lógica y guardado del juego)<br>Jorge Castellano Bajo (Simulación del juego)</html>", SwingConstants.CENTER);
+        creditos.setBounds(70, 340, 350, 65);
+        creditos.setFont(new Font("Arial", Font.BOLD, 12));
+        creditos.setForeground(Color.white);
+        creditos.setBorder(BorderFactory.createLineBorder(Color.white));
+        creditos.setOpaque(true);
+        creditos.setBackground(new Color(0, 0, 0, 150));
+        panel.add(creditos);
+
         panelSimular.revalidate();
         panelSimular.repaint();
         this.revalidate();
