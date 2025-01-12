@@ -1243,7 +1243,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                 System.out.println("Movimiento no válido.");
                 actualizarEtiqueta("Movimiento no válido.");
             }
-            
+            // TURNOS SIMULACION
             if(accionesTotales == supervivientes.size()*3){
                 actualizarTurnoSim();
                 System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
@@ -1261,7 +1261,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                 panelSimular.revalidate();
                 panelSimular.repaint();
             }
-
+            //
             actualizarIconosSim();
         }};
         Moverse.addActionListener(accionBoton4);
