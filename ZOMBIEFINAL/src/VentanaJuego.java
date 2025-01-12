@@ -165,7 +165,8 @@ public class VentanaJuego extends JFrame implements Serializable{
                         EstadoJuego estado = (EstadoJuego) in.readObject();
                         
                         VentanaJuego Juego = new VentanaJuego();
-
+                        
+                        
                         //tablero = estado.getTablero();
                         ventana.contadorTurnos = estado.getTurno();
                         ventana.zombies = estado.getZombies();
