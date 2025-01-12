@@ -1006,10 +1006,6 @@ public class VentanaJuego extends JFrame implements Serializable{
             
             tablero.tablero[x][y].agregarSuperviviente(superviviente);
             String color = superviviente.getNombre().toLowerCase();  
-            
-            
-            
-            
 
             ImageIcon iconoSuperviviente = null;
             switch (color) {
@@ -1036,9 +1032,6 @@ public class VentanaJuego extends JFrame implements Serializable{
             System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: " + x + ", Y: " + y);
 
             tablero.tablero[x][y].setHaySuperviviente(true);
-            
-
-            
         }
 
         // Actualizar la interfaz gráfica
@@ -1470,17 +1463,15 @@ public class VentanaJuego extends JFrame implements Serializable{
                             System.out.println("Movimiento no válido.");
                     }
 
-                    if (accionesTotales == 12) {
-                            System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
-                            accionarZombiesSim();
-                            colocarZombieFinDeRonda();
-                            actualizarTurnoSim(); 
-                        }
+                    if (accionesTotales == supervivientes.size()*3) {
+                        actualizarTurnoSim(); 
+                        System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+                    }
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
-                        indiceActual--;
-                        if (indiceActual < 0) {
-                            indiceActual = 3;
+                        indiceActual++;
+                        if (indiceActual == supervivientes.size()) {
+                            indiceActual = 0;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                         siguienteSuperviviente.resetearAcciones();
@@ -1585,15 +1576,15 @@ public class VentanaJuego extends JFrame implements Serializable{
                         System.out.println("Movimiento no válido o acciones agotadas.");
                     }
                     
-                    if (accionesTotales == 12) {
-                        actualizarTurno();
+                    if (accionesTotales == supervivientes.size()*3) {
+                        actualizarTurnoSim();
                         System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
                     }
 
                     if (supervivienteActual.getAccionesDisponibles() == 0) {
-                        indiceActual--;
-                        if (indiceActual < 0) {
-                            indiceActual = 3;
+                        indiceActual++;
+                        if (indiceActual == supervivientes.size()) {
+                            indiceActual = 0;
                         }
                         Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                         siguienteSuperviviente.resetearAcciones();
@@ -1692,6 +1683,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         String objetoSeleccionado = (String) listaActivas.getSelectedItem();
 
         if (objetoSeleccionado != null && !objetoSeleccionado.trim().isEmpty()) {
+            
             // Si es un arma
             if (objetoSeleccionado.equals("Rifle") || objetoSeleccionado.equals("Pistola") || objetoSeleccionado.equals("Espada")) {
                 Arma armaSeleccionada = null;
@@ -1742,6 +1734,25 @@ public class VentanaJuego extends JFrame implements Serializable{
                     actualizarEtiquetaSim("Provisión añadida al inventario: " + provisionSeleccionada.getNombre());
                 }
             }
+            supervivienteActual.gastarAccion();
+            accionesTotales++;
+            System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
+        }
+        if(accionesTotales == supervivientes.size()*3){
+                actualizarTurnoSim();
+                System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+            }
+        if (supervivienteActual.getAccionesDisponibles() == 0) {
+            indiceActual++;
+            if (indiceActual == supervivientes.size()) {
+                indiceActual = 0;
+            }
+            Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
+            siguienteSuperviviente.resetearAcciones();
+            System.out.println("Es el turno de " + siguienteSuperviviente.getNombre());
+            etiquetaTurnos.setText("Turno " + siguienteSuperviviente.getNombre());
+            panelSimular.revalidate();
+            panelSimular.repaint();
         }
     };
     listaActivas.addActionListener(accionLista);
@@ -2024,15 +2035,15 @@ public class VentanaJuego extends JFrame implements Serializable{
                             System.out.println("Movimiento no válido o acciones agotadas.");
                         }
 
-                        if (accionesTotales == 12) {
+                        if (accionesTotales == supervivientes.size()*3) {
                             actualizarTurnoSim(); 
                             System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
                         }
                         
                         if (supervivienteActual.getAccionesDisponibles() == 0) {
-                            indiceActual--;
-                            if (indiceActual < 0) {
-                                indiceActual = 3;
+                            indiceActual++;
+                            if (indiceActual == supervivientes.size()) {
+                                indiceActual = 0;
                             }
                             Superviviente siguienteSuperviviente = supervivientes.get(indiceActual);
                             siguienteSuperviviente.resetearAcciones();
