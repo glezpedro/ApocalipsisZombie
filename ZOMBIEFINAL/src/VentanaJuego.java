@@ -1667,17 +1667,17 @@ public class VentanaJuego extends JFrame implements Serializable{
     
     public void funcionBuscarSim() {
     // Texto Elegir Objeto (Arma o Provisión):
-    etiqueta1 = new JLabel("Elegir Objeto:", SwingConstants.CENTER); // Creamos etiqueta
+    etiqueta1 = new JLabel("Elegir Objeto:", SwingConstants.CENTER); 
     etiqueta1.setBounds(30, 245, 100, 30);
-    etiqueta1.setOpaque(true); // Así podemos poner background
+    etiqueta1.setOpaque(true); 
     etiqueta1.setForeground(Color.black);
-    etiqueta1.setFont(new Font("arial", Font.BOLD, 15)); // Establece el font
+    etiqueta1.setFont(new Font("arial", Font.BOLD, 15)); 
     panelSimular.add(etiqueta1);
     etiqueta1.setOpaque(false);
 
-    Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
+    Superviviente supervivienteActual = supervivientes.get(indiceActual); 
 
-    // Opciones de objetos disponibles (Armas y Provisiones)
+    
     String[] opcionesObjetos = {
         "",
         "Rifle",
@@ -1689,21 +1689,28 @@ public class VentanaJuego extends JFrame implements Serializable{
     };
 
     listaActivas = new JComboBox(opcionesObjetos);
-    listaActivas.setBounds(30, 275, 115, 20); // Aumentamos el tamaño del combo box para caber todas las opciones
+    listaActivas.setBounds(30, 275, 115, 20); 
     listaActivas.setSelectedItem("");
     panelSimular.add(listaActivas);
 
-    // Acción al seleccionar un objeto (arma o provisión)
+   
     ActionListener accionLista = (ActionEvent e) -> {
         String objetoSeleccionado = (String) listaActivas.getSelectedItem();
 
+       
+        if (supervivienteActual.getInventario().getObjetos().size() >= 5) {
+            actualizarEtiquetaSim("Inventario lleno");  
+            System.out.println("Inventario lleno");  
+            return;  
+        }
+
         if (objetoSeleccionado != null && !objetoSeleccionado.trim().isEmpty()) {
             
-            // Si es un arma
+            
             if (objetoSeleccionado.equals("Rifle") || objetoSeleccionado.equals("Pistola") || objetoSeleccionado.equals("Espada")) {
                 Arma armaSeleccionada = null;
 
-                // Crear el arma con características específicas según el nombre
+                
                 switch (objetoSeleccionado) {
                     case "Rifle":
                         armaSeleccionada = new Arma("Rifle", 5, 3, 2, 4);
@@ -1724,11 +1731,11 @@ public class VentanaJuego extends JFrame implements Serializable{
                     actualizarEtiquetaSim("Arma añadida al inventario: " + armaSeleccionada.getNombre());
                 }
             }
-            // Si es una provisión
+            
             else if (objetoSeleccionado.equals("Agua") || objetoSeleccionado.equals("Barrita energética") || objetoSeleccionado.equals("Galletas de Avena")) {
                 Provisiones provisionSeleccionada = null;
 
-                // Crear la provisión con características específicas según el nombre
+                
                 switch (objetoSeleccionado) {
                     case "Agua":
                         provisionSeleccionada = new Provisiones("Agua", 0, "2025-12-31");
@@ -1754,9 +1761,9 @@ public class VentanaJuego extends JFrame implements Serializable{
             System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
         }
         if(accionesTotales == supervivientes.size()*3){
-                actualizarTurnoSim();
-                System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
-            }
+            actualizarTurnoSim();
+            System.out.println("Moviendo Zombis y colocando nuevo Zombie"); 
+        }
         if (supervivienteActual.getAccionesDisponibles() == 0) {
             indiceActual++;
             if (indiceActual == supervivientes.size()) {
@@ -1772,6 +1779,7 @@ public class VentanaJuego extends JFrame implements Serializable{
     };
     listaActivas.addActionListener(accionLista);
 }
+
     
     
     private String armaSeleccionada1 = "";
