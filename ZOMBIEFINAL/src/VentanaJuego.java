@@ -466,14 +466,15 @@ public class VentanaJuego extends JFrame implements Serializable{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame nuevaVentanaS = new JFrame("Añadir Elementos");
-                nuevaVentanaS.setSize(300,100);
+                nuevaVentanaS.setSize(300,110);
                 nuevaVentanaS.setLocation(panelSimular.getHeight()+40, panelSimular.getHeight()+100); //Pone la ventana al lado de la otra
                 nuevaVentanaS.setResizable(false);
                 nuevaVentanaS.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 nuevaVentanaS.setLayout(new FlowLayout()); 
 
-                JButton btnSupervivientes = new JButton("Añadir Supervivientes");
+                JButton btnSupervivientes = new JButton("Añadir Superviviente");
                 JButton btnZombis = new JButton("Añadir Zombis");
+                JButton btnInv = new JButton("Limpiar Inventario");
                 
                  btnSupervivientes.addActionListener(ev -> {
                   colocarSupervivientesSim();
@@ -483,9 +484,17 @@ public class VentanaJuego extends JFrame implements Serializable{
                  btnZombis.addActionListener(ev -> {
                      colocarZombiSimulacion();
                  });
+                 
+                 btnInv.addActionListener(ev -> {
+                    if (!Superviviente.listaSupervivienteSimulacion.isEmpty()) {
+                        Superviviente.listaSupervivienteSimulacion.getLast().getInventario().limpiarInventario();
+                        actualizarEtiquetaSim("Inventario limpiado.");
+                    } else actualizarEtiquetaSim("No existe Superviviente o no se ha podido limpiar.");
+                 });
                 
                 nuevaVentanaS.add(btnSupervivientes);
                 nuevaVentanaS.add(btnZombis);
+                nuevaVentanaS.add(btnInv);
                 nuevaVentanaS.setVisible(true);
             }
         };
@@ -1497,10 +1506,6 @@ public class VentanaJuego extends JFrame implements Serializable{
         Atacar.addActionListener(atacar);
 }
 
-
-
-
-
     public boolean ataqueValido(Arma arma, Superviviente supervivienteActual, Zombi zombieAtacado){
         
         int distancia = calcularDistancia(supervivienteActual.getX(), supervivienteActual.getY(), zombieAtacado.getX(), zombieAtacado.getY());
@@ -2071,8 +2076,6 @@ public class VentanaJuego extends JFrame implements Serializable{
             actualizarEtiquetaSim("Seleccione una casilla con Superviviente.");
         }
     }
-    
-    
     
     public void buscar (){
         Superviviente superviviente = supervivientes.get(indiceActual); 
@@ -2680,7 +2683,6 @@ public class VentanaJuego extends JFrame implements Serializable{
         }
     }
 
-    
     private void mostrarGameStatusFinal(Boolean status) {
         this.getContentPane().removeAll();
         

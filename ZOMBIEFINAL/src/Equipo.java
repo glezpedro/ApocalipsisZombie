@@ -45,8 +45,6 @@ public class Equipo implements Serializable {
         System.out.println("No se encontró el arma " + nombreArma + " o ya está activa.");
     }
     
-    
-
     public void agregarItem() {
         if (objetos.size() >= MAX_OBJETOS) {
             System.out.println("Inventario lleno. No se pueden agregar más objetos.");
@@ -107,7 +105,6 @@ public class Equipo implements Serializable {
             return;
         }
 
-        
         objetos.add(arma);
         System.out.println("Se añadió al inventario el arma: " + arma.getNombre());
     }
@@ -144,9 +141,6 @@ public class Equipo implements Serializable {
                 .orElse(null);
     }
 
-
-
-    
     public static Arma elegirArma(String nombreArma) {
     
     List<Object> posiblesItems2 = List.of(
@@ -171,7 +165,6 @@ public class Equipo implements Serializable {
     
 }
 
-
     public List<String> obtenerNombresArmasNA() {
         List<String> nombres = new ArrayList<>();
         for (Arma arma : obtenerArmasNA()) {
@@ -180,8 +173,6 @@ public class Equipo implements Serializable {
         return nombres;
     }
     
-    
-
     public List<String> obtenerNombresArmasActivas() {
         List<String> nombres = new ArrayList<>();
         for (Arma arma : armasActivas) {
@@ -215,6 +206,10 @@ public class Equipo implements Serializable {
         } else {
             System.out.println("No se encontró el arma activa con el nombre " + nombreArma);
         }
+    }
+    
+    public void limpiarInventario(){
+        objetos.removeAll(objetos);
     }
 
 }
