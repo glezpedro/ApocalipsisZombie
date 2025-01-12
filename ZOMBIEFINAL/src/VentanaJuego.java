@@ -361,7 +361,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                
                 JFrame nuevaVentana = new JFrame("Lista de Ataques");
                 nuevaVentana.setSize(300, 120);
-                nuevaVentana.setLocationRelativeTo(null); //Pone la ventana en el centro
+                nuevaVentana.setLocation(panelJuego.getHeight()+40, panelJuego.getHeight()+100); //Pone la ventana en el centro
                 nuevaVentana.setResizable(false);
                 nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 nuevaVentana.setLayout(new FlowLayout()); 
@@ -466,8 +466,8 @@ public class VentanaJuego extends JFrame implements Serializable{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame nuevaVentanaS = new JFrame("Añadir Elementos");
-                nuevaVentanaS.setSize(300,240);
-                nuevaVentanaS.setLocationRelativeTo(null); //Pone la ventana en el centro
+                nuevaVentanaS.setSize(300,100);
+                nuevaVentanaS.setLocation(panelSimular.getHeight()+40, panelSimular.getHeight()+100); //Pone la ventana al lado de la otra
                 nuevaVentanaS.setResizable(false);
                 nuevaVentanaS.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 nuevaVentanaS.setLayout(new FlowLayout()); 
@@ -511,7 +511,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                
                 JFrame nuevaVentana = new JFrame("Lista de Ataques");
                 nuevaVentana.setSize(300, 120);
-                nuevaVentana.setLocationRelativeTo(null); //Pone la ventana en el centro
+                nuevaVentana.setLocation(panelSimular.getHeight()+40, panelSimular.getHeight()+100);
                 nuevaVentana.setResizable(false);
                 nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 nuevaVentana.setLayout(new FlowLayout()); 
@@ -521,17 +521,17 @@ public class VentanaJuego extends JFrame implements Serializable{
                 JButton btnZombisElim = new JButton("Zombis Eliminados");
                 
                 btnSupervivientes.addActionListener(ev -> {
-                    if (registroAtaques.isEmpty()) actualizarEtiqueta("No hay ataques");
-                    else actualizarEtiqueta(registroAtaques.toString()); 
+                    if (registroAtaques.isEmpty()) actualizarEtiquetaSim("No hay ataques");
+                    else actualizarEtiquetaSim(registroAtaques.toString()); 
                 });
 
                 btnZombis.addActionListener(ev -> {
-                    if (Zombi.superAtacados.isEmpty()) actualizarEtiqueta("No hay Supervivientes atacados.");
-                    else actualizarEtiqueta(Zombi.superAtacados.toString());
+                    if (Zombi.superAtacados.isEmpty()) actualizarEtiquetaSim("No hay Supervivientes atacados.");
+                    else actualizarEtiquetaSim(Zombi.superAtacados.toString());
                 });
                 
                 btnZombisElim.addActionListener(ev -> {
-                    if (Ataque.zombisEliminados.isEmpty()) actualizarEtiqueta("No hay zombis eliminados.");
+                    if (Ataque.zombisEliminados.isEmpty()) actualizarEtiquetaSim("No hay zombis eliminados.");
                     else {
                         limpiarPanelSim();
                         etiqueta1 = new JLabel("Elegir Superviviente:", SwingConstants.CENTER); // Creamos etiqueta
@@ -855,6 +855,9 @@ public class VentanaJuego extends JFrame implements Serializable{
                 System.out.println("Zombi creado: " + zombiSeleccionado.getCategoria() + ", " 
                         + zombiSeleccionado.getTipo() + ", X: " + zombiSeleccionado.getX() 
                         + ", Y: " + zombiSeleccionado.getY());
+                actualizarEtiquetaSim("Zombi creado: " + zombiSeleccionado.getCategoria() + ", " 
+                        + zombiSeleccionado.getTipo() + "\nX: " + zombiSeleccionado.getX() 
+                        + ", Y: " + zombiSeleccionado.getY());
             }
 
             // Quitar el JComboBox y la etiqueta después de la selección
@@ -975,6 +978,7 @@ public class VentanaJuego extends JFrame implements Serializable{
             panelJuego.add(etiquetaSuperviviente);
 
             System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: " + x + ", Y: " + y);
+            
 
             tablero.tablero[x][y].setHaySuperviviente(true);
 
@@ -1036,6 +1040,7 @@ public class VentanaJuego extends JFrame implements Serializable{
             panelSimular.add(etiquetaSuperviviente);
 
             System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: " + x + ", Y: " + y);
+            actualizarEtiquetaSim("Superviviente creado: " + superviviente.getNombre() + "\nX: " + x + ", Y: " + y);
 
             tablero.tablero[x][y].setHaySuperviviente(true);
         }
