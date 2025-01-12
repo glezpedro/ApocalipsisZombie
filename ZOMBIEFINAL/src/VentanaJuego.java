@@ -1653,9 +1653,9 @@ public class VentanaJuego extends JFrame implements Serializable{
         Buscar.addActionListener(accionBoton4);
     }
     
-    public void funcionBuscarSim(){
-         // Texto Elegir Arma:
-    etiqueta1 = new JLabel("Elegir Arma:", SwingConstants.CENTER); // Creamos etiqueta
+    public void funcionBuscarSim() {
+    // Texto Elegir Objeto (Arma o Provisión):
+    etiqueta1 = new JLabel("Elegir Objeto:", SwingConstants.CENTER); // Creamos etiqueta
     etiqueta1.setBounds(30, 245, 100, 30);
     etiqueta1.setOpaque(true); // Así podemos poner background
     etiqueta1.setForeground(Color.black);
@@ -1665,50 +1665,80 @@ public class VentanaJuego extends JFrame implements Serializable{
 
     Superviviente supervivienteActual = supervivientes.get(indiceActual); // Obtener al superviviente actual
 
-    // Opciones de armas disponibles
-    String[] opcionesArmas = {
+    // Opciones de objetos disponibles (Armas y Provisiones)
+    String[] opcionesObjetos = {
         "",
         "Rifle",
         "Pistola",
-        "Espada"
+        "Espada",
+        "Agua",
+        "Barrita energética",
+        "Galletas de Avena"
     };
 
-    listaActivas = new JComboBox(opcionesArmas);
-    listaActivas.setBounds(30, 275, 100, 20);
+    listaActivas = new JComboBox(opcionesObjetos);
+    listaActivas.setBounds(30, 275, 115, 20); // Aumentamos el tamaño del combo box para caber todas las opciones
     listaActivas.setSelectedItem("");
     panelSimular.add(listaActivas);
 
-    
+    // Acción al seleccionar un objeto (arma o provisión)
     ActionListener accionLista = (ActionEvent e) -> {
-        armaSeleccionada1 = (String) listaActivas.getSelectedItem();
+        String objetoSeleccionado = (String) listaActivas.getSelectedItem();
 
-        if (armaSeleccionada1 != null && !armaSeleccionada1.trim().isEmpty()) {
-            Arma armaSeleccionada = null;
+        if (objetoSeleccionado != null && !objetoSeleccionado.trim().isEmpty()) {
+            // Si es un arma
+            if (objetoSeleccionado.equals("Rifle") || objetoSeleccionado.equals("Pistola") || objetoSeleccionado.equals("Espada")) {
+                Arma armaSeleccionada = null;
 
-            
-            switch (armaSeleccionada1) {
-                case "Rifle":
-                    armaSeleccionada = new Arma("Rifle", 5, 3, 2, 4);
-                    break;
-                case "Pistola":
-                    armaSeleccionada = new Arma("Pistola", 3, 2, 1, 3);
-                    break;
-                case "Espada":
-                    armaSeleccionada = new Arma("Espada", 7, 1, 3, 5);
-                    break;
-                default:
-                    System.out.println("Arma desconocida.");
+                // Crear el arma con características específicas según el nombre
+                switch (objetoSeleccionado) {
+                    case "Rifle":
+                        armaSeleccionada = new Arma("Rifle", 5, 3, 2, 4);
+                        break;
+                    case "Pistola":
+                        armaSeleccionada = new Arma("Pistola", 3, 2, 1, 3);
+                        break;
+                    case "Espada":
+                        armaSeleccionada = new Arma("Espada", 7, 1, 3, 5);
+                        break;
+                    default:
+                        System.out.println("Arma desconocida.");
+                }
+
+                if (armaSeleccionada != null) {
+                    supervivienteActual.getInventario().agregarArmaEspecifica(armaSeleccionada);
+                    System.out.println("Arma añadida al inventario: " + armaSeleccionada.getNombre());
+                }
             }
+            // Si es una provisión
+            else if (objetoSeleccionado.equals("Agua") || objetoSeleccionado.equals("Barrita energética") || objetoSeleccionado.equals("Galletas de Avena")) {
+                Provisiones provisionSeleccionada = null;
 
+                // Crear la provisión con características específicas según el nombre
+                switch (objetoSeleccionado) {
+                    case "Agua":
+                        provisionSeleccionada = new Provisiones("Agua", 0, "2025-12-31");
+                        break;
+                    case "Barrita energética":
+                        provisionSeleccionada = new Provisiones("Barrita energética", 250,"2024-08-15" );
+                        break;
+                    case "Galletas de Avena":
+                        provisionSeleccionada = new Provisiones("Galletas de Avena", 150,"2026-01-10" );
+                        break;
+                    default:
+                        System.out.println("Provisión desconocida.");
+                }
 
-            if (armaSeleccionada != null) {
-                supervivienteActual.getInventario().agregarArmaEspecifica(armaSeleccionada);
-                System.out.println("Arma añadida al inventario: " + armaSeleccionada.getNombre());
+                if (provisionSeleccionada != null) {
+                    supervivienteActual.getInventario().agregarProvisionEspecifica(provisionSeleccionada);
+                    System.out.println("Provisión añadida al inventario: " + provisionSeleccionada.getNombre());
+                }
             }
         }
     };
     listaActivas.addActionListener(accionLista);
-    }
+}
+
     
     private String armaSeleccionada1 = "";
     private String armaSeleccionada2 = "";

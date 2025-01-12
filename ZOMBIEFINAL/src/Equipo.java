@@ -111,6 +111,30 @@ public class Equipo implements Serializable {
         objetos.add(arma);
         System.out.println("Se añadió al inventario el arma: " + arma.getNombre());
     }
+    
+    public void agregarProvisionEspecifica(Provisiones provision) {
+
+    if (objetos.size() >= MAX_OBJETOS) {
+        System.out.println("Inventario lleno. No se pueden agregar más objetos.");
+        return;
+    }
+
+    // Verificar si la provisión ya está en el inventario
+    boolean provisionRepetida = objetos.stream()
+            .filter(obj -> obj instanceof Provisiones)
+            .map(obj -> (Provisiones) obj)
+            .anyMatch(provisionEnInventario -> provisionEnInventario.getNombre().equalsIgnoreCase(provision.getNombre()));
+
+    if (provisionRepetida) {
+        System.out.println("La provisión '" + provision.getNombre() + "' ya está en el inventario.");
+        return;
+    }
+
+    // Agregar la provisión al inventario
+    objetos.add(provision);
+    System.out.println("Se añadió al inventario la provisión: " + provision.getNombre());
+}
+
     public Arma obtenerArmaPorNombre(String nombreArma) {
         return (Arma) objetos.stream()
                 .filter(obj -> obj instanceof Arma)
