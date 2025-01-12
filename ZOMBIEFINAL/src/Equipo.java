@@ -45,32 +45,7 @@ public class Equipo implements Serializable {
         System.out.println("No se encontró el arma " + nombreArma + " o ya está activa.");
     }
     
-    public Arma obtenerArma(int opcion) {
-    // Lista de posibles armas
-    List<Arma> posiblesItems = List.of(
-        new Arma("Espada", 1, 0, 1, 2),
-        new Arma("Pistola", 2, 1, 3, 3),
-        new Arma("Rifle", 3, 2, 5, 5)
-    );
-
-    if (opcion < 1 || opcion > posiblesItems.size()) {
-        System.out.println("Opción no válida.");
-        return null; 
-    }
-
-    return posiblesItems.get(opcion - 1); // -1 porque la lista es 0-based
-}
-
-public void agregarArma(Arma armaElegida) {
-    if (objetos.size() >= MAX_OBJETOS) {
-        System.out.println("Inventario lleno. No se pueden agregar más objetos.");
-        return;
-    }
-
-    // Agregar el arma al inventario
-    objetos.add(armaElegida);
-    System.out.println(armaElegida.getNombre() + " ha sido agregada al inventario.");
-}
+    
 
     public void agregarItem() {
         if (objetos.size() >= MAX_OBJETOS) {
@@ -114,6 +89,40 @@ public void agregarArma(Arma armaElegida) {
             (itemRandom instanceof Arma ? ((Arma) itemRandom).getNombre() : ((Provisiones) itemRandom).getNombre()));
     }
     
+    public void agregarArmaEspecifica(Arma arma) {
+        
+        if (objetos.size() >= MAX_OBJETOS) {
+            System.out.println("Inventario lleno. No se pueden agregar más objetos.");
+            return;
+        }
+
+        
+        boolean armaRepetida = objetos.stream()
+                .filter(obj -> obj instanceof Arma)
+                .map(obj -> (Arma) obj)
+                .anyMatch(armaEnInventario -> armaEnInventario.getNombre().equalsIgnoreCase(arma.getNombre()));
+
+        if (armaRepetida) {
+            System.out.println("El arma '" + arma.getNombre() + "' ya está en el inventario.");
+            return;
+        }
+
+        
+        objetos.add(arma);
+        System.out.println("Se añadió al inventario el arma: " + arma.getNombre());
+    }
+    public Arma obtenerArmaPorNombre(String nombreArma) {
+        return (Arma) objetos.stream()
+                .filter(obj -> obj instanceof Arma)
+                .map(obj -> (Arma) obj)
+                .filter(arma -> arma.getNombre().equalsIgnoreCase(nombreArma))
+                .findFirst()
+                .orElse(null);
+    }
+
+
+
+    
     public static Arma elegirArma(String nombreArma) {
     
     List<Object> posiblesItems2 = List.of(
@@ -147,14 +156,7 @@ public void agregarArma(Arma armaElegida) {
         return nombres;
     }
     
-    public Arma obtenerArmaPorNombre(String nombreArma) {
-        for (Arma arma : armasActivas) {
-            if (arma.getNombre().equals(nombreArma)) {
-                return arma; 
-            }
-        }
-        return null; 
-    }
+    
 
     public List<String> obtenerNombresArmasActivas() {
         List<String> nombres = new ArrayList<>();
