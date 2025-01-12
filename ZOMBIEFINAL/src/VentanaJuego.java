@@ -487,6 +487,9 @@ public class VentanaJuego extends JFrame implements Serializable{
                  
                  btnInv.addActionListener(ev -> {
                     if (!Superviviente.listaSupervivienteSimulacion.isEmpty()) {
+                        for (Arma arma : Superviviente.listaSupervivienteSimulacion.getLast().getInventario().obtenerArmasActivas()) {
+                            Superviviente.listaSupervivienteSimulacion.getLast().getInventario().desactivarArma(arma.getNombre());
+                        }
                         Superviviente.listaSupervivienteSimulacion.getLast().getInventario().limpiarInventario();
                         actualizarEtiquetaSim("Inventario limpiado.");
                     } else actualizarEtiquetaSim("No existe Superviviente o no se ha podido limpiar.");
