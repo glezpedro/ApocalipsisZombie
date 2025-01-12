@@ -1008,6 +1008,11 @@ public class VentanaJuego extends JFrame implements Serializable{
     
     public void colocarSupervivientesSim() {
         System.out.println("Intentando crear superviviente en: X: " + tablero.getCoordenadaXSeleccionada() + ", Y: " + tablero.getCoordenadaYSeleccionada()+" ...");
+        if(!Superviviente.listaSupervivienteSimulacion.isEmpty()) {
+            actualizarEtiquetaSim("Ya hay un superviviente en simulación");
+            return;
+        } 
+        
         supervivientes = Superviviente.crearSupervivienteSim(tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
 
         for (Superviviente superviviente : supervivientes) {
@@ -1031,14 +1036,12 @@ public class VentanaJuego extends JFrame implements Serializable{
                         iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
                         break;
             }
-          
+           
             posicionesUsadas.add(new Point(x, y));
-
+            actualizarEtiquetaSim("Superviviente creado: " + superviviente.getNombre() + "\nX: " + superviviente.getX() + ", Y: " + superviviente.getY());
             tablero.botonesTablero[x][y].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
             JLabel etiquetaSuperviviente = new JLabel(iconoSuperviviente);
             panelSimular.add(etiquetaSuperviviente);
-
-
 
             tablero.tablero[x][y].setHaySuperviviente(true);
         }

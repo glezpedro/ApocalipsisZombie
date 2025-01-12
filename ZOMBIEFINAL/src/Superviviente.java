@@ -100,10 +100,8 @@ public class Superviviente implements Serializable{
             coordenadaSeleccionada = COORDENADAS[random.nextInt(COORDENADAS.length)];
         }
     }
-
-    
     private static int numSuperviviente = 2;
-    
+        
     public static List<Superviviente> listaSupervivienteSimulacion = new ArrayList<>();
 
     public static List<Superviviente> crearSupervivienteSim(int x, int y) {
