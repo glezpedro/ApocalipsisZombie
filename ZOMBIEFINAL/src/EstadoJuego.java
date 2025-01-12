@@ -7,7 +7,7 @@ public class EstadoJuego implements Serializable {
     private Set<Zombi> zombies;
     private List<Superviviente> supervivientes;
     private int indiceActual;
-    private List<Almacen_Ataques> registroAtaques; // Registro de ataques
+    private List<Almacen_Ataques> registroAtaques; 
     private Tablero tablero;
     private int metaX;
     private int metaY;

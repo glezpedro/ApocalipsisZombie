@@ -3,10 +3,10 @@ import java.util.*;
 
 
 public class Equipo implements Serializable {
-    private static final int MAX_OBJETOS = 5; // Límite del inventario general
-    private static final int MAX_ARMAS = 2; // Límite de armas activas
-    private List<Object> objetos = new ArrayList<>(); // Inventario general
-    private List<Arma> armasActivas = new ArrayList<>(); // Armas activas
+    private static final int MAX_OBJETOS = 5; 
+    private static final int MAX_ARMAS = 2; 
+    private List<Object> objetos = new ArrayList<>(); 
+    private List<Arma> armasActivas = new ArrayList<>();
     
 
     public Equipo() {}
@@ -134,7 +134,6 @@ public class Equipo implements Serializable {
         return;
     }
 
-    // Agregar la provisión al inventario
     objetos.add(provision);
     System.out.println("Se añadió al inventario la provisión: " + provision.getNombre());
 }
@@ -163,7 +162,7 @@ public class Equipo implements Serializable {
         if (item instanceof Arma) {
             Arma arma = (Arma) item;
             if (arma.getNombre().equalsIgnoreCase(nombreArma)) {
-                return arma; // Devuelve el arma encontrada
+                return arma; 
             }
         }
     }
@@ -189,7 +188,7 @@ public class Equipo implements Serializable {
     }
     
     public List<Object> obtenerObjetos() {
-        return new ArrayList<>(objetos); // Devuelve una copia del inventario
+        return new ArrayList<>(objetos); 
     }
 
     public List<String> obtenerNombres() {

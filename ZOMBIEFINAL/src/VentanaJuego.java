@@ -2685,7 +2685,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         }
         
         if (supervivientesEnMeta.containsAll(todosLosSupervivientes)) {
-            // Comprobar que todos los supervivientes tienen al menos una provisión
+
             boolean todosConProvisiones = true;
             for (Superviviente superviviente : todosLosSupervivientes) {
                 int cantidadProvisiones = 0;

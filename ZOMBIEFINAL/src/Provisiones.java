@@ -14,7 +14,6 @@ public class Provisiones extends Equipo implements Serializable{
         this.caducidad = caducidad;
     }
     
-    // Getters
     public String getNombre() {
         return nombre;
     }

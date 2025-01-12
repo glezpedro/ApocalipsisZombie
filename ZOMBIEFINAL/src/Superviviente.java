@@ -107,7 +107,7 @@ public class Superviviente implements Serializable{
     public static List<Superviviente> crearSupervivienteSim(int x, int y) {
         if (!listaSupervivienteSimulacion.isEmpty()) {
             System.out.println("Ya hay un superviviente en simulación");
-            return listaSupervivienteSimulacion; // Devuelve la lista actual sin cambios
+            return listaSupervivienteSimulacion; // devuelve la lista actual sin cambios
         }else{System.out.println("Superviviente creado con éxito");}
 
         String nombre = COLORES[numSuperviviente];
@@ -118,9 +118,9 @@ public class Superviviente implements Serializable{
         nuevoSuperviviente.coordenadaX = x;
         nuevoSuperviviente.coordenadaY = y;
 
-        listaSupervivienteSimulacion.add(nuevoSuperviviente); // Añadimos el nuevo superviviente
+        listaSupervivienteSimulacion.add(nuevoSuperviviente); // añadimos el nuevo superviviente
 
-        return listaSupervivienteSimulacion; // Retornamos la lista actualizada
+        return listaSupervivienteSimulacion; // retornamos la lista actualizada
     }
 
     public static List<Superviviente> crearSupervivientes() {

@@ -85,7 +85,6 @@ public class Tablero implements Serializable{
                 final int fila = i;
                 final int columna = j;
                 
-                // Al hacer clic, guardar las coordenadas seleccionadas
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
