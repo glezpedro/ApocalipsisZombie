@@ -470,7 +470,8 @@ public class VentanaJuego extends JFrame implements Serializable{
                 JButton btnZombis = new JButton("Añadir Zombis");
                 
                  btnSupervivientes.addActionListener(ev -> {
-                  colocarSupervivientesSim(); 
+                  colocarSupervivientesSim();
+                  etiquetaTurnos.setText("Turno " + supervivientes.get(indiceActual).getNombre());
                 });
                  
                  btnZombis.addActionListener(ev -> {
@@ -1228,7 +1229,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                     tablero.tablero[viejaXY[0]][viejaXY[1]].setHaySuperviviente(false);
                     tablero.tablero[nuevaX][nuevaY].setHaySuperviviente(true);
 
-                    actualizarIconos();
+                    actualizarIconosSim();
                     accionesTotales++; 
                     System.out.println("Le quedan a " + supervivienteActual.getNombre() + " " + supervivienteActual.getAccionesDisponibles() + " acciones.");
                      
@@ -1259,7 +1260,7 @@ public class VentanaJuego extends JFrame implements Serializable{
                 panelSimular.repaint();
             }
 
-            actualizarIconos();
+            actualizarIconosSim();
         }};
         Moverse.addActionListener(accionBoton4);
     }
