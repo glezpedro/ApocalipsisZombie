@@ -13,8 +13,8 @@ public class EstadoJuego implements Serializable {
     private int metaY;
     private int accionesTotales;
 
-    public EstadoJuego(Tablero tablero, List<Superviviente> supervivientes, int turno, Set<Zombi> zombies, int indiceActual, List<Almacen_Ataques> registroAtaques, int metaX, int metaY, int accionesTotales) {
-        this.tablero = tablero;
+    public EstadoJuego( List<Superviviente> supervivientes, int turno, Set<Zombi> zombies, int indiceActual, List<Almacen_Ataques> registroAtaques, int metaX, int metaY, int accionesTotales) {
+        //this.tablero = tablero;
         this.supervivientes = supervivientes;
         this.turno = turno;
         this.zombies = zombies;

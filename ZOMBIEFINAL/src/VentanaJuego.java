@@ -163,22 +163,24 @@ public class VentanaJuego extends JFrame implements Serializable{
                         FileInputStream fileIn = new FileInputStream(archivoSeleccionado);
                         ObjectInputStream in = new ObjectInputStream(fileIn);
                         EstadoJuego estado = (EstadoJuego) in.readObject();
-                        in.close();
-                        fileIn.close();
+                        
+                        VentanaJuego Juego = new VentanaJuego();
 
-                        tablero = estado.getTablero();
-                        contadorTurnos = estado.getTurno();
-                        zombies = estado.getZombies();
-                        metaX = estado.getMetaX();
-                        metaY = estado.getMetaY();
-                        registroAtaques = estado.getRegistroAtaques();
-                        accionesTotales = estado.getAccionesTotales();
-                        supervivientes = estado.getSupervivientes();
-                        indiceActual = estado.getIndiceActual();
+                        //tablero = estado.getTablero();
+                        ventana.contadorTurnos = estado.getTurno();
+                        ventana.zombies = estado.getZombies();
+                        ventana.metaX = estado.getMetaX();
+                        ventana.metaY = estado.getMetaY();
+                        ventana.registroAtaques = estado.getRegistroAtaques();
+                        ventana.accionesTotales = estado.getAccionesTotales();
+                        ventana.supervivientes = estado.getSupervivientes();
+                        ventana.indiceActual = estado.getIndiceActual();
 
                         colocarPanelJuego();
                         actualizarIconos();
 
+                        in.close();
+                        fileIn.close();
                         System.out.println("Partida cargada correctamente desde: " + archivoSeleccionado.getName());
                     }
                 } catch (Exception ex) {
@@ -305,10 +307,13 @@ public class VentanaJuego extends JFrame implements Serializable{
                     for (int j = 0; j < 9; j++) {
                         tablero.botonesTablero[i][j].setIcon(null);
                     }
+                    
                 }
+                ventana.revalidate(); 
+                ventana.repaint();
                 try {
                     EstadoJuego estado = new EstadoJuego(
-                        tablero,
+                        //tablero,
                         supervivientes,
                         contadorTurnos,
                         zombies,
