@@ -100,24 +100,29 @@ public class Superviviente implements Serializable{
             coordenadaSeleccionada = COORDENADAS[random.nextInt(COORDENADAS.length)];
         }
     }
+
+    
     private static int numSuperviviente = 2;
     
-    public static List<Superviviente> crearSupervivienteSim(int x, int y){
-        List<Superviviente> supervivienteSIm = new ArrayList<>();
-                    
-                    String nombre = COLORES[numSuperviviente];
-                    int salud = random.nextInt(6)+ 5;
-                    int maxHeridas = random.nextInt(3) + 3;
-                    numSuperviviente++;
-                    Superviviente supervivientesim = new Superviviente(nombre, salud, maxHeridas);
-                    supervivientesim.coordenadaX = x;  
-                    supervivientesim.coordenadaY = y;
-                    
-            supervivienteSIm.add(supervivientesim);
-        
+    public static List<Superviviente> listaSupervivienteSimulacion = new ArrayList<>();
 
-        return supervivienteSIm;
-               
+    public static List<Superviviente> crearSupervivienteSim(int x, int y) {
+        if (!listaSupervivienteSimulacion.isEmpty()) {
+            System.out.println("Ya hay un superviviente en simulación");
+            return listaSupervivienteSimulacion; // Devuelve la lista actual sin cambios
+        }else{System.out.println("Superviviente creado con éxito");}
+
+        String nombre = COLORES[numSuperviviente];
+        int salud = random.nextInt(6) + 5;
+        int maxHeridas = random.nextInt(3) + 3;
+        numSuperviviente++;
+        Superviviente nuevoSuperviviente = new Superviviente(nombre, salud, maxHeridas);
+        nuevoSuperviviente.coordenadaX = x;
+        nuevoSuperviviente.coordenadaY = y;
+
+        listaSupervivienteSimulacion.add(nuevoSuperviviente); // Añadimos el nuevo superviviente
+
+        return listaSupervivienteSimulacion; // Retornamos la lista actualizada
     }
 
     public static List<Superviviente> crearSupervivientes() {

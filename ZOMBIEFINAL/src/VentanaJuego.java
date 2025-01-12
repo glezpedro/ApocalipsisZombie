@@ -1007,50 +1007,46 @@ public class VentanaJuego extends JFrame implements Serializable{
     }
     
     public void colocarSupervivientesSim() {
-        
+        System.out.println("Intentando crear superviviente en: X: " + tablero.getCoordenadaXSeleccionada() + ", Y: " + tablero.getCoordenadaYSeleccionada()+" ...");
         supervivientes = Superviviente.crearSupervivienteSim(tablero.getCoordenadaXSeleccionada(), tablero.getCoordenadaYSeleccionada());
-        
+
         for (Superviviente superviviente : supervivientes) {
             int x = superviviente.getX();
             int y = superviviente.getY();
-            
             tablero.tablero[x][y].agregarSuperviviente(superviviente);
             String color = superviviente.getNombre().toLowerCase();  
 
             ImageIcon iconoSuperviviente = null;
-            switch (color) {
-                case "amarillo":
-                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/amarillo.png"));
-                    break;
-                case "verde":
-                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/verde.png"));
-                    break;
-                case "azul":
-                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/azul.png"));
-                    break;
-                case "rojo":
-                    iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
-                    break;
+                switch (color) {
+                    case "amarillo":
+                        iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/amarillo.png"));
+                        break;
+                    case "verde":
+                        iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/verde.png"));
+                        break;
+                    case "azul":
+                        iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/azul.png"));
+                        break;
+                    case "rojo":
+                        iconoSuperviviente = new ImageIcon(getClass().getResource("/resources/rojo.png"));
+                        break;
             }
-
+          
             posicionesUsadas.add(new Point(x, y));
 
             tablero.botonesTablero[x][y].setIcon(new ImageIcon(iconoSuperviviente.getImage().getScaledInstance(20, 20, Image.SCALE_AREA_AVERAGING)));
             JLabel etiquetaSuperviviente = new JLabel(iconoSuperviviente);
             panelSimular.add(etiquetaSuperviviente);
 
-            System.out.println("Superviviente creado: " + superviviente.getNombre() + ", X: " + x + ", Y: " + y);
-            actualizarEtiquetaSim("Superviviente creado: " + superviviente.getNombre() + "\nX: " + x + ", Y: " + y);
+
 
             tablero.tablero[x][y].setHaySuperviviente(true);
         }
 
-        // Actualizar la interfaz gráfica
+            // Actualizar la interfaz gráfica
         panelSimular.revalidate();
         panelSimular.repaint();
-        
-        
-    }
+    }    
     
     public void colocarMetaSim(){
         ImageIcon iconoMeta = new ImageIcon(getClass().getResource("/resources/meta.png"));
