@@ -2748,7 +2748,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         else gameStatus.setText("Derrota");
         panel.add(gameStatus);
         
-        JLabel creditos = new JLabel("<html>Créditos:<br>Angel Molinero Caja (Imágenes, GUI y lógica del juego)<br>Pedro González Martín (Lógica y guardado del juego)<br>Jorge Castellano Bajo (Simulación del juego)</html>", SwingConstants.CENTER);
+        JLabel creditos = new JLabel("<html><div style='text-align:center;'><u>Creadores</u><br>Angel Molinero Caja (Imágenes e Interfaz)<br>Pedro González Martín (Lógica y Guardado)<br>Jorge Castellano Bajo (Simulación)</div></html>", SwingConstants.CENTER);
         creditos.setBounds(70, 340, 350, 65);
         creditos.setFont(new Font("Arial", Font.BOLD, 12));
         creditos.setForeground(Color.white);
@@ -2806,7 +2806,7 @@ public class VentanaJuego extends JFrame implements Serializable{
         panel.add(gameStatus);
 
         // Añadiendo créditos
-        JLabel creditos = new JLabel("<html><div style='text-align:center;'><u>Creadores</u><br>Angel Molinero Caja (Imagenes y GUI)<br>Pedro González Martín (Logica y Guardado)<br>Jorge Castellano Bajo (Simulación)</div></html>", SwingConstants.CENTER);
+        JLabel creditos = new JLabel("<html><div style='text-align:center;'><u>Creadores</u><br>Angel Molinero Caja (Imágenes e Interfaz)<br>Pedro González Martín (Lógica y Guardado)<br>Jorge Castellano Bajo (Simulación)</div></html>", SwingConstants.CENTER);
         creditos.setBounds(70, 340, 350, 65);
         creditos.setFont(new Font("Arial", Font.BOLD, 12));
         creditos.setForeground(Color.white);
