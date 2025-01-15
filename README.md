@@ -69,9 +69,7 @@
 
 ### Instalación y Ejecución
 
-1. Descargar el archivo comprimido con el proyecto.
-2. Importar el proyecto en NetBeans.
-3. Compilar y ejecutar el archivo `.jar` proporcionado.
+1. Ejecutar el archivo `.jar` proporcionado.
 
 ---
 
